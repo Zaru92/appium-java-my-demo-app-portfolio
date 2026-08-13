@@ -1,0 +1,16 @@
+* text=auto eol=lf
+
+mvnw text eol=lf
+mvnw.cmd text eol=crlf
+*.bat text eol=crlf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.mp4 binary
+*.apk binary
+*.aab binary
+*.ipa binary
+*.pdf binary
+*.docx binary
