@@ -41,3 +41,7 @@ screenshots/
 *.local.properties
 src/test/resources/config/local.properties
 src/test/resources/devices/*-local.properties
+
+# Locally downloaded application builds
+src/test/resources/apps/*
+!src/test/resources/apps/README.md
