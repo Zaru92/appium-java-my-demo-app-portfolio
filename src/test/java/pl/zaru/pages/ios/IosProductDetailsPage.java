@@ -3,7 +3,6 @@ package pl.zaru.page.ios;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
-import io.appium.java_client.AppiumBy;
 import pl.zaru.page.BasePage;
 import pl.zaru.page.CartPage;
 import pl.zaru.page.ProductDetailsPage;
