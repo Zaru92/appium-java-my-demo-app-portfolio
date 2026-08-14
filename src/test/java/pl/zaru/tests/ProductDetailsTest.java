@@ -10,6 +10,7 @@ import pl.zaru.base.BaseTest;
 import pl.zaru.page.ProductCatalogPage;
 import pl.zaru.page.ProductCatalogPageFactory;
 import pl.zaru.page.ProductDetailsPage;
+import pl.zaru.testdata.TestProduct;
 
 public final class ProductDetailsTest extends BaseTest {
 
@@ -18,7 +19,8 @@ public final class ProductDetailsTest extends BaseTest {
 
   @Test(groups = {"smoke", "catalog"})
   public void shouldOpenSelectedProductDetails() {
-    String productName = productNameForCurrentPlatform();
+
+    String productName = TestProduct.BACKPACK.nameFor(driver());
 
     ProductCatalogPage catalogPage = ProductCatalogPageFactory.create(driver());
 
