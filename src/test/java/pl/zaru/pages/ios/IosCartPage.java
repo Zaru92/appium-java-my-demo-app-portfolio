@@ -26,6 +26,9 @@ public final class IosCartPage extends BasePage implements CartPage {
 
   private static final By EMPTY_CART = AppiumBy.accessibilityId("No Items");
 
+    private static final By PROCEED_TO_CHECKOUT_BUTTON =
+        AppiumBy.accessibilityId("ProceedToCheckout");
+
   public IosCartPage(AppiumDriver driver) {
     super(driver);
   }
@@ -71,4 +74,9 @@ public final class IosCartPage extends BasePage implements CartPage {
   public boolean isEmpty() {
     return waitUntilVisible(EMPTY_CART).isDisplayed();
   }
+
+    @Override
+    public void proceedToCheckout() {
+        tap(PROCEED_TO_CHECKOUT_BUTTON);
+    }
 }

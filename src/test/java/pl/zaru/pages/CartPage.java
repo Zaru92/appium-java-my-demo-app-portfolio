@@ -13,4 +13,6 @@ public interface CartPage {
   void removeFirstProduct();
 
   boolean isEmpty();
+
+    void proceedToCheckout();
 }
