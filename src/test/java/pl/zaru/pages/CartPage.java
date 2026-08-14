@@ -2,15 +2,15 @@ package pl.zaru.page;
 
 public interface CartPage {
 
-    boolean isLoaded();
+  boolean isLoaded();
 
-    boolean containsProduct(String productName);
+  boolean containsProduct(String productName);
 
-    int firstProductQuantity();
+  int firstProductQuantity();
 
-    void increaseFirstProductQuantity();
+  void increaseFirstProductQuantity();
 
-    void removeFirstProduct();
+  void removeFirstProduct();
 
-    boolean isEmpty();
+  boolean isEmpty();
 }
