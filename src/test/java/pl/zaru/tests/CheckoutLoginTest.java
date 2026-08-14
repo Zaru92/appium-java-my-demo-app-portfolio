@@ -10,13 +10,17 @@ import pl.zaru.page.LoginPageFactory;
 import pl.zaru.page.ProductCatalogPage;
 import pl.zaru.page.ProductCatalogPageFactory;
 import pl.zaru.page.ProductDetailsPage;
+import pl.zaru.page.ShippingAddressPage;
+import pl.zaru.page.ShippingAddressPageFactory;
 import pl.zaru.testdata.TestProduct;
+import pl.zaru.testdata.TestUser;
 
-public final class CheckoutAuthenticationTest extends BaseTest {
+public final class CheckoutLoginTest extends BaseTest {
 
   @Test
-  public void shouldRequireLoginBeforeCheckout() {
+  public void shouldContinueCheckoutAfterValidLogin() {
     String productName = TestProduct.BACKPACK.nameFor(driver());
+    TestUser user = TestUser.STANDARD;
 
     ProductCatalogPage catalogPage = ProductCatalogPageFactory.create(driver());
 
@@ -25,15 +29,18 @@ public final class CheckoutAuthenticationTest extends BaseTest {
     detailsPage.addToCart();
 
     CartPage cartPage = detailsPage.openCart();
-
     assertTrue(cartPage.isLoaded(), "Cart should be displayed.");
 
     cartPage.proceedToCheckout();
 
     LoginPage loginPage = LoginPageFactory.create(driver());
+    assertTrue(loginPage.isLoaded(), "Login page should be displayed.");
+
+    loginPage.login(user.username(), user.password());
+
+    ShippingAddressPage shippingAddressPage = ShippingAddressPageFactory.create(driver());
 
     assertTrue(
-        loginPage.isLoaded(),
-        "Unauthenticated user should be redirected to login before checkout.");
+        shippingAddressPage.isLoaded(), "Shipping address page should be displayed after login.");
   }
 }

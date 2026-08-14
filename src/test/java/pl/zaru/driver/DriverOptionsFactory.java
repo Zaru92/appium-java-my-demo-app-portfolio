@@ -37,7 +37,9 @@ final class DriverOptionsFactory {
         new XCUITestOptions()
             .setDeviceName(config.deviceName())
             .setApp(config.appPath().toString())
-            .setNewCommandTimeout(config.newCommandTimeout());
+            .setNewCommandTimeout(config.newCommandTimeout())
+            .setConnectHardwareKeyboard(true)
+            .setForceSimulatorSoftwareKeyboardPresence(false);
 
     config.udid().ifPresent(options::setUdid);
     config.platformVersion().ifPresent(options::setPlatformVersion);

@@ -14,5 +14,5 @@ public interface CartPage {
 
   boolean isEmpty();
 
-    void proceedToCheckout();
+  void proceedToCheckout();
 }

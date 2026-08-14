@@ -22,8 +22,7 @@ public final class AndroidCartPage extends BasePage implements CartPage {
 
   private static final By EMPTY_CART = AppiumBy.id(APP_PACKAGE + ":id/noItemCL");
 
-    private static final By PROCEED_TO_CHECKOUT_BUTTON =
-        AppiumBy.id(APP_PACKAGE + ":id/cartBt");
+  private static final By PROCEED_TO_CHECKOUT_BUTTON = AppiumBy.id(APP_PACKAGE + ":id/cartBt");
 
   public AndroidCartPage(AppiumDriver driver) {
     super(driver);
@@ -77,8 +76,8 @@ public final class AndroidCartPage extends BasePage implements CartPage {
     return waitUntilVisible(EMPTY_CART).isDisplayed();
   }
 
-    @Override
-    public void proceedToCheckout() {
-        tap(PROCEED_TO_CHECKOUT_BUTTON);
-    }
+  @Override
+  public void proceedToCheckout() {
+    tap(PROCEED_TO_CHECKOUT_BUTTON);
+  }
 }

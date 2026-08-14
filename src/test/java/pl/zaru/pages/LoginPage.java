@@ -2,5 +2,7 @@ package pl.zaru.page;
 
 public interface LoginPage {
 
-    boolean isLoaded();
+  boolean isLoaded();
+
+  void login(String username, String password);
 }

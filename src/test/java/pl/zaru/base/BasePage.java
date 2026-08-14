@@ -48,6 +48,14 @@ public abstract class BasePage {
     waitUntilClickable(locator).click();
   }
 
+  protected void replaceText(By locator, String value, String fieldName) {
+    String normalizedValue = requireNonBlank(value, fieldName);
+    WebElement element = waitUntilVisible(locator);
+
+    element.clear();
+    element.sendKeys(normalizedValue);
+  }
+
   protected static String requireNonBlank(String value, String fieldName) {
     Objects.requireNonNull(value, fieldName + " must not be null");
 

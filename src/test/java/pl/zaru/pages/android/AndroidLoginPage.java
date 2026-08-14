@@ -8,18 +8,30 @@ import pl.zaru.page.LoginPage;
 
 public final class AndroidLoginPage extends BasePage implements LoginPage {
 
-    private static final String APP_PACKAGE =
-        "com.saucelabs.mydemoapp.android";
+  private static final String APP_PACKAGE = "com.saucelabs.mydemoapp.android";
 
-    private static final By LOGIN_TITLE =
-        AppiumBy.id(APP_PACKAGE + ":id/loginTV");
+  private static final By LOGIN_TITLE = AppiumBy.id(APP_PACKAGE + ":id/loginTV");
 
-    public AndroidLoginPage(AppiumDriver driver) {
-        super(driver);
-    }
+  private static final By USERNAME_INPUT = AppiumBy.id("com.saucelabs.mydemoapp.android:id/nameET");
 
-    @Override
-    public boolean isLoaded() {
-        return waitUntilVisible(LOGIN_TITLE).isDisplayed();
-    }
+  private static final By PASSWORD_INPUT =
+      AppiumBy.id("com.saucelabs.mydemoapp.android:id/passwordET");
+
+  private static final By LOGIN_BUTTON = AppiumBy.id("com.saucelabs.mydemoapp.android:id/loginBtn");
+
+  public AndroidLoginPage(AppiumDriver driver) {
+    super(driver);
+  }
+
+  @Override
+  public boolean isLoaded() {
+    return waitUntilVisible(LOGIN_TITLE).isDisplayed();
+  }
+
+  @Override
+  public void login(String username, String password) {
+    replaceText(USERNAME_INPUT, username, "username");
+    replaceText(PASSWORD_INPUT, password, "password");
+    tap(LOGIN_BUTTON);
+  }
 }
