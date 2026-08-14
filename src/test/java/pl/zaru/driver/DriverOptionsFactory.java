@@ -41,6 +41,8 @@ final class DriverOptionsFactory {
             .setConnectHardwareKeyboard(true)
             .setForceSimulatorSoftwareKeyboardPresence(false);
 
+    options.setCapability("appium:connectHardwareKeyboard", true);
+
     config.udid().ifPresent(options::setUdid);
     config.platformVersion().ifPresent(options::setPlatformVersion);
 

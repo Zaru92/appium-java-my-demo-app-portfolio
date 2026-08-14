@@ -1,10 +1,17 @@
 package pl.zaru.page;
 
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.nativekey.AndroidKey;
+import io.appium.java_client.android.nativekey.KeyEvent;
+import java.io.IOException;
 import java.time.Duration;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -56,6 +63,54 @@ public abstract class BasePage {
     element.sendKeys(normalizedValue);
   }
 
+  protected void hideAndroidKeyboardIfPresent() {
+    if (driver instanceof AndroidDriver androidDriver && androidDriver.isKeyboardShown()) {
+
+      androidDriver.pressKey(new KeyEvent(AndroidKey.BACK));
+    }
+  }
+
+  protected final void hideIosSimulatorSoftwareKeyboardIfPresent() {
+    boolean keyboardShown = Boolean.TRUE.equals(driver.executeScript("mobile: isKeyboardShown"));
+
+    if (!keyboardShown) {
+      return;
+    }
+
+    try {
+      Process process =
+          new ProcessBuilder(
+                  "/usr/bin/osascript",
+                  "-e",
+                  "tell application \"Simulator\" to activate",
+                  "-e",
+                  "delay 0.3",
+                  "-e",
+                  "tell application \"System Events\" " + "to keystroke \"k\" using command down")
+              .inheritIO()
+              .start();
+
+      if (!process.waitFor(5, TimeUnit.SECONDS)) {
+        process.destroyForcibly();
+        throw new IllegalStateException(
+            "Timed out while hiding the iOS Simulator software keyboard.");
+      }
+
+      if (process.exitValue() != 0) {
+        throw new IllegalStateException(
+            "Could not send Command+K to iOS Simulator. "
+                + "Grant Accessibility permission to the terminal or IDE running Maven.");
+      }
+    } catch (IOException exception) {
+      throw new IllegalStateException(
+          "Could not start osascript to hide the iOS Simulator keyboard.", exception);
+    } catch (InterruptedException exception) {
+      Thread.currentThread().interrupt();
+      throw new IllegalStateException(
+          "Interrupted while hiding the iOS Simulator keyboard.", exception);
+    }
+  }
+
   protected static String requireNonBlank(String value, String fieldName) {
     Objects.requireNonNull(value, fieldName + " must not be null");
 
@@ -68,5 +123,20 @@ public abstract class BasePage {
 
   protected void waitUntilTextEquals(By locator, String expectedText) {
     wait.until(ExpectedConditions.textToBe(locator, expectedText));
+  }
+
+  protected void scrollToIosElement(By locator) {
+    WebElement element = driver.findElement(locator);
+
+    driver.executeScript(
+        "mobile: scrollToElement", Map.of("elementId", ((RemoteWebElement) element).getId()));
+  }
+
+  protected void scrollIosDown(By containerLocator, double distance) {
+    RemoteWebElement container = (RemoteWebElement) driver.findElement(containerLocator);
+
+    driver.executeScript(
+        "mobile: scroll",
+        Map.of("elementId", container.getId(), "direction", "down", "distance", distance));
   }
 }
