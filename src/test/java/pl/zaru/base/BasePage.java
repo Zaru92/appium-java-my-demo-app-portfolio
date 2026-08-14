@@ -57,4 +57,8 @@ public abstract class BasePage {
 
     return value;
   }
+
+    protected void waitUntilTextEquals(By locator, String expectedText) {
+        wait.until(ExpectedConditions.textToBe(locator, expectedText));
+    }
 }
