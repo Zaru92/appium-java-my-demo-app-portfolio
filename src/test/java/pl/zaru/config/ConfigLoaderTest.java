@@ -16,8 +16,8 @@ public final class ConfigLoaderTest {
 
     assertEquals(config.platform(), MobilePlatform.ANDROID);
     assertEquals(config.automationName(), "UiAutomator2");
-    assertEquals(config.deviceName(), "Pixel_9");
-    assertEquals(config.udid().orElseThrow(), "emulator-5554");
+    assertEquals(config.deviceName(), "Pixel_8");
+    assertEquals(config.udid().orElseThrow(), "emulator-5556");
     assertTrue(config.platformVersion().isEmpty());
     assertTrue(
         config

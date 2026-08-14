@@ -12,6 +12,7 @@ public abstract class BasePage {
 
   private static final Duration DEFAULT_WAIT_TIMEOUT = Duration.ofSeconds(10);
 
+  private final AppiumDriver driver;
   private final WebDriverWait wait;
 
   protected BasePage(AppiumDriver driver) {
@@ -19,7 +20,7 @@ public abstract class BasePage {
   }
 
   protected BasePage(AppiumDriver driver, Duration waitTimeout) {
-    Objects.requireNonNull(driver, "driver must not be null");
+    this.driver = Objects.requireNonNull(driver, "driver must not be null");
     Objects.requireNonNull(waitTimeout, "waitTimeout must not be null");
 
     if (waitTimeout.isZero() || waitTimeout.isNegative()) {
@@ -27,6 +28,10 @@ public abstract class BasePage {
     }
 
     wait = new WebDriverWait(driver, waitTimeout);
+  }
+
+  protected final AppiumDriver driver() {
+    return driver;
   }
 
   protected final WebElement waitUntilVisible(By locator) {
@@ -41,5 +46,15 @@ public abstract class BasePage {
 
   protected final void tap(By locator) {
     waitUntilClickable(locator).click();
+  }
+
+  protected static String requireNonBlank(String value, String fieldName) {
+    Objects.requireNonNull(value, fieldName + " must not be null");
+
+    if (value.isBlank()) {
+      throw new IllegalArgumentException(fieldName + " must not be blank");
+    }
+
+    return value;
   }
 }
