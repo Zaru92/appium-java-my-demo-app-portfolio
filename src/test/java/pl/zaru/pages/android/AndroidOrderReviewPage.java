@@ -6,17 +6,29 @@ import org.openqa.selenium.By;
 import pl.zaru.page.BasePage;
 import pl.zaru.page.OrderReviewPage;
 
-public final class AndroidOrderReviewPage extends BasePage implements OrderReviewPage {
+public final class AndroidOrderReviewPage extends BasePage
+    implements OrderReviewPage {
 
-  private static final By REVIEW_ORDER_HEADING =
-      AppiumBy.id("com.saucelabs.mydemoapp.android:id/enterShippingAddressTV");
+    private static final String APP_ID =
+        "com.saucelabs.mydemoapp.android:id/";
 
-  public AndroidOrderReviewPage(AppiumDriver driver) {
-    super(driver);
-  }
+    private static final By REVIEW_ORDER_HEADING =
+        AppiumBy.id(APP_ID + "enterShippingAddressTV");
 
-  @Override
-  public boolean isLoaded() {
-    return waitUntilVisible(REVIEW_ORDER_HEADING).isDisplayed();
-  }
+    private static final By PLACE_ORDER_BUTTON =
+        AppiumBy.id(APP_ID + "paymentBtn");
+
+    public AndroidOrderReviewPage(AppiumDriver driver) {
+        super(driver);
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return waitUntilVisible(REVIEW_ORDER_HEADING).isDisplayed();
+    }
+
+    @Override
+    public void placeOrder() {
+        tap(PLACE_ORDER_BUTTON);
+    }
 }
