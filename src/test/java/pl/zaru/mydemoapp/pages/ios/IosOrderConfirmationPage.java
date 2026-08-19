@@ -3,33 +3,31 @@ package pl.zaru.mydemoapp.pages.ios;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
-import pl.zaru.mydemoapp.pages.BasePage;
-import pl.zaru.mydemoapp.pages.OrderConfirmationPage;
+import pl.zaru.mydemoapp.pages.base.BasePage;
+import pl.zaru.mydemoapp.pages.contracts.OrderConfirmationPage;
 
-public final class IosOrderConfirmationPage extends BasePage
-    implements OrderConfirmationPage {
+public final class IosOrderConfirmationPage extends BasePage implements OrderConfirmationPage {
 
-    private static final By CONFIRMATION_HEADING =
-        AppiumBy.iOSNsPredicateString(
-            "type == 'XCUIElementTypeStaticText' "
-                + "AND label == 'Checkout Complete'");
+  private static final By CONFIRMATION_HEADING =
+      AppiumBy.iOSNsPredicateString(
+          "type == 'XCUIElementTypeStaticText' " + "AND label == 'Checkout Complete'");
 
-    private static final By CONFIRMATION_MESSAGE =
-        AppiumBy.iOSNsPredicateString(
-            "type == 'XCUIElementTypeStaticText' "
-                + "AND label BEGINSWITH 'Thank you for your order'");
+  private static final By CONFIRMATION_MESSAGE =
+      AppiumBy.iOSNsPredicateString(
+          "type == 'XCUIElementTypeStaticText' "
+              + "AND label BEGINSWITH 'Thank you for your order'");
 
-    public IosOrderConfirmationPage(AppiumDriver driver) {
-        super(driver);
-    }
+  public IosOrderConfirmationPage(AppiumDriver driver) {
+    super(driver);
+  }
 
-    @Override
-    public boolean isLoaded() {
-        return waitUntilVisible(CONFIRMATION_HEADING).isDisplayed();
-    }
+  @Override
+  public boolean isLoaded() {
+    return waitUntilVisible(CONFIRMATION_HEADING).isDisplayed();
+  }
 
-    @Override
-    public String confirmationMessage() {
-        return waitUntilVisible(CONFIRMATION_MESSAGE).getText();
-    }
+  @Override
+  public String confirmationMessage() {
+    return waitUntilVisible(CONFIRMATION_MESSAGE).getText();
+  }
 }

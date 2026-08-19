@@ -3,8 +3,8 @@ package pl.zaru.mydemoapp.pages.ios;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
-import pl.zaru.mydemoapp.pages.BasePage;
-import pl.zaru.mydemoapp.pages.CartPage;
+import pl.zaru.mydemoapp.pages.base.BasePage;
+import pl.zaru.mydemoapp.pages.contracts.CartPage;
 
 public final class IosCartPage extends BasePage implements CartPage {
 

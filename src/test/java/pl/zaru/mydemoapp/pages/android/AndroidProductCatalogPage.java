@@ -3,9 +3,9 @@ package pl.zaru.mydemoapp.pages.android;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
-import pl.zaru.mydemoapp.pages.BasePage;
-import pl.zaru.mydemoapp.pages.ProductCatalogPage;
-import pl.zaru.mydemoapp.pages.ProductDetailsPage;
+import pl.zaru.mydemoapp.pages.base.BasePage;
+import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
+import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
 
 public final class AndroidProductCatalogPage extends BasePage implements ProductCatalogPage {
 

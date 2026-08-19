@@ -5,8 +5,8 @@ import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
 import pl.zaru.mydemoapp.base.BaseTest;
-import pl.zaru.mydemoapp.pages.ProductCatalogPage;
-import pl.zaru.mydemoapp.pages.ProductCatalogPageFactory;
+import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
+import pl.zaru.mydemoapp.pages.factories.ProductCatalogPageFactory;
 
 public final class AppLaunchSmokeTest extends BaseTest {
 

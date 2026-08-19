@@ -1,4 +1,4 @@
-package pl.zaru.mydemoapp.pages;
+package pl.zaru.mydemoapp.pages.contracts;
 
 public interface ProductDetailsPage {
 

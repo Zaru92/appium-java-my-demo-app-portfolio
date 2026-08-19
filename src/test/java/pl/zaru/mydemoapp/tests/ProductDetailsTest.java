@@ -7,9 +7,9 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import org.testng.annotations.Test;
 import pl.zaru.mydemoapp.base.BaseTest;
-import pl.zaru.mydemoapp.pages.ProductCatalogPage;
-import pl.zaru.mydemoapp.pages.ProductCatalogPageFactory;
-import pl.zaru.mydemoapp.pages.ProductDetailsPage;
+import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
+import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
+import pl.zaru.mydemoapp.pages.factories.ProductCatalogPageFactory;
 import pl.zaru.mydemoapp.testdata.TestProduct;
 
 public final class ProductDetailsTest extends BaseTest {

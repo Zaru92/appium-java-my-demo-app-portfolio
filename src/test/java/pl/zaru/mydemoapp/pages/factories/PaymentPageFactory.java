@@ -1,9 +1,10 @@
-package pl.zaru.mydemoapp.pages;
+package pl.zaru.mydemoapp.pages.factories;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import pl.zaru.mydemoapp.pages.android.AndroidPaymentPage;
+import pl.zaru.mydemoapp.pages.contracts.PaymentPage;
 import pl.zaru.mydemoapp.pages.ios.IosPaymentPage;
 
 public final class PaymentPageFactory {

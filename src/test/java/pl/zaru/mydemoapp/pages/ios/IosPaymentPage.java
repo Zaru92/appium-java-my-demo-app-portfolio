@@ -4,8 +4,8 @@ import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 import java.util.Objects;
 import org.openqa.selenium.By;
-import pl.zaru.mydemoapp.pages.BasePage;
-import pl.zaru.mydemoapp.pages.PaymentPage;
+import pl.zaru.mydemoapp.pages.base.BasePage;
+import pl.zaru.mydemoapp.pages.contracts.PaymentPage;
 import pl.zaru.mydemoapp.testdata.TestPaymentCard;
 
 public final class IosPaymentPage extends BasePage implements PaymentPage {

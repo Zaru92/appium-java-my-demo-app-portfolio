@@ -1,4 +1,4 @@
-package pl.zaru.mydemoapp.pages;
+package pl.zaru.mydemoapp.pages.contracts;
 
 import pl.zaru.mydemoapp.testdata.TestAddress;
 

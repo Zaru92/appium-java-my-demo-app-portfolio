@@ -1,4 +1,4 @@
-package pl.zaru.mydemoapp.pages;
+package pl.zaru.mydemoapp.pages.base;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;

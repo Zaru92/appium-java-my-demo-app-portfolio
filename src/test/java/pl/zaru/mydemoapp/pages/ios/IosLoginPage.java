@@ -3,8 +3,8 @@ package pl.zaru.mydemoapp.pages.ios;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
-import pl.zaru.mydemoapp.pages.BasePage;
-import pl.zaru.mydemoapp.pages.LoginPage;
+import pl.zaru.mydemoapp.pages.base.BasePage;
+import pl.zaru.mydemoapp.pages.contracts.LoginPage;
 
 public final class IosLoginPage extends BasePage implements LoginPage {
 

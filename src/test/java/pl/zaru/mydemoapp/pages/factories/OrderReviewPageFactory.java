@@ -1,10 +1,11 @@
-package pl.zaru.mydemoapp.pages;
+package pl.zaru.mydemoapp.pages.factories;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import java.util.Objects;
 import pl.zaru.mydemoapp.pages.android.AndroidOrderReviewPage;
+import pl.zaru.mydemoapp.pages.contracts.OrderReviewPage;
 import pl.zaru.mydemoapp.pages.ios.IosOrderReviewPage;
 
 public final class OrderReviewPageFactory {
