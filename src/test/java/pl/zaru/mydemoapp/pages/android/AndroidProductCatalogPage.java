@@ -2,10 +2,12 @@ package pl.zaru.mydemoapp.pages.android;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
+import java.util.Objects;
 import org.openqa.selenium.By;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
+import pl.zaru.mydemoapp.testdata.model.TestProduct;
 
 public final class AndroidProductCatalogPage extends BasePage implements ProductCatalogPage {
 
@@ -23,14 +25,16 @@ public final class AndroidProductCatalogPage extends BasePage implements Product
   }
 
   @Override
-  public ProductDetailsPage openProduct(String productName) {
-    String normalizedProductName = requireNonBlank(productName, "productName");
+  public ProductDetailsPage openProduct(TestProduct product) {
+    String productName = Objects.requireNonNull(product, "product must not be null").androidName();
+
+    String escapedProductName = productName.replace("\\", "\\\\").replace("\"", "\\\"");
 
     By productImage =
         AppiumBy.androidUIAutomator(
             ("new UiSelector().resourceId(\"%s\").text(\"%s\")"
                     + ".fromParent(new UiSelector().resourceId(\"%s\"))")
-                .formatted(PRODUCT_NAME_ID, normalizedProductName, PRODUCT_IMAGE_ID));
+                .formatted(PRODUCT_NAME_ID, escapedProductName, PRODUCT_IMAGE_ID));
 
     tap(productImage);
 

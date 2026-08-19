@@ -17,13 +17,13 @@ public final class AddProductToCartTest extends BaseTest {
 
     ScreenFactory screens = new ScreenFactory(driver());
 
-    String productName = TestProduct.BACKPACK.nameFor(driver());
+    TestProduct product = TestProduct.BACKPACK;
 
     ProductCatalogPage catalogPage = screens.productCatalogPage();
 
     assertTrue(catalogPage.isLoaded(), "Product catalog should be loaded.");
 
-    ProductDetailsPage detailsPage = catalogPage.openProduct(productName);
+    ProductDetailsPage detailsPage = catalogPage.openProduct(product);
 
     assertTrue(detailsPage.isLoaded(), "Product details should be loaded.");
 
@@ -34,7 +34,6 @@ public final class AddProductToCartTest extends BaseTest {
     assertTrue(cartPage.isLoaded(), "Cart should be loaded.");
 
     assertTrue(
-        cartPage.containsProduct(productName),
-        "Cart should contain selected product: " + productName);
+        cartPage.containsProduct(product), "Cart should contain selected product: " + product);
   }
 }

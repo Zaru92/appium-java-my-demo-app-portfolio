@@ -2,10 +2,12 @@ package pl.zaru.mydemoapp.pages.android;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
+import java.util.Objects;
 import org.openqa.selenium.By;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.CartPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
+import pl.zaru.mydemoapp.testdata.model.TestProduct;
 
 public final class AndroidProductDetailsPage extends BasePage implements ProductDetailsPage {
 
@@ -25,8 +27,13 @@ public final class AndroidProductDetailsPage extends BasePage implements Product
   }
 
   @Override
-  public String displayedProductName() {
-    return waitUntilVisible(PRODUCT_NAME).getText();
+  public boolean displaysProduct(TestProduct product) {
+    String expectedProductName =
+        Objects.requireNonNull(product, "product must not be null").androidName();
+
+    String displayedProductName = waitUntilVisible(PRODUCT_NAME).getText();
+
+    return expectedProductName.equals(displayedProductName);
   }
 
   @Override

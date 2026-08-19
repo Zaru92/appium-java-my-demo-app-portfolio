@@ -1,9 +1,5 @@
 package pl.zaru.mydemoapp.testdata.model;
 
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.ios.IOSDriver;
-import org.openqa.selenium.WebDriver;
-
 public enum TestProduct {
   BACKPACK("Sauce Labs Backpack", "Sauce Labs Backpack - Black");
 
@@ -11,19 +7,24 @@ public enum TestProduct {
   private final String iosName;
 
   TestProduct(String androidName, String iosName) {
-    this.androidName = androidName;
-    this.iosName = iosName;
+    this.androidName = requireNonBlank(androidName, "androidName");
+    this.iosName = requireNonBlank(iosName, "iosName");
   }
 
-  public String nameFor(WebDriver driver) {
-    if (driver instanceof AndroidDriver) {
-      return androidName;
+  public String androidName() {
+    return androidName;
+  }
+
+  public String iosName() {
+    return iosName;
+  }
+
+  private static String requireNonBlank(String value, String fieldName) {
+
+    if (value == null || value.isBlank()) {
+      throw new IllegalArgumentException(fieldName + " must not be blank");
     }
 
-    if (driver instanceof IOSDriver) {
-      return iosName;
-    }
-
-    throw new IllegalArgumentException("Unsupported driver type: " + driver.getClass().getName());
+    return value;
   }
 }

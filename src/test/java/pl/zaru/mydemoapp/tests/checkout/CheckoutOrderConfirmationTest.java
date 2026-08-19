@@ -25,12 +25,12 @@ public final class CheckoutOrderConfirmationTest extends BaseTest {
   public void shouldConfirmOrderAfterPlacingIt() {
     ScreenFactory screens = new ScreenFactory(driver());
 
-    String productName = TestProduct.BACKPACK.nameFor(driver());
+    TestProduct product = TestProduct.BACKPACK;
     TestUser user = UserFactory.standardUser();
 
     ProductCatalogPage catalogPage = screens.productCatalogPage();
 
-    ProductDetailsPage detailsPage = catalogPage.openProduct(productName);
+    ProductDetailsPage detailsPage = catalogPage.openProduct(product);
 
     detailsPage.addToCart();
 

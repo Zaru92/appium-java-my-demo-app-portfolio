@@ -18,11 +18,11 @@ public final class CheckoutAuthenticationTest extends BaseTest {
 
     ScreenFactory screens = new ScreenFactory(driver());
 
-    String productName = TestProduct.BACKPACK.nameFor(driver());
+    TestProduct product = TestProduct.BACKPACK;
 
     ProductCatalogPage catalogPage = screens.productCatalogPage();
 
-    ProductDetailsPage detailsPage = catalogPage.openProduct(productName);
+    ProductDetailsPage detailsPage = catalogPage.openProduct(product);
 
     detailsPage.addToCart();
 

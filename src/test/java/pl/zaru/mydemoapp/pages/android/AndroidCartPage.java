@@ -2,9 +2,11 @@ package pl.zaru.mydemoapp.pages.android;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
+import java.util.Objects;
 import org.openqa.selenium.By;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.CartPage;
+import pl.zaru.mydemoapp.testdata.model.TestProduct;
 
 public final class AndroidCartPage extends BasePage implements CartPage {
 
@@ -34,11 +36,12 @@ public final class AndroidCartPage extends BasePage implements CartPage {
   }
 
   @Override
-  public boolean containsProduct(String productName) {
-    String normalized = requireNonBlank(productName, "productName");
-    String escaped = normalized.replace("\\", "\\\\").replace("\"", "\\\"");
+  public boolean containsProduct(TestProduct product) {
+    String productName = Objects.requireNonNull(product, "product must not be null").androidName();
 
-    By product =
+    String escaped = productName.replace("\\", "\\\\").replace("\"", "\\\"");
+
+    By productTitle =
         AppiumBy.androidUIAutomator(
             "new UiSelector()"
                 + ".resourceId(\""
@@ -48,7 +51,7 @@ public final class AndroidCartPage extends BasePage implements CartPage {
                 + escaped
                 + "\")");
 
-    return waitUntilVisible(product).isDisplayed();
+    return waitUntilVisible(productTitle).isDisplayed();
   }
 
   @Override
