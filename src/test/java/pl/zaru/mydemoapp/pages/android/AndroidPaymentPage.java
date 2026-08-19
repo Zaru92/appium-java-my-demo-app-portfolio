@@ -6,7 +6,7 @@ import java.util.Objects;
 import org.openqa.selenium.By;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.PaymentPage;
-import pl.zaru.mydemoapp.testdata.TestPaymentCard;
+import pl.zaru.mydemoapp.testdata.model.TestPaymentCard;
 
 public final class AndroidPaymentPage extends BasePage implements PaymentPage {
 

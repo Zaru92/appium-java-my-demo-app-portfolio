@@ -10,8 +10,9 @@ import pl.zaru.mydemoapp.pages.contracts.LoginPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
 import pl.zaru.mydemoapp.pages.contracts.ShippingAddressPage;
-import pl.zaru.mydemoapp.testdata.TestProduct;
-import pl.zaru.mydemoapp.testdata.TestUser;
+import pl.zaru.mydemoapp.testdata.factory.UserFactory;
+import pl.zaru.mydemoapp.testdata.model.TestProduct;
+import pl.zaru.mydemoapp.testdata.model.TestUser;
 
 public final class CheckoutLoginTest extends BaseTest {
 
@@ -21,7 +22,7 @@ public final class CheckoutLoginTest extends BaseTest {
     ScreenFactory screens = new ScreenFactory(driver());
 
     String productName = TestProduct.BACKPACK.nameFor(driver());
-    TestUser user = TestUser.STANDARD;
+    TestUser user = UserFactory.standardUser();
 
     ProductCatalogPage catalogPage = screens.productCatalogPage();
 

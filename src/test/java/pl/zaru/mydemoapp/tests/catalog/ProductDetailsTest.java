@@ -10,7 +10,7 @@ import pl.zaru.mydemoapp.base.BaseTest;
 import pl.zaru.mydemoapp.pages.ScreenFactory;
 import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
-import pl.zaru.mydemoapp.testdata.TestProduct;
+import pl.zaru.mydemoapp.testdata.model.TestProduct;
 
 public final class ProductDetailsTest extends BaseTest {
 

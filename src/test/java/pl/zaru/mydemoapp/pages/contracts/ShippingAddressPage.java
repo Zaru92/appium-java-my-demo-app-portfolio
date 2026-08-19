@@ -1,6 +1,6 @@
 package pl.zaru.mydemoapp.pages.contracts;
 
-import pl.zaru.mydemoapp.testdata.TestAddress;
+import pl.zaru.mydemoapp.testdata.model.TestAddress;
 
 public interface ShippingAddressPage {
 

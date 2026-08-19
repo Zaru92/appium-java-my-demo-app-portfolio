@@ -8,7 +8,7 @@ import pl.zaru.mydemoapp.pages.ScreenFactory;
 import pl.zaru.mydemoapp.pages.contracts.CartPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
-import pl.zaru.mydemoapp.testdata.TestProduct;
+import pl.zaru.mydemoapp.testdata.model.TestProduct;
 
 public final class AddProductToCartTest extends BaseTest {
 

@@ -12,10 +12,11 @@ import pl.zaru.mydemoapp.pages.contracts.PaymentPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
 import pl.zaru.mydemoapp.pages.contracts.ShippingAddressPage;
-import pl.zaru.mydemoapp.testdata.TestAddress;
-import pl.zaru.mydemoapp.testdata.TestPaymentCard;
-import pl.zaru.mydemoapp.testdata.TestProduct;
-import pl.zaru.mydemoapp.testdata.TestUser;
+import pl.zaru.mydemoapp.testdata.factory.AddressFactory;
+import pl.zaru.mydemoapp.testdata.factory.PaymentCardFactory;
+import pl.zaru.mydemoapp.testdata.factory.UserFactory;
+import pl.zaru.mydemoapp.testdata.model.TestProduct;
+import pl.zaru.mydemoapp.testdata.model.TestUser;
 
 public final class CheckoutPaymentTest extends BaseTest {
 
@@ -25,7 +26,7 @@ public final class CheckoutPaymentTest extends BaseTest {
     ScreenFactory screens = new ScreenFactory(driver());
 
     String productName = TestProduct.BACKPACK.nameFor(driver());
-    TestUser user = TestUser.STANDARD;
+    TestUser user = UserFactory.standardUser();
 
     ProductCatalogPage catalogPage = screens.productCatalogPage();
 
@@ -48,14 +49,14 @@ public final class CheckoutPaymentTest extends BaseTest {
     assertTrue(
         shippingAddressPage.isLoaded(), "Shipping address page should be displayed after login.");
 
-    shippingAddressPage.fillAddress(TestAddress.DEFAULT);
+    shippingAddressPage.fillAddress(AddressFactory.validShippingAddress());
     shippingAddressPage.continueToPayment();
 
     PaymentPage paymentPage = screens.paymentPage();
 
     assertTrue(paymentPage.isLoaded(), "Payment page should be displayed.");
 
-    paymentPage.fillPaymentDetails(TestPaymentCard.DEFAULT);
+    paymentPage.fillPaymentDetails(PaymentCardFactory.validVisaCard());
     paymentPage.continueToOrderReview();
 
     OrderReviewPage orderReviewPage = screens.orderReviewPage();

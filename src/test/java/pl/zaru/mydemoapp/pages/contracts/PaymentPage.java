@@ -1,6 +1,6 @@
 package pl.zaru.mydemoapp.pages.contracts;
 
-import pl.zaru.mydemoapp.testdata.TestPaymentCard;
+import pl.zaru.mydemoapp.testdata.model.TestPaymentCard;
 
 public interface PaymentPage {
 

@@ -5,7 +5,7 @@ import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.ShippingAddressPage;
-import pl.zaru.mydemoapp.testdata.TestAddress;
+import pl.zaru.mydemoapp.testdata.model.TestAddress;
 
 public final class AndroidShippingAddressPage extends BasePage implements ShippingAddressPage {
 
