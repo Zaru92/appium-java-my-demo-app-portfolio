@@ -5,16 +5,19 @@ import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
 import pl.zaru.mydemoapp.base.BaseTest;
+import pl.zaru.mydemoapp.pages.ScreenFactory;
 import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
-import pl.zaru.mydemoapp.pages.factories.ProductCatalogPageFactory;
 
 public final class AppLaunchSmokeTest extends BaseTest {
 
   @Test(groups = "smoke")
   public void shouldLaunchApplication() {
+
+    ScreenFactory screens = new ScreenFactory(driver());
+
     assertNotNull(driver().getSessionId(), "Appium session should be active.");
 
-    ProductCatalogPage catalogPage = ProductCatalogPageFactory.create(driver());
+    ProductCatalogPage catalogPage = screens.productCatalogPage();
 
     assertTrue(catalogPage.isLoaded(), "Product catalog should be visible after launch.");
   }

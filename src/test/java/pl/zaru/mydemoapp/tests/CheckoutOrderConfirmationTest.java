@@ -4,6 +4,7 @@ import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
 import pl.zaru.mydemoapp.base.BaseTest;
+import pl.zaru.mydemoapp.pages.ScreenFactory;
 import pl.zaru.mydemoapp.pages.contracts.CartPage;
 import pl.zaru.mydemoapp.pages.contracts.LoginPage;
 import pl.zaru.mydemoapp.pages.contracts.OrderConfirmationPage;
@@ -12,12 +13,6 @@ import pl.zaru.mydemoapp.pages.contracts.PaymentPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
 import pl.zaru.mydemoapp.pages.contracts.ShippingAddressPage;
-import pl.zaru.mydemoapp.pages.factories.LoginPageFactory;
-import pl.zaru.mydemoapp.pages.factories.OrderConfirmationPageFactory;
-import pl.zaru.mydemoapp.pages.factories.OrderReviewPageFactory;
-import pl.zaru.mydemoapp.pages.factories.PaymentPageFactory;
-import pl.zaru.mydemoapp.pages.factories.ProductCatalogPageFactory;
-import pl.zaru.mydemoapp.pages.factories.ShippingAddressPageFactory;
 import pl.zaru.mydemoapp.testdata.TestAddress;
 import pl.zaru.mydemoapp.testdata.TestPaymentCard;
 import pl.zaru.mydemoapp.testdata.TestProduct;
@@ -27,10 +22,12 @@ public final class CheckoutOrderConfirmationTest extends BaseTest {
 
   @Test
   public void shouldConfirmOrderAfterPlacingIt() {
+    ScreenFactory screens = new ScreenFactory(driver());
+
     String productName = TestProduct.BACKPACK.nameFor(driver());
     TestUser user = TestUser.STANDARD;
 
-    ProductCatalogPage catalogPage = ProductCatalogPageFactory.create(driver());
+    ProductCatalogPage catalogPage = screens.productCatalogPage();
 
     ProductDetailsPage detailsPage = catalogPage.openProduct(productName);
 
@@ -41,12 +38,12 @@ public final class CheckoutOrderConfirmationTest extends BaseTest {
 
     cartPage.proceedToCheckout();
 
-    LoginPage loginPage = LoginPageFactory.create(driver());
+    LoginPage loginPage = screens.loginPage();
     assertTrue(loginPage.isLoaded(), "Login page should be displayed.");
 
     loginPage.login(user.username(), user.password());
 
-    ShippingAddressPage shippingAddressPage = ShippingAddressPageFactory.create(driver());
+    ShippingAddressPage shippingAddressPage = screens.shippingAddressPage();
 
     assertTrue(
         shippingAddressPage.isLoaded(), "Shipping address page should be displayed after login.");
@@ -54,19 +51,19 @@ public final class CheckoutOrderConfirmationTest extends BaseTest {
     shippingAddressPage.fillAddress(TestAddress.DEFAULT);
     shippingAddressPage.continueToPayment();
 
-    PaymentPage paymentPage = PaymentPageFactory.create(driver());
+    PaymentPage paymentPage = screens.paymentPage();
     assertTrue(paymentPage.isLoaded(), "Payment page should be displayed.");
 
     paymentPage.fillPaymentDetails(TestPaymentCard.DEFAULT);
     paymentPage.continueToOrderReview();
 
-    OrderReviewPage orderReviewPage = OrderReviewPageFactory.create(driver());
+    OrderReviewPage orderReviewPage = screens.orderReviewPage();
 
     assertTrue(orderReviewPage.isLoaded(), "Order review page should be displayed.");
 
     orderReviewPage.placeOrder();
 
-    OrderConfirmationPage confirmationPage = OrderConfirmationPageFactory.create(driver());
+    OrderConfirmationPage confirmationPage = screens.orderConfirmationPage();
 
     assertTrue(confirmationPage.isLoaded(), "Order confirmation page should be displayed.");
 

@@ -4,21 +4,23 @@ import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
 import pl.zaru.mydemoapp.base.BaseTest;
+import pl.zaru.mydemoapp.pages.ScreenFactory;
 import pl.zaru.mydemoapp.pages.contracts.CartPage;
 import pl.zaru.mydemoapp.pages.contracts.LoginPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
-import pl.zaru.mydemoapp.pages.factories.LoginPageFactory;
-import pl.zaru.mydemoapp.pages.factories.ProductCatalogPageFactory;
 import pl.zaru.mydemoapp.testdata.TestProduct;
 
 public final class CheckoutAuthenticationTest extends BaseTest {
 
   @Test
   public void shouldRequireLoginBeforeCheckout() {
+
+    ScreenFactory screens = new ScreenFactory(driver());
+
     String productName = TestProduct.BACKPACK.nameFor(driver());
 
-    ProductCatalogPage catalogPage = ProductCatalogPageFactory.create(driver());
+    ProductCatalogPage catalogPage = screens.productCatalogPage();
 
     ProductDetailsPage detailsPage = catalogPage.openProduct(productName);
 
@@ -30,7 +32,7 @@ public final class CheckoutAuthenticationTest extends BaseTest {
 
     cartPage.proceedToCheckout();
 
-    LoginPage loginPage = LoginPageFactory.create(driver());
+    LoginPage loginPage = screens.loginPage();
 
     assertTrue(
         loginPage.isLoaded(),

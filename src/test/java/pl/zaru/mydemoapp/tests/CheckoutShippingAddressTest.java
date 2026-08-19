@@ -4,16 +4,13 @@ import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
 import pl.zaru.mydemoapp.base.BaseTest;
+import pl.zaru.mydemoapp.pages.ScreenFactory;
 import pl.zaru.mydemoapp.pages.contracts.CartPage;
 import pl.zaru.mydemoapp.pages.contracts.LoginPage;
 import pl.zaru.mydemoapp.pages.contracts.PaymentPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
 import pl.zaru.mydemoapp.pages.contracts.ShippingAddressPage;
-import pl.zaru.mydemoapp.pages.factories.LoginPageFactory;
-import pl.zaru.mydemoapp.pages.factories.PaymentPageFactory;
-import pl.zaru.mydemoapp.pages.factories.ProductCatalogPageFactory;
-import pl.zaru.mydemoapp.pages.factories.ShippingAddressPageFactory;
 import pl.zaru.mydemoapp.testdata.TestAddress;
 import pl.zaru.mydemoapp.testdata.TestProduct;
 import pl.zaru.mydemoapp.testdata.TestUser;
@@ -22,10 +19,13 @@ public final class CheckoutShippingAddressTest extends BaseTest {
 
   @Test
   public void shouldContinueToPaymentAfterProvidingShippingAddress() {
+
+    ScreenFactory screens = new ScreenFactory(driver());
+
     String productName = TestProduct.BACKPACK.nameFor(driver());
     TestUser user = TestUser.STANDARD;
 
-    ProductCatalogPage catalogPage = ProductCatalogPageFactory.create(driver());
+    ProductCatalogPage catalogPage = screens.productCatalogPage();
 
     ProductDetailsPage detailsPage = catalogPage.openProduct(productName);
 
@@ -36,12 +36,12 @@ public final class CheckoutShippingAddressTest extends BaseTest {
 
     cartPage.proceedToCheckout();
 
-    LoginPage loginPage = LoginPageFactory.create(driver());
+    LoginPage loginPage = screens.loginPage();
     assertTrue(loginPage.isLoaded(), "Login page should be displayed.");
 
     loginPage.login(user.username(), user.password());
 
-    ShippingAddressPage shippingAddressPage = ShippingAddressPageFactory.create(driver());
+    ShippingAddressPage shippingAddressPage = screens.shippingAddressPage();
 
     assertTrue(
         shippingAddressPage.isLoaded(), "Shipping address page should be displayed after login.");
@@ -49,7 +49,7 @@ public final class CheckoutShippingAddressTest extends BaseTest {
     shippingAddressPage.fillAddress(TestAddress.DEFAULT);
     shippingAddressPage.continueToPayment();
 
-    PaymentPage paymentPage = PaymentPageFactory.create(driver());
+    PaymentPage paymentPage = screens.paymentPage();
 
     assertTrue(paymentPage.isLoaded(), "Payment page should be displayed.");
   }

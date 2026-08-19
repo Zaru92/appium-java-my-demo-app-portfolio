@@ -5,19 +5,22 @@ import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
 import pl.zaru.mydemoapp.base.BaseTest;
+import pl.zaru.mydemoapp.pages.ScreenFactory;
 import pl.zaru.mydemoapp.pages.contracts.CartPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
-import pl.zaru.mydemoapp.pages.factories.ProductCatalogPageFactory;
 import pl.zaru.mydemoapp.testdata.TestProduct;
 
 public final class CartManagementTest extends BaseTest {
 
   @Test
   public void shouldUpdateQuantityAndRemoveProduct() {
+
+    ScreenFactory screens = new ScreenFactory(driver());
+
     String productName = TestProduct.BACKPACK.nameFor(driver());
 
-    ProductCatalogPage catalogPage = ProductCatalogPageFactory.create(driver());
+    ProductCatalogPage catalogPage = screens.productCatalogPage();
 
     ProductDetailsPage detailsPage = catalogPage.openProduct(productName);
 
