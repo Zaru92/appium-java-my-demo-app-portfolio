@@ -11,7 +11,7 @@ import java.time.Duration;
 import java.util.Optional;
 import org.openqa.selenium.Capabilities;
 import org.testng.annotations.Test;
-import pl.zaru.mydemoapp.config.MobilePlatform;
+import pl.zaru.mydemoapp.config.Platform;
 import pl.zaru.mydemoapp.config.TestConfig;
 
 public final class DriverOptionsFactoryTest {
@@ -62,7 +62,7 @@ public final class DriverOptionsFactoryTest {
   private static TestConfig androidConfig() {
     return new TestConfig(
         URI.create("http://127.0.0.1:4723"),
-        MobilePlatform.ANDROID,
+        Platform.ANDROID,
         "Pixel_9",
         Optional.of("emulator-5554"),
         Optional.empty(),
@@ -74,7 +74,7 @@ public final class DriverOptionsFactoryTest {
   private static TestConfig iosConfig() {
     return new TestConfig(
         URI.create("http://127.0.0.1:4723"),
-        MobilePlatform.IOS,
+        Platform.IOS,
         "iPhone 17 Pro",
         Optional.empty(),
         Optional.of("26.4"),

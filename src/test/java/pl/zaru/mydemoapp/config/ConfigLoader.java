@@ -40,14 +40,14 @@ public final class ConfigLoader {
 
     String selectedPlatform = overrides.getOrDefault("platform", required(properties, "platform"));
 
-    MobilePlatform platform = MobilePlatform.from(selectedPlatform);
+    Platform platform = Platform.from(selectedPlatform);
 
     properties.putAll(loadProperties(platform.configFile()));
     applyOverrides(properties, overrides);
 
     return new TestConfig(
         URI.create(required(properties, "appium.url")),
-        MobilePlatform.from(required(properties, "platform")),
+        Platform.from(required(properties, "platform")),
         required(properties, "deviceName"),
         optional(properties, "udid"),
         optional(properties, "platformVersion"),

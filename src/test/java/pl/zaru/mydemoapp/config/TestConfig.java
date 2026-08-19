@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public record TestConfig(
     URI appiumUrl,
-    MobilePlatform platform,
+    Platform platform,
     String deviceName,
     Optional<String> udid,
     Optional<String> platformVersion,

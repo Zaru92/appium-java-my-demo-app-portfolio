@@ -14,7 +14,7 @@ public final class ConfigLoaderTest {
   public void shouldLoadAndroidConfigurationByDefault() {
     TestConfig config = ConfigLoader.load(Map.of());
 
-    assertEquals(config.platform(), MobilePlatform.ANDROID);
+    assertEquals(config.platform(), Platform.ANDROID);
     assertEquals(config.automationName(), "UiAutomator2");
     assertEquals(config.deviceName(), "Pixel_8");
     assertEquals(config.udid().orElseThrow(), "emulator-5554");
@@ -30,7 +30,7 @@ public final class ConfigLoaderTest {
   public void shouldLoadIosConfiguration() {
     TestConfig config = ConfigLoader.load(Map.of("platform", "ios"));
 
-    assertEquals(config.platform(), MobilePlatform.IOS);
+    assertEquals(config.platform(), Platform.IOS);
     assertEquals(config.automationName(), "XCUITest");
     assertEquals(config.deviceName(), "iPhone 17 Pro");
     assertEquals(config.platformVersion().orElseThrow(), "26.4");

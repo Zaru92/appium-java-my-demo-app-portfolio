@@ -2,7 +2,7 @@ package pl.zaru.mydemoapp.config;
 
 import java.util.Locale;
 
-public enum MobilePlatform {
+public enum Platform {
   ANDROID("android", "UiAutomator2", "android.properties"),
   IOS("ios", "XCUITest", "ios.properties");
 
@@ -10,7 +10,8 @@ public enum MobilePlatform {
   private final String automationName;
   private final String configFile;
 
-  MobilePlatform(String value, String automationName, String configFile) {
+  Platform(String value, String automationName, String configFile) {
+
     this.value = value;
     this.automationName = automationName;
     this.configFile = configFile;
@@ -28,7 +29,7 @@ public enum MobilePlatform {
     return configFile;
   }
 
-  public static MobilePlatform from(String value) {
+  public static Platform from(String value) {
     if (value == null || value.isBlank()) {
       throw new IllegalArgumentException("Platform must not be blank.");
     }
