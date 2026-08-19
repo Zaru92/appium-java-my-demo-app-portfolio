@@ -1,4 +1,4 @@
-package pl.zaru.mydemoapp.tests;
+package pl.zaru.mydemoapp.tests.authentication;
 
 import static org.testng.Assert.assertTrue;
 
@@ -7,20 +7,16 @@ import pl.zaru.mydemoapp.base.BaseTest;
 import pl.zaru.mydemoapp.pages.ScreenFactory;
 import pl.zaru.mydemoapp.pages.contracts.CartPage;
 import pl.zaru.mydemoapp.pages.contracts.LoginPage;
-import pl.zaru.mydemoapp.pages.contracts.OrderReviewPage;
-import pl.zaru.mydemoapp.pages.contracts.PaymentPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
 import pl.zaru.mydemoapp.pages.contracts.ShippingAddressPage;
-import pl.zaru.mydemoapp.testdata.TestAddress;
-import pl.zaru.mydemoapp.testdata.TestPaymentCard;
 import pl.zaru.mydemoapp.testdata.TestProduct;
 import pl.zaru.mydemoapp.testdata.TestUser;
 
-public final class CheckoutPaymentTest extends BaseTest {
+public final class CheckoutLoginTest extends BaseTest {
 
   @Test
-  public void shouldContinueToOrderReviewAfterProvidingPaymentDetails() {
+  public void shouldContinueCheckoutAfterValidLogin() {
 
     ScreenFactory screens = new ScreenFactory(driver());
 
@@ -47,19 +43,5 @@ public final class CheckoutPaymentTest extends BaseTest {
 
     assertTrue(
         shippingAddressPage.isLoaded(), "Shipping address page should be displayed after login.");
-
-    shippingAddressPage.fillAddress(TestAddress.DEFAULT);
-    shippingAddressPage.continueToPayment();
-
-    PaymentPage paymentPage = screens.paymentPage();
-
-    assertTrue(paymentPage.isLoaded(), "Payment page should be displayed.");
-
-    paymentPage.fillPaymentDetails(TestPaymentCard.DEFAULT);
-    paymentPage.continueToOrderReview();
-
-    OrderReviewPage orderReviewPage = screens.orderReviewPage();
-
-    assertTrue(orderReviewPage.isLoaded(), "Order review page should be displayed.");
   }
 }

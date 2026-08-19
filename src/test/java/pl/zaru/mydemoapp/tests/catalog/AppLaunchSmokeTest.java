@@ -1,4 +1,4 @@
-package pl.zaru.mydemoapp.tests;
+package pl.zaru.mydemoapp.tests.catalog;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;

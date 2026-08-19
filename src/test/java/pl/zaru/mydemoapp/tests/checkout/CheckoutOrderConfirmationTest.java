@@ -1,4 +1,4 @@
-package pl.zaru.mydemoapp.tests;
+package pl.zaru.mydemoapp.tests.checkout;
 
 import static org.testng.Assert.assertTrue;
 
@@ -7,19 +7,21 @@ import pl.zaru.mydemoapp.base.BaseTest;
 import pl.zaru.mydemoapp.pages.ScreenFactory;
 import pl.zaru.mydemoapp.pages.contracts.CartPage;
 import pl.zaru.mydemoapp.pages.contracts.LoginPage;
+import pl.zaru.mydemoapp.pages.contracts.OrderConfirmationPage;
+import pl.zaru.mydemoapp.pages.contracts.OrderReviewPage;
 import pl.zaru.mydemoapp.pages.contracts.PaymentPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
 import pl.zaru.mydemoapp.pages.contracts.ShippingAddressPage;
 import pl.zaru.mydemoapp.testdata.TestAddress;
+import pl.zaru.mydemoapp.testdata.TestPaymentCard;
 import pl.zaru.mydemoapp.testdata.TestProduct;
 import pl.zaru.mydemoapp.testdata.TestUser;
 
-public final class CheckoutShippingAddressTest extends BaseTest {
+public final class CheckoutOrderConfirmationTest extends BaseTest {
 
   @Test
-  public void shouldContinueToPaymentAfterProvidingShippingAddress() {
-
+  public void shouldConfirmOrderAfterPlacingIt() {
     ScreenFactory screens = new ScreenFactory(driver());
 
     String productName = TestProduct.BACKPACK.nameFor(driver());
@@ -50,7 +52,25 @@ public final class CheckoutShippingAddressTest extends BaseTest {
     shippingAddressPage.continueToPayment();
 
     PaymentPage paymentPage = screens.paymentPage();
-
     assertTrue(paymentPage.isLoaded(), "Payment page should be displayed.");
+
+    paymentPage.fillPaymentDetails(TestPaymentCard.DEFAULT);
+    paymentPage.continueToOrderReview();
+
+    OrderReviewPage orderReviewPage = screens.orderReviewPage();
+
+    assertTrue(orderReviewPage.isLoaded(), "Order review page should be displayed.");
+
+    orderReviewPage.placeOrder();
+
+    OrderConfirmationPage confirmationPage = screens.orderConfirmationPage();
+
+    assertTrue(confirmationPage.isLoaded(), "Order confirmation page should be displayed.");
+
+    String confirmationMessage = confirmationPage.confirmationMessage();
+
+    assertTrue(
+        confirmationMessage.startsWith("Thank you for your order"),
+        "Unexpected confirmation message: " + confirmationMessage);
   }
 }

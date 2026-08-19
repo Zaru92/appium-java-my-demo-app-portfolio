@@ -1,20 +1,20 @@
-package pl.zaru.mydemoapp.tests;
+package pl.zaru.mydemoapp.tests.cart;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
 import pl.zaru.mydemoapp.base.BaseTest;
 import pl.zaru.mydemoapp.pages.ScreenFactory;
 import pl.zaru.mydemoapp.pages.contracts.CartPage;
-import pl.zaru.mydemoapp.pages.contracts.LoginPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
 import pl.zaru.mydemoapp.testdata.TestProduct;
 
-public final class CheckoutAuthenticationTest extends BaseTest {
+public final class CartManagementTest extends BaseTest {
 
   @Test
-  public void shouldRequireLoginBeforeCheckout() {
+  public void shouldUpdateQuantityAndRemoveProduct() {
 
     ScreenFactory screens = new ScreenFactory(driver());
 
@@ -28,14 +28,16 @@ public final class CheckoutAuthenticationTest extends BaseTest {
 
     CartPage cartPage = detailsPage.openCart();
 
-    assertTrue(cartPage.isLoaded(), "Cart should be displayed.");
+    assertTrue(cartPage.isLoaded(), "Cart should be loaded.");
 
-    cartPage.proceedToCheckout();
+    assertEquals(cartPage.firstProductQuantity(), 1, "Initial product quantity should be one.");
 
-    LoginPage loginPage = screens.loginPage();
+    cartPage.increaseFirstProductQuantity();
 
-    assertTrue(
-        loginPage.isLoaded(),
-        "Unauthenticated user should be redirected to login before checkout.");
+    assertEquals(cartPage.firstProductQuantity(), 2, "Product quantity should increase to two.");
+
+    cartPage.removeFirstProduct();
+
+    assertTrue(cartPage.isEmpty(), "Cart should be empty after removing the product.");
   }
 }
