@@ -16,9 +16,10 @@ public final class ConfigLoaderTest {
 
     assertEquals(config.platform(), Platform.ANDROID);
     assertEquals(config.automationName(), "UiAutomator2");
-    assertEquals(config.deviceName(), "Pixel_8");
-    assertEquals(config.udid().orElseThrow(), "emulator-5554");
-    assertTrue(config.platformVersion().isEmpty());
+    assertEquals(config.device().targetType(), TargetType.EMULATOR);
+    assertEquals(config.device().deviceName(), "Pixel_8");
+    assertEquals(config.device().udid().orElseThrow(), "emulator-5554");
+    assertTrue(config.device().platformVersion().isEmpty());
     assertTrue(
         config
             .appPath()
@@ -32,9 +33,10 @@ public final class ConfigLoaderTest {
 
     assertEquals(config.platform(), Platform.IOS);
     assertEquals(config.automationName(), "XCUITest");
-    assertEquals(config.deviceName(), "iPhone 17 Pro");
-    assertEquals(config.platformVersion().orElseThrow(), "26.4");
-    assertTrue(config.udid().isEmpty());
+    assertEquals(config.device().targetType(), TargetType.SIMULATOR);
+    assertEquals(config.device().deviceName(), "iPhone 17 Pro");
+    assertEquals(config.device().platformVersion().orElseThrow(), "26.4");
+    assertTrue(config.device().udid().isEmpty());
     assertTrue(
         config
             .appPath()
@@ -49,12 +51,14 @@ public final class ConfigLoaderTest {
                 "appium.url", "http://127.0.0.1:4725",
                 "deviceName", "Pixel 7",
                 "udid", "physical-device-udid",
-                "newCommandTimeoutSeconds", "180"));
+                "newCommandTimeoutSeconds", "180",
+                "targetType", "real"));
 
     assertEquals(config.appiumUrl(), URI.create("http://127.0.0.1:4725"));
-    assertEquals(config.deviceName(), "Pixel 7");
-    assertEquals(config.udid().orElseThrow(), "physical-device-udid");
+    assertEquals(config.device().deviceName(), "Pixel 7");
+    assertEquals(config.device().udid().orElseThrow(), "physical-device-udid");
     assertEquals(config.newCommandTimeout(), Duration.ofSeconds(180));
+    assertEquals(config.device().targetType(), TargetType.REAL_DEVICE);
   }
 
   @Test(
@@ -62,5 +66,12 @@ public final class ConfigLoaderTest {
       expectedExceptionsMessageRegExp = "newCommandTimeoutSeconds must be positive\\.")
   public void shouldRejectNonPositiveTimeout() {
     ConfigLoader.load(Map.of("newCommandTimeoutSeconds", "0"));
+  }
+
+  @Test(
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Target type emulator is not supported for platform ios\\.")
+  public void shouldRejectIncompatibleTargetType() {
+    ConfigLoader.load(Map.of("platform", "ios", "targetType", "emulator"));
   }
 }

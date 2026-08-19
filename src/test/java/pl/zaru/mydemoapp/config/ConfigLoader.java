@@ -19,6 +19,7 @@ public final class ConfigLoader {
   private static final Set<String> OVERRIDABLE_KEYS =
       Set.of(
           "platform",
+          "targetType",
           "appium.url",
           "deviceName",
           "udid",
@@ -38,19 +39,25 @@ public final class ConfigLoader {
 
     Properties properties = loadProperties("common.properties");
 
-    String selectedPlatform = overrides.getOrDefault("platform", required(properties, "platform"));
+    Platform selectedPlatform =
+        Platform.from(overrides.getOrDefault("platform", required(properties, "platform")));
 
-    Platform platform = Platform.from(selectedPlatform);
-
-    properties.putAll(loadProperties(platform.configFile()));
+    properties.putAll(loadProperties(selectedPlatform.configFile()));
     applyOverrides(properties, overrides);
+
+    Platform platform = Platform.from(required(properties, "platform"));
+
+    DeviceConfig device =
+        new DeviceConfig(
+            TargetType.from(required(properties, "targetType")),
+            required(properties, "deviceName"),
+            optional(properties, "udid"),
+            optional(properties, "platformVersion"));
 
     return new TestConfig(
         URI.create(required(properties, "appium.url")),
-        Platform.from(required(properties, "platform")),
-        required(properties, "deviceName"),
-        optional(properties, "udid"),
-        optional(properties, "platformVersion"),
+        platform,
+        device,
         optional(properties, "appWaitActivity"),
         Path.of(required(properties, "app")),
         Duration.ofSeconds(positiveLong(properties, "newCommandTimeoutSeconds")));

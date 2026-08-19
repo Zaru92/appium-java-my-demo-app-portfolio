@@ -11,7 +11,9 @@ import java.time.Duration;
 import java.util.Optional;
 import org.openqa.selenium.Capabilities;
 import org.testng.annotations.Test;
+import pl.zaru.mydemoapp.config.DeviceConfig;
 import pl.zaru.mydemoapp.config.Platform;
+import pl.zaru.mydemoapp.config.TargetType;
 import pl.zaru.mydemoapp.config.TestConfig;
 
 public final class DriverOptionsFactoryTest {
@@ -24,7 +26,7 @@ public final class DriverOptionsFactoryTest {
 
     assertTrue(options instanceof UiAutomator2Options);
     assertAutomationName(options, config);
-    assertEquals(options.getCapability("appium:deviceName"), "Pixel_9");
+    assertEquals(options.getCapability("appium:deviceName"), "Pixel_8");
     assertEquals(options.getCapability("appium:udid"), "emulator-5554");
     assertEquals(options.getCapability("appium:app"), config.appPath().toString());
     assertEquals(timeoutInSeconds(options), 120L);
@@ -63,11 +65,10 @@ public final class DriverOptionsFactoryTest {
     return new TestConfig(
         URI.create("http://127.0.0.1:4723"),
         Platform.ANDROID,
-        "Pixel_9",
-        Optional.of("emulator-5554"),
-        Optional.empty(),
+        new DeviceConfig(
+            TargetType.EMULATOR, "Pixel_8", Optional.of("emulator-5554"), Optional.empty()),
         Optional.of("com.saucelabs.mydemoapp.android.view.activities.MainActivity"),
-        Path.of("src/test/resources/apps/" + "my-demo-app-android-2.2.0.apk"),
+        Path.of("src/test/resources/apps/my-demo-app-android-2.2.0.apk"),
         Duration.ofSeconds(120));
   }
 
@@ -75,11 +76,10 @@ public final class DriverOptionsFactoryTest {
     return new TestConfig(
         URI.create("http://127.0.0.1:4723"),
         Platform.IOS,
-        "iPhone 17 Pro",
+        new DeviceConfig(
+            TargetType.SIMULATOR, "iPhone 17 Pro", Optional.empty(), Optional.of("26.4")),
         Optional.empty(),
-        Optional.of("26.4"),
-        Optional.empty(),
-        Path.of("src/test/resources/apps/" + "my-demo-app-ios-simulator-2.2.2.zip"),
+        Path.of("src/test/resources/apps/my-demo-app-ios-simulator-2.2.2.zip"),
         Duration.ofSeconds(120));
   }
 }

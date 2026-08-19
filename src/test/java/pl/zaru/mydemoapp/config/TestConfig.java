@@ -9,9 +9,7 @@ import java.util.Optional;
 public record TestConfig(
     URI appiumUrl,
     Platform platform,
-    String deviceName,
-    Optional<String> udid,
-    Optional<String> platformVersion,
+    DeviceConfig device,
     Optional<String> appWaitActivity,
     Path appPath,
     Duration newCommandTimeout) {
@@ -19,17 +17,21 @@ public record TestConfig(
   public TestConfig {
     Objects.requireNonNull(appiumUrl, "appiumUrl must not be null");
     Objects.requireNonNull(platform, "platform must not be null");
+    Objects.requireNonNull(device, "device must not be null");
     Objects.requireNonNull(appPath, "appPath must not be null");
     Objects.requireNonNull(newCommandTimeout, "newCommandTimeout must not be null");
 
-    deviceName = requireText(deviceName, "deviceName");
-    udid = normalize(udid, "udid");
-    platformVersion = normalize(platformVersion, "platformVersion");
     appWaitActivity = normalize(appWaitActivity, "appWaitActivity");
     appPath = appPath.toAbsolutePath().normalize();
 
     if (!appiumUrl.isAbsolute() || appiumUrl.getHost() == null) {
       throw new IllegalArgumentException("appiumUrl must be an absolute URL.");
+    }
+
+    if (!device.targetType().supports(platform)) {
+      throw new IllegalArgumentException(
+          "Target type %s is not supported for platform %s."
+              .formatted(device.targetType().value(), platform.value()));
     }
 
     if (newCommandTimeout.isZero() || newCommandTimeout.isNegative()) {
@@ -39,14 +41,6 @@ public record TestConfig(
 
   public String automationName() {
     return platform.automationName();
-  }
-
-  private static String requireText(String value, String fieldName) {
-    if (value == null || value.isBlank()) {
-      throw new IllegalArgumentException(fieldName + " must not be blank.");
-    }
-
-    return value.trim();
   }
 
   private static Optional<String> normalize(Optional<String> value, String fieldName) {

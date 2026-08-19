@@ -1,6 +1,8 @@
 package pl.zaru.mydemoapp.driver;
 
 import io.appium.java_client.ios.options.XCUITestOptions;
+import pl.zaru.mydemoapp.config.DeviceConfig;
+import pl.zaru.mydemoapp.config.TargetType;
 import pl.zaru.mydemoapp.config.TestConfig;
 
 final class IosOptionsFactory {
@@ -8,19 +10,22 @@ final class IosOptionsFactory {
   private IosOptionsFactory() {}
 
   static XCUITestOptions create(TestConfig config) {
+    DeviceConfig device = config.device();
+
     XCUITestOptions options =
         new XCUITestOptions()
-            .setDeviceName(config.deviceName())
+            .setDeviceName(device.deviceName())
             .setApp(config.appPath().toString())
-            .setNewCommandTimeout(config.newCommandTimeout())
-            .setConnectHardwareKeyboard(true)
-            .setForceSimulatorSoftwareKeyboardPresence(false);
+            .setNewCommandTimeout(config.newCommandTimeout());
 
-    options.setCapability("appium:connectHardwareKeyboard", true);
+    if (device.targetType() == TargetType.SIMULATOR) {
+      options.setConnectHardwareKeyboard(true).setForceSimulatorSoftwareKeyboardPresence(false);
 
-    config.udid().ifPresent(options::setUdid);
+      options.setCapability("appium:connectHardwareKeyboard", true);
+    }
 
-    config.platformVersion().ifPresent(options::setPlatformVersion);
+    device.udid().ifPresent(options::setUdid);
+    device.platformVersion().ifPresent(options::setPlatformVersion);
 
     return options;
   }
