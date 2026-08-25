@@ -23,7 +23,11 @@ public final class DevicePreflightTest {
     AtomicBoolean simctlCalled = new AtomicBoolean();
 
     DevicePreflight preflight =
-        new DevicePreflight(device -> adbCalled.set(true), device -> simctlCalled.set(true));
+        new DevicePreflight(
+            config -> {},
+            config -> {},
+            device -> adbCalled.set(true),
+            device -> simctlCalled.set(true));
 
     preflight.verify(androidConfig());
 
@@ -37,7 +41,11 @@ public final class DevicePreflightTest {
     AtomicBoolean simctlCalled = new AtomicBoolean();
 
     DevicePreflight preflight =
-        new DevicePreflight(device -> adbCalled.set(true), device -> simctlCalled.set(true));
+        new DevicePreflight(
+            config -> {},
+            config -> {},
+            device -> adbCalled.set(true),
+            device -> simctlCalled.set(true));
 
     preflight.verify(iosSimulatorConfig());
 
@@ -47,7 +55,8 @@ public final class DevicePreflightTest {
 
   @Test
   public void shouldRejectRealIosDevice() {
-    DevicePreflight preflight = new DevicePreflight(device -> {}, device -> {});
+    DevicePreflight preflight =
+        new DevicePreflight(config -> {}, config -> {}, device -> {}, device -> {});
 
     expectThrows(
         UnsupportedOperationException.class, () -> preflight.verify(realIosDeviceConfig()));

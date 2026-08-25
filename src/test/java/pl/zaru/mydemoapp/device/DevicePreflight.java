@@ -7,14 +7,30 @@ import pl.zaru.mydemoapp.config.TargetType;
 import pl.zaru.mydemoapp.config.TestConfig;
 
 public final class DevicePreflight {
+  private final PreflightCheck appBinaryChecker;
+  private final PreflightCheck appiumServerChecker;
   private final DeviceChecker adbDeviceChecker;
   private final DeviceChecker simctlDeviceChecker;
 
   public DevicePreflight() {
-    this(new AdbDeviceChecker(), new SimctlDeviceChecker());
+    this(
+        new AppBinaryChecker(),
+        new AppiumServerChecker(),
+        new AdbDeviceChecker(),
+        new SimctlDeviceChecker());
   }
 
-  DevicePreflight(DeviceChecker adbDeviceChecker, DeviceChecker simctlDeviceChecker) {
+  DevicePreflight(
+      PreflightCheck appBinaryChecker,
+      PreflightCheck appiumServerChecker,
+      DeviceChecker adbDeviceChecker,
+      DeviceChecker simctlDeviceChecker) {
+
+    this.appBinaryChecker =
+        Objects.requireNonNull(appBinaryChecker, "appBinaryChecker must not be null");
+
+    this.appiumServerChecker =
+        Objects.requireNonNull(appiumServerChecker, "appiumServerChecker must not be null");
 
     this.adbDeviceChecker =
         Objects.requireNonNull(adbDeviceChecker, "adbDeviceChecker must not be null");
@@ -25,6 +41,9 @@ public final class DevicePreflight {
 
   public void verify(TestConfig config) {
     Objects.requireNonNull(config, "config must not be null");
+
+    appBinaryChecker.verify(config);
+    appiumServerChecker.verify(config);
 
     if (config.platform() == Platform.ANDROID) {
       adbDeviceChecker.verify(config.device());

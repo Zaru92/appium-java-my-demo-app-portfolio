@@ -19,16 +19,17 @@ public final class DevicePreflightListener implements ISuiteListener {
     TestConfig config = ConfigLoader.load();
 
     LOGGER.info(
-        "Running device preflight: platform={}, targetType={}, deviceName={}",
+        "Running test environment preflight: platform={}, targetType={}, deviceName={}",
         config.platform().value(),
         config.device().targetType().value(),
         config.device().deviceName());
 
     try {
       devicePreflight.verify(config);
-      LOGGER.info("Device preflight completed successfully.");
+      LOGGER.info("Test environment preflight completed successfully.");
     } catch (RuntimeException exception) {
-      throw new TestNGException("Device preflight failed: " + exception.getMessage(), exception);
+      throw new TestNGException(
+          "Test environment preflight failed: " + exception.getMessage(), exception);
     }
   }
 }
