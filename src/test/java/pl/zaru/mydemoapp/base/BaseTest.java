@@ -1,6 +1,7 @@
 package pl.zaru.mydemoapp.base;
 
 import io.appium.java_client.AppiumDriver;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
@@ -12,8 +13,8 @@ import pl.zaru.mydemoapp.listeners.ScreenshotOnFailureListener;
 @Listeners({DevicePreflightListener.class, ScreenshotOnFailureListener.class})
 public abstract class BaseTest {
   @BeforeMethod(alwaysRun = true)
-  public final void setUp() {
-    DriverManager.startSession(ConfigLoader.load());
+  public final void setUp(ITestContext context) {
+    DriverManager.startSession(ConfigLoader.load(context.getCurrentXmlTest().getAllParameters()));
   }
 
   @AfterMethod(alwaysRun = true)

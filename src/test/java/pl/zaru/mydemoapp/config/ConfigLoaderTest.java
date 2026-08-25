@@ -79,4 +79,22 @@ public final class ConfigLoaderTest {
   public void shouldRejectIncompatibleTargetType() {
     ConfigLoader.load(Map.of("platform", "ios", "targetType", "emulator"));
   }
+
+  @Test
+  public void shouldLoadConfigurationFromRuntimeOverrides() {
+    TestConfig config =
+        ConfigLoader.load(
+            Map.of(
+                "platform", "android",
+                "targetType", "emulator",
+                "deviceName", "Parallel Pixel 8",
+                "udid", "emulator-5554",
+                "systemPort", "8201"));
+
+    assertEquals(config.platform(), Platform.ANDROID);
+    assertEquals(config.device().deviceName(), "Parallel Pixel 8");
+    assertEquals(config.device().udid(), Optional.of("emulator-5554"));
+    assertEquals(config.device().systemPort(), Optional.of(8201));
+    assertTrue(config.device().wdaLocalPort().isEmpty());
+  }
 }

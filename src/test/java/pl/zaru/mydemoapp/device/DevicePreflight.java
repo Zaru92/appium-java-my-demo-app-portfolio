@@ -12,6 +12,8 @@ public final class DevicePreflight {
   private final DeviceChecker adbDeviceChecker;
   private final DeviceChecker simctlDeviceChecker;
 
+  PortChecker portChecker = new PortChecker();
+
   public DevicePreflight() {
     this(
         new AppBinaryChecker(),
@@ -45,14 +47,7 @@ public final class DevicePreflight {
     appBinaryChecker.verify(config);
     appiumServerChecker.verify(config);
 
-    PortChecker portChecker = new PortChecker();
-
-    config.device().systemPort().ifPresent(port -> portChecker.verifyAvailable("systemPort", port));
-
-    config
-        .device()
-        .wdaLocalPort()
-        .ifPresent(port -> portChecker.verifyAvailable("wdaLocalPort", port));
+    verifySystemPort(config);
 
     if (config.platform() == Platform.ANDROID) {
       adbDeviceChecker.verify(config.device());
@@ -70,5 +65,9 @@ public final class DevicePreflight {
 
     throw new UnsupportedOperationException(
         "Preflight for a real iOS device is not supported yet.");
+  }
+
+  private void verifySystemPort(TestConfig config) {
+    config.device().systemPort().ifPresent(port -> portChecker.verifyAvailable("systemPort", port));
   }
 }

@@ -33,18 +33,26 @@ public final class ConfigLoader {
   private ConfigLoader() {}
 
   public static TestConfig load() {
-    return load(systemOverrides());
+    return createConfig(systemOverrides());
   }
 
-  static TestConfig load(Map<String, String> overrides) {
+  public static TestConfig load(Map<String, String> overrides) {
     Objects.requireNonNull(overrides, "overrides must not be null");
 
+    Map<String, String> mergedOverrides = new HashMap<>(overrides);
+    mergedOverrides.putAll(systemOverrides());
+
+    return createConfig(mergedOverrides);
+  }
+
+  private static TestConfig createConfig(Map<String, String> overrides) {
     Properties properties = loadProperties("common.properties");
 
     Platform selectedPlatform =
         Platform.from(overrides.getOrDefault("platform", required(properties, "platform")));
 
     properties.putAll(loadProperties(selectedPlatform.configFile()));
+
     applyOverrides(properties, overrides);
 
     Platform platform = Platform.from(required(properties, "platform"));
