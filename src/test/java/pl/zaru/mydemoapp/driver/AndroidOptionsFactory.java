@@ -20,6 +20,7 @@ final class AndroidOptionsFactory {
     device.udid().ifPresent(options::setUdid);
     device.platformVersion().ifPresent(options::setPlatformVersion);
     config.appWaitActivity().ifPresent(options::setAppWaitActivity);
+    device.systemPort().ifPresent(options::setSystemPort);
 
     return options;
   }

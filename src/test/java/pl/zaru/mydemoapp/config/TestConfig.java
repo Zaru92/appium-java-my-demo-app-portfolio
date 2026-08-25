@@ -37,6 +37,14 @@ public record TestConfig(
     if (newCommandTimeout.isZero() || newCommandTimeout.isNegative()) {
       throw new IllegalArgumentException("newCommandTimeout must be positive.");
     }
+
+    if (platform == Platform.ANDROID && device.wdaLocalPort().isPresent()) {
+      throw new IllegalArgumentException("wdaLocalPort is supported only for iOS.");
+    }
+
+    if (platform == Platform.IOS && device.systemPort().isPresent()) {
+      throw new IllegalArgumentException("systemPort is supported only for Android.");
+    }
   }
 
   public String automationName() {

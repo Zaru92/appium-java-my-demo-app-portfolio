@@ -65,6 +65,16 @@ public final class AllureEnvironment {
 
     environment.setProperty("os.architecture", System.getProperty("os.arch", "unknown"));
 
+    config
+        .device()
+        .systemPort()
+        .ifPresent(port -> environment.setProperty("system.port", String.valueOf(port)));
+
+    config
+        .device()
+        .wdaLocalPort()
+        .ifPresent(port -> environment.setProperty("wda.local.port", String.valueOf(port)));
+
     Path environmentFile = resultsDirectory.resolve(ENVIRONMENT_FILE);
 
     try (Writer writer = Files.newBufferedWriter(environmentFile, UTF_8)) {

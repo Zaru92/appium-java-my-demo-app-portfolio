@@ -33,6 +33,7 @@ public final class DriverOptionsFactoryTest {
     assertEquals(
         options.getCapability("appium:appWaitActivity"),
         "com.saucelabs.mydemoapp.android.view.activities.MainActivity");
+    assertEquals(((Number) options.getCapability("appium:systemPort")).intValue(), 8200);
   }
 
   @Test
@@ -47,6 +48,7 @@ public final class DriverOptionsFactoryTest {
     assertEquals(options.getCapability("appium:platformVersion"), "26.4");
     assertEquals(options.getCapability("appium:app"), config.appPath().toString());
     assertEquals(timeoutInSeconds(options), 120L);
+    assertEquals(((Number) options.getCapability("appium:wdaLocalPort")).intValue(), 8100);
   }
 
   private static void assertAutomationName(Capabilities options, TestConfig config) {
@@ -66,7 +68,12 @@ public final class DriverOptionsFactoryTest {
         URI.create("http://127.0.0.1:4723"),
         Platform.ANDROID,
         new DeviceConfig(
-            TargetType.EMULATOR, "Pixel_8", Optional.of("emulator-5554"), Optional.empty()),
+            TargetType.EMULATOR,
+            "Pixel_8",
+            Optional.of("emulator-5554"),
+            Optional.empty(),
+            Optional.of(8200),
+            Optional.empty()),
         Optional.of("com.saucelabs.mydemoapp.android.view.activities.MainActivity"),
         Path.of("src/test/resources/apps/my-demo-app-android-2.2.0.apk"),
         Duration.ofSeconds(120));
@@ -77,7 +84,12 @@ public final class DriverOptionsFactoryTest {
         URI.create("http://127.0.0.1:4723"),
         Platform.IOS,
         new DeviceConfig(
-            TargetType.SIMULATOR, "iPhone 17 Pro", Optional.empty(), Optional.of("26.4")),
+            TargetType.SIMULATOR,
+            "iPhone 17 Pro",
+            Optional.empty(),
+            Optional.of("26.4"),
+            Optional.empty(),
+            Optional.of(8100)),
         Optional.empty(),
         Path.of("src/test/resources/apps/my-demo-app-ios-simulator-2.2.2.zip"),
         Duration.ofSeconds(120));

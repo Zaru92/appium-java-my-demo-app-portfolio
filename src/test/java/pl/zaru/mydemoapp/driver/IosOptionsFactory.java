@@ -26,6 +26,7 @@ final class IosOptionsFactory {
 
     device.udid().ifPresent(options::setUdid);
     device.platformVersion().ifPresent(options::setPlatformVersion);
+    device.wdaLocalPort().ifPresent(options::setWdaLocalPort);
 
     return options;
   }

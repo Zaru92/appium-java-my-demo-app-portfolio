@@ -7,6 +7,7 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Map;
+import java.util.Optional;
 import org.testng.annotations.Test;
 
 public final class ConfigLoaderTest {
@@ -25,6 +26,8 @@ public final class ConfigLoaderTest {
             .appPath()
             .endsWith(Path.of("src/test/resources/apps/" + "my-demo-app-android-2.2.0.apk")));
     assertEquals(config.newCommandTimeout(), Duration.ofSeconds(120));
+    assertEquals(config.device().systemPort(), Optional.of(8200));
+    assertTrue(config.device().wdaLocalPort().isEmpty());
   }
 
   @Test
@@ -41,6 +44,8 @@ public final class ConfigLoaderTest {
         config
             .appPath()
             .endsWith(Path.of("src/test/resources/apps/" + "my-demo-app-ios-simulator-2.2.2.zip")));
+    assertTrue(config.device().systemPort().isEmpty());
+    assertEquals(config.device().wdaLocalPort(), Optional.of(8100));
   }
 
   @Test

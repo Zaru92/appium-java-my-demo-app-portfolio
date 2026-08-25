@@ -26,7 +26,9 @@ public final class ConfigLoader {
           "platformVersion",
           "app",
           "newCommandTimeoutSeconds",
-          "appWaitActivity");
+          "appWaitActivity",
+          "systemPort",
+          "wdaLocalPort");
 
   private ConfigLoader() {}
 
@@ -52,7 +54,9 @@ public final class ConfigLoader {
             TargetType.from(required(properties, "targetType")),
             required(properties, "deviceName"),
             optional(properties, "udid"),
-            optional(properties, "platformVersion"));
+            optional(properties, "platformVersion"),
+            optionalPort(properties, "systemPort"),
+            optionalPort(properties, "wdaLocalPort"));
 
     return new TestConfig(
         URI.create(required(properties, "appium.url")),
@@ -134,5 +138,25 @@ public final class ConfigLoader {
     } catch (NumberFormatException exception) {
       throw new IllegalStateException(key + " must be a whole number: " + value, exception);
     }
+  }
+
+  private static Optional<Integer> optionalPort(Properties properties, String key) {
+
+    return optional(properties, key)
+        .map(
+            value -> {
+              try {
+                int port = Integer.parseInt(value);
+
+                if (port < 1 || port > 65535) {
+                  throw new IllegalStateException(key + " must be between 1 and 65535.");
+                }
+
+                return port;
+              } catch (NumberFormatException exception) {
+                throw new IllegalStateException(
+                    key + " must be a whole number: " + value, exception);
+              }
+            });
   }
 }
