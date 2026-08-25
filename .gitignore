@@ -22,6 +22,7 @@ dependency-reduced-pom.xml
 Thumbs.db
 
 # Test outputs
+.allure/
 allure-results/
 allure-report/
 test-output/
