@@ -3,6 +3,7 @@ package pl.zaru.mydemoapp.pages.android;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
+import pl.zaru.mydemoapp.actions.AndroidActions;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.ShippingAddressPage;
 import pl.zaru.mydemoapp.testdata.model.TestAddress;
@@ -26,8 +27,11 @@ public final class AndroidShippingAddressPage extends BasePage implements Shippi
             + "\"))");
   }
 
+  private final AndroidActions androidActions;
+
   public AndroidShippingAddressPage(AppiumDriver driver) {
     super(driver);
+    androidActions = new AndroidActions(driver);
   }
 
   @Override
@@ -48,7 +52,7 @@ public final class AndroidShippingAddressPage extends BasePage implements Shippi
 
   @Override
   public void continueToPayment() {
-    hideAndroidKeyboardIfPresent();
+    androidActions.hideKeyboardIfPresent();
     tap(PAYMENT_BUTTON);
   }
 }

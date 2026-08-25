@@ -3,6 +3,7 @@ package pl.zaru.mydemoapp.pages.ios;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
+import pl.zaru.mydemoapp.actions.IosActions;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.ShippingAddressPage;
 import pl.zaru.mydemoapp.testdata.model.TestAddress;
@@ -35,8 +36,11 @@ public final class IosShippingAddressPage extends BasePage implements ShippingAd
   }
   ;
 
+  private final IosActions iosActions;
+
   public IosShippingAddressPage(AppiumDriver driver) {
     super(driver);
+    iosActions = new IosActions(driver);
   }
 
   @Override
@@ -52,16 +56,16 @@ public final class IosShippingAddressPage extends BasePage implements ShippingAd
     replaceText(CITY, address.city(), "city");
     replaceText(STATE, address.state(), "state");
 
-    scrollToIosElement(ZIP_CODE);
+    iosActions.scrollTo(ZIP_CODE);
     replaceText(ZIP_CODE, address.zipCode(), "zip code");
 
-    scrollToIosElement(COUNTRY);
+    iosActions.scrollTo(COUNTRY);
     replaceText(COUNTRY, address.country(), "country");
   }
 
   @Override
   public void continueToPayment() {
-    hideIosSimulatorSoftwareKeyboardIfPresent();
+    iosActions.hideSimulatorSoftwareKeyboardIfPresent();
     tap(TO_PAYMENT_BUTTON);
   }
 }
