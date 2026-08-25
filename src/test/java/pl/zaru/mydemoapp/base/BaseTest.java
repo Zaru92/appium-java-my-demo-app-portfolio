@@ -7,8 +7,9 @@ import org.testng.annotations.Listeners;
 import pl.zaru.mydemoapp.config.ConfigLoader;
 import pl.zaru.mydemoapp.driver.DriverManager;
 import pl.zaru.mydemoapp.listeners.DevicePreflightListener;
+import pl.zaru.mydemoapp.listeners.ScreenshotOnFailureListener;
 
-@Listeners(DevicePreflightListener.class)
+@Listeners({DevicePreflightListener.class, ScreenshotOnFailureListener.class})
 public abstract class BaseTest {
   @BeforeMethod(alwaysRun = true)
   public final void setUp() {
