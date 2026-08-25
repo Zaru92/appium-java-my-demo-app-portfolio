@@ -45,6 +45,15 @@ public final class DevicePreflight {
     appBinaryChecker.verify(config);
     appiumServerChecker.verify(config);
 
+    PortChecker portChecker = new PortChecker();
+
+    config.device().systemPort().ifPresent(port -> portChecker.verifyAvailable("systemPort", port));
+
+    config
+        .device()
+        .wdaLocalPort()
+        .ifPresent(port -> portChecker.verifyAvailable("wdaLocalPort", port));
+
     if (config.platform() == Platform.ANDROID) {
       adbDeviceChecker.verify(config.device());
       return;
