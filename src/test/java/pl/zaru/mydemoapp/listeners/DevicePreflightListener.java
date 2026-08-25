@@ -8,6 +8,7 @@ import org.testng.TestNGException;
 import pl.zaru.mydemoapp.config.ConfigLoader;
 import pl.zaru.mydemoapp.config.TestConfig;
 import pl.zaru.mydemoapp.device.DevicePreflight;
+import pl.zaru.mydemoapp.reporting.AllureEnvironment;
 
 public final class DevicePreflightListener implements ISuiteListener {
   private static final Logger LOGGER = LoggerFactory.getLogger(DevicePreflightListener.class);
@@ -26,6 +27,7 @@ public final class DevicePreflightListener implements ISuiteListener {
 
     try {
       devicePreflight.verify(config);
+      AllureEnvironment.write(config);
       LOGGER.info("Test environment preflight completed successfully.");
     } catch (RuntimeException exception) {
       throw new TestNGException(
