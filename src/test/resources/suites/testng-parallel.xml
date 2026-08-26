@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.1.dtd">
+
+<suite
+    name="Cross-platform parallel smoke"
+    parallel="tests"
+    thread-count="2"
+    preserve-order="true">
+
+    <test name="Android smoke">
+        <parameter name="platform" value="android"/>
+        <parameter name="targetType" value="emulator"/>
+        <parameter name="deviceName" value="Pixel 8"/>
+        <parameter name="udid" value="emulator-5554"/>
+        <parameter name="systemPort" value="8200"/>
+
+        <classes>
+            <class name="pl.zaru.mydemoapp.tests.catalog.AppLaunchSmokeTest"/>
+        </classes>
+    </test>
+
+    <test name="iOS smoke">
+        <parameter name="platform" value="ios"/>
+        <parameter name="targetType" value="simulator"/>
+        <parameter name="deviceName" value="iPhone 17 Pro"/>
+        <parameter name="udid" value="A9DADA59-6D06-40A3-97FE-045F8D1E7F98"/>
+        <parameter name="platformVersion" value="26.4"/>
+        <parameter name="wdaLocalPort" value="8100"/>
+
+        <classes>
+            <class name="pl.zaru.mydemoapp.tests.catalog.AppLaunchSmokeTest"/>
+        </classes>
+    </test>
+
+</suite>
