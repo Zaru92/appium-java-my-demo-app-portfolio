@@ -14,9 +14,15 @@
         <parameter name="udid" value="emulator-5554"/>
         <parameter name="systemPort" value="8200"/>
 
-        <classes>
-            <class name="pl.zaru.mydemoapp.tests.catalog.AppLaunchSmokeTest"/>
-        </classes>
+        <groups>
+            <run>
+                <include name="smoke"/>
+            </run>
+        </groups>
+
+        <packages>
+            <package name="pl.zaru.mydemoapp.tests.*"/>
+        </packages>
     </test>
 
     <test name="iOS smoke">
@@ -27,9 +33,15 @@
         <parameter name="platformVersion" value="26.4"/>
         <parameter name="wdaLocalPort" value="8100"/>
 
-        <classes>
-            <class name="pl.zaru.mydemoapp.tests.catalog.AppLaunchSmokeTest"/>
-        </classes>
+        <groups>
+            <run>
+                <include name="smoke"/>
+            </run>
+        </groups>
+
+        <packages>
+            <package name="pl.zaru.mydemoapp.tests.*"/>
+        </packages>
     </test>
 
 </suite>
