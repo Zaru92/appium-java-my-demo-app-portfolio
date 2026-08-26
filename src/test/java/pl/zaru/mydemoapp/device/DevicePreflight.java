@@ -11,6 +11,7 @@ public final class DevicePreflight {
   private final PreflightCheck appiumServerChecker;
   private final DeviceChecker adbDeviceChecker;
   private final DeviceChecker simctlDeviceChecker;
+  private final DeviceChecker xcuitestDeviceChecker;
 
   PortChecker portChecker = new PortChecker();
 
@@ -19,14 +20,16 @@ public final class DevicePreflight {
         new AppBinaryChecker(),
         new AppiumServerChecker(),
         new AdbDeviceChecker(),
-        new SimctlDeviceChecker());
+        new SimctlDeviceChecker(),
+        new XcuitestDeviceChecker());
   }
 
   DevicePreflight(
       PreflightCheck appBinaryChecker,
       PreflightCheck appiumServerChecker,
       DeviceChecker adbDeviceChecker,
-      DeviceChecker simctlDeviceChecker) {
+      DeviceChecker simctlDeviceChecker,
+      DeviceChecker xcuitestDeviceChecker) {
 
     this.appBinaryChecker =
         Objects.requireNonNull(appBinaryChecker, "appBinaryChecker must not be null");
@@ -39,6 +42,9 @@ public final class DevicePreflight {
 
     this.simctlDeviceChecker =
         Objects.requireNonNull(simctlDeviceChecker, "simctlDeviceChecker must not be null");
+
+    this.xcuitestDeviceChecker =
+        Objects.requireNonNull(xcuitestDeviceChecker, "xcuitestDeviceChecker must not be null");
   }
 
   public void verify(TestConfig config) {
@@ -63,8 +69,7 @@ public final class DevicePreflight {
       return;
     }
 
-    throw new UnsupportedOperationException(
-        "Preflight for a real iOS device is not supported yet.");
+    xcuitestDeviceChecker.verify(device);
   }
 
   private void verifySystemPort(TestConfig config) {

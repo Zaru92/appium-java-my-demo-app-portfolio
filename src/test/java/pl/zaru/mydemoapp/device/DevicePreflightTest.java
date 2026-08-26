@@ -2,7 +2,6 @@ package pl.zaru.mydemoapp.device;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.expectThrows;
 
 import java.net.URI;
 import java.nio.file.Path;
@@ -21,45 +20,63 @@ public final class DevicePreflightTest {
   public void shouldUseAdbCheckerForAndroid() {
     AtomicBoolean adbCalled = new AtomicBoolean();
     AtomicBoolean simctlCalled = new AtomicBoolean();
+    AtomicBoolean xcuitestCalled = new AtomicBoolean();
 
     DevicePreflight preflight =
         new DevicePreflight(
             config -> {},
             config -> {},
             device -> adbCalled.set(true),
-            device -> simctlCalled.set(true));
+            device -> simctlCalled.set(true),
+            device -> xcuitestCalled.set(true));
 
     preflight.verify(androidConfig());
 
     assertTrue(adbCalled.get());
     assertFalse(simctlCalled.get());
+    assertFalse(xcuitestCalled.get());
   }
 
   @Test
   public void shouldUseSimctlCheckerForIosSimulator() {
     AtomicBoolean adbCalled = new AtomicBoolean();
     AtomicBoolean simctlCalled = new AtomicBoolean();
+    AtomicBoolean xcuitestCalled = new AtomicBoolean();
 
     DevicePreflight preflight =
         new DevicePreflight(
             config -> {},
             config -> {},
             device -> adbCalled.set(true),
-            device -> simctlCalled.set(true));
+            device -> simctlCalled.set(true),
+            device -> xcuitestCalled.set(true));
 
     preflight.verify(iosSimulatorConfig());
 
     assertFalse(adbCalled.get());
     assertTrue(simctlCalled.get());
+    assertFalse(xcuitestCalled.get());
   }
 
   @Test
-  public void shouldRejectRealIosDevice() {
-    DevicePreflight preflight =
-        new DevicePreflight(config -> {}, config -> {}, device -> {}, device -> {});
+  public void shouldUseXcuitestCheckerForRealIosDevice() {
+    AtomicBoolean adbCalled = new AtomicBoolean();
+    AtomicBoolean simctlCalled = new AtomicBoolean();
+    AtomicBoolean xcuitestCalled = new AtomicBoolean();
 
-    expectThrows(
-        UnsupportedOperationException.class, () -> preflight.verify(realIosDeviceConfig()));
+    DevicePreflight preflight =
+        new DevicePreflight(
+            config -> {},
+            config -> {},
+            device -> adbCalled.set(true),
+            device -> simctlCalled.set(true),
+            device -> xcuitestCalled.set(true));
+
+    preflight.verify(realIosDeviceConfig());
+
+    assertFalse(adbCalled.get());
+    assertFalse(simctlCalled.get());
+    assertTrue(xcuitestCalled.get());
   }
 
   private static TestConfig androidConfig() {
