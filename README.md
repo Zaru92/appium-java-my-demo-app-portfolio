@@ -1,6 +1,8 @@
 # Appium Java My Demo App Portfolio
 
 [![Framework CI](https://github.com/Zaru92/appium-java-my-demo-app-portfolio/actions/workflows/framework-ci.yml/badge.svg)](https://github.com/Zaru92/appium-java-my-demo-app-portfolio/actions/workflows/framework-ci.yml)
+[![Android Smoke](https://github.com/Zaru92/appium-java-my-demo-app-portfolio/actions/workflows/android-smoke.yml/badge.svg)](https://github.com/Zaru92/appium-java-my-demo-app-portfolio/actions/workflows/android-smoke.yml)
+[![iOS Simulator Smoke](https://github.com/Zaru92/appium-java-my-demo-app-portfolio/actions/workflows/ios-smoke.yml/badge.svg)](https://github.com/Zaru92/appium-java-my-demo-app-portfolio/actions/workflows/ios-smoke.yml)
 
 Cross-platform mobile UI automation framework for
 [Sauce Labs My Demo App](https://github.com/saucelabs/my-demo-app-android), built with Java,
@@ -23,7 +25,8 @@ Allure reporting.
   tunnels
 - Parallel Android and iOS smoke execution with isolated automation ports
 - Allure environment metadata, screenshots, and page source captured on failure
-- Device-independent framework verification in GitHub Actions
+- Device-independent framework verification and Android/iOS virtual-device smoke tests in GitHub
+  Actions
 - Reproducible Maven Wrapper build and automated Java formatting checks
 
 ## Technology
@@ -38,7 +41,7 @@ Allure reporting.
 | Allure TestNG | 2.35.4 |
 | SLF4J / Logback | Structured runtime logging |
 | Spotless / google-java-format | Source formatting verification |
-| GitHub Actions | Device-independent CI quality gate |
+| GitHub Actions | Framework quality gate and Android/iOS virtual-device smoke tests |
 
 ## Test coverage
 
@@ -317,6 +320,10 @@ application, Appium server, Java version, host OS, and automation port.
 
 ## Continuous integration
 
+The repository contains three GitHub Actions workflows.
+
+### Framework CI
+
 `Framework CI` runs on Ubuntu for pushes and pull requests targeting `main`. It uses JDK 21 and
 the Maven Wrapper to:
 
@@ -325,6 +332,28 @@ the Maven Wrapper to:
 3. verify Java formatting with Spotless,
 4. upload Surefire and Allure results as workflow artifacts.
 
-Mobile E2E tests remain local because GitHub-hosted runners do not provide the configured physical
-devices or the project application binaries. They can later be moved to a self-hosted runner or a
+### Android Smoke
+
+`Android Smoke` is triggered manually from the GitHub Actions interface. It:
+
+1. starts a hardware-accelerated Android 15 emulator,
+2. installs pinned Appium and UiAutomator2 versions,
+3. downloads and verifies the Android application,
+4. starts the Appium server and waits for its status endpoint,
+5. runs `AppLaunchSmokeTest`,
+6. uploads Surefire, Allure, failure, and Appium server artifacts.
+
+### iOS Simulator Smoke
+
+`iOS Simulator Smoke` is triggered manually from the GitHub Actions interface. It:
+
+1. uses a macOS ARM64 runner with Xcode,
+2. installs pinned Appium and XCUITest versions,
+3. downloads and verifies the iOS Simulator application,
+4. selects and boots an available iPhone Simulator dynamically,
+5. starts the Appium server and runs `AppLaunchSmokeTest`,
+6. uploads Surefire, Allure, failure, and Appium server artifacts.
+
+Physical-device E2E tests remain local because they require signing identities, Remote XPC
+infrastructure, or USB-connected devices. They can later be moved to a self-hosted runner or a
 cloud device provider.
