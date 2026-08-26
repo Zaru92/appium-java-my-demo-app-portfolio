@@ -49,6 +49,7 @@ public final class DriverOptionsFactoryTest {
     assertEquals(options.getCapability("appium:app"), config.appPath().toString());
     assertEquals(timeoutInSeconds(options), 120L);
     assertEquals(((Number) options.getCapability("appium:wdaLocalPort")).intValue(), 8100);
+    assertEquals(((Number) options.getCapability("appium:wdaLaunchTimeout")).longValue(), 300_000L);
   }
 
   private static void assertAutomationName(Capabilities options, TestConfig config) {
