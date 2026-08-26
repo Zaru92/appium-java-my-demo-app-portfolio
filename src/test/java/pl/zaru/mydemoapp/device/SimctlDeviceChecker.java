@@ -7,7 +7,7 @@ import pl.zaru.mydemoapp.config.DeviceConfig;
 import pl.zaru.mydemoapp.config.TargetType;
 
 public final class SimctlDeviceChecker implements DeviceChecker {
-  private static final Duration COMMAND_TIMEOUT = Duration.ofSeconds(10);
+  private static final Duration COMMAND_TIMEOUT = Duration.ofSeconds(30);
 
   private final CommandExecutor commandExecutor;
 
