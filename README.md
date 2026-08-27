@@ -3,6 +3,7 @@
 [![Framework CI](https://github.com/Zaru92/appium-java-my-demo-app-portfolio/actions/workflows/framework-ci.yml/badge.svg)](https://github.com/Zaru92/appium-java-my-demo-app-portfolio/actions/workflows/framework-ci.yml)
 [![Android Smoke](https://github.com/Zaru92/appium-java-my-demo-app-portfolio/actions/workflows/android-smoke.yml/badge.svg)](https://github.com/Zaru92/appium-java-my-demo-app-portfolio/actions/workflows/android-smoke.yml)
 [![iOS Simulator Smoke](https://github.com/Zaru92/appium-java-my-demo-app-portfolio/actions/workflows/ios-smoke.yml/badge.svg)](https://github.com/Zaru92/appium-java-my-demo-app-portfolio/actions/workflows/ios-smoke.yml)
+[![CodeQL](https://github.com/Zaru92/appium-java-my-demo-app-portfolio/actions/workflows/codeql.yml/badge.svg)](https://github.com/Zaru92/appium-java-my-demo-app-portfolio/actions/workflows/codeql.yml)
 
 Cross-platform mobile UI automation framework for
 [Sauce Labs My Demo App](https://github.com/saucelabs/my-demo-app-android), built with Java,
@@ -28,6 +29,7 @@ Allure reporting.
 - Device-independent framework verification and Android/iOS virtual-device smoke tests in GitHub
   Actions
 - Reproducible Maven Wrapper build and automated Java formatting checks
+- CodeQL static analysis, Dependabot updates, and immutable SHA-pinned workflow actions
 
 ## Technology
 
@@ -42,6 +44,7 @@ Allure reporting.
 | SLF4J / Logback | Structured runtime logging |
 | Spotless / google-java-format | Source formatting verification |
 | GitHub Actions | Framework quality gate and Android/iOS virtual-device smoke tests |
+| CodeQL | Static security analysis of framework and test sources |
 
 ## Test coverage
 
@@ -320,7 +323,8 @@ application, Appium server, Java version, host OS, and automation port.
 
 ## Continuous integration
 
-The repository contains three GitHub Actions workflows.
+The repository contains four GitHub Actions workflows. Reusable actions are pinned to full commit
+SHAs and kept current through Dependabot pull requests.
 
 ### Framework CI
 
@@ -331,6 +335,16 @@ the Maven Wrapper to:
 2. run the device-independent TestNG suite,
 3. verify Java formatting with Spotless,
 4. upload Surefire and Allure results as workflow artifacts.
+
+### CodeQL
+
+`CodeQL` runs on Ubuntu for pushes and pull requests targeting `main`, on a weekly schedule, and on
+manual request. It:
+
+1. initializes Java/Kotlin analysis in manual build mode,
+2. compiles the framework and test sources with JDK 21 and the Maven Wrapper,
+3. analyzes the extracted CodeQL database,
+4. uploads the results to GitHub code scanning.
 
 ### Android Smoke
 
