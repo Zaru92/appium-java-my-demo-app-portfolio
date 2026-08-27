@@ -29,7 +29,8 @@ Allure reporting.
 - Device-independent framework verification and Android/iOS virtual-device smoke tests in GitHub
   Actions
 - Reproducible Maven Wrapper build and automated Java formatting checks
-- CodeQL static analysis, Dependabot updates, and immutable SHA-pinned workflow actions
+- CodeQL static analysis, dependency review, Dependabot updates, and immutable SHA-pinned
+  workflow actions
 
 ## Technology
 
@@ -45,6 +46,7 @@ Allure reporting.
 | Spotless / google-java-format | Source formatting verification |
 | GitHub Actions | Framework quality gate and Android/iOS virtual-device smoke tests |
 | CodeQL | Static security analysis of framework and test sources |
+| Dependency Review | Pull-request vulnerability gate for runtime and test dependencies |
 
 ## Test coverage
 
@@ -323,7 +325,7 @@ application, Appium server, Java version, host OS, and automation port.
 
 ## Continuous integration
 
-The repository contains four GitHub Actions workflows. Reusable actions are pinned to full commit
+The repository contains five GitHub Actions workflows. Reusable actions are pinned to full commit
 SHAs and kept current through Dependabot pull requests.
 
 ### Framework CI
@@ -345,6 +347,15 @@ manual request. It:
 2. compiles the framework and test sources with JDK 21 and the Maven Wrapper,
 3. analyzes the extracted CodeQL database,
 4. uploads the results to GitHub code scanning.
+
+### Dependency Review
+
+`Dependency Review` runs for pull requests targeting `main`. It:
+
+1. compares dependency changes between the pull request base and head,
+2. checks runtime and development dependencies against the GitHub Advisory Database,
+3. fails when a pull request introduces a vulnerability with moderate or higher severity,
+4. reports the first patched version when available.
 
 ### Android Smoke
 
