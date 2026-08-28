@@ -2,6 +2,7 @@ package pl.zaru.mydemoapp.pages.base;
 
 import io.appium.java_client.AppiumDriver;
 import java.time.Duration;
+import java.util.List;
 import java.util.Objects;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -42,6 +43,18 @@ public abstract class BasePage {
   protected final WebElement waitUntilClickable(By locator) {
     Objects.requireNonNull(locator, "locator must not be null");
     return wait.until(ExpectedConditions.elementToBeClickable(locator));
+  }
+
+  protected final List<WebElement> waitUntilVisibleElements(By locator) {
+    Objects.requireNonNull(locator, "locator must not be null");
+
+    return wait.until(
+        currentDriver -> {
+          List<WebElement> visibleElements =
+              currentDriver.findElements(locator).stream().filter(WebElement::isDisplayed).toList();
+
+          return visibleElements.isEmpty() ? null : visibleElements;
+        });
   }
 
   protected final void tap(By locator) {
