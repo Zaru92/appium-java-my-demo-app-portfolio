@@ -28,7 +28,7 @@ Allure reporting.
 - Allure environment metadata, screenshots, and page source captured on failure
 - Device-independent framework verification and Android/iOS virtual-device smoke tests in GitHub
   Actions
-- Reproducible Maven Wrapper build and automated Java formatting checks
+- Reproducible Maven Wrapper build, automated Java formatting, and PMD static analysis
 - CodeQL static analysis, dependency review, Dependabot updates, and immutable SHA-pinned
   workflow actions
 
@@ -44,6 +44,7 @@ Allure reporting.
 | Allure TestNG | 2.35.4 |
 | SLF4J / Logback | Structured runtime logging |
 | Spotless / google-java-format | Source formatting verification |
+| PMD 7.26.0 | Static analysis with a project-specific ruleset |
 | GitHub Actions | Framework quality gate and Android/iOS virtual-device smoke tests |
 | CodeQL | Static security analysis of framework and test sources |
 | Dependency Review | Pull-request vulnerability gate for runtime and test dependencies |
@@ -281,10 +282,50 @@ Example:
   test
 ```
 
+## Code quality
+
+### Static code quality gate
+
+Run compilation and all automated code checks without executing TestNG tests:
+
+```bash
+./mvnw --batch-mode --no-transfer-progress \
+  -DskipTests \
+  clean verify
+```
+
+This command:
+
+- validates the Java, Maven, and plugin versions with Maven Enforcer,
+- compiles framework and test sources with `javac`,
+- verifies Java formatting with Spotless,
+- runs PMD static analysis using `config/pmd/ruleset.xml`.
+
+The `-DskipTests` property skips test execution but still compiles all test sources.
+
+During development, individual checks can also be executed separately:
+
+```bash
+./mvnw spotless:check
+```
+
+```bash
+./mvnw --batch-mode --no-transfer-progress \
+  -DskipTests \
+  pmd:check
+```
+
+Format Java sources automatically:
+
+```bash
+./mvnw spotless:apply
+```
+
+Detailed PMD results are written to `target/pmd.xml`.
+
 ## Framework verification
 
-Run all device-independent configuration and infrastructure tests together with the formatting
-quality gate:
+Run the complete device-independent framework quality gate:
 
 ```bash
 ./mvnw --batch-mode --no-transfer-progress \
@@ -292,8 +333,11 @@ quality gate:
   clean verify
 ```
 
-This command does not start Appium or create a mobile session. The same verification runs in
-GitHub Actions for pushes and pull requests targeting `main`.
+This command performs the same compilation, Maven Enforcer, Spotless, and PMD checks as the static
+code quality gate, and additionally runs all device-independent TestNG framework tests.
+
+It does not start Appium or create a mobile session. The same full verification runs in GitHub
+Actions for pushes and pull requests targeting `main`.
 
 ## Reports and diagnostics
 
@@ -336,7 +380,8 @@ the Maven Wrapper to:
 1. compile all framework and test sources,
 2. run the device-independent TestNG suite,
 3. verify Java formatting with Spotless,
-4. upload Surefire and Allure results as workflow artifacts.
+4. run PMD static analysis using the project-specific ruleset,
+5. upload Surefire and Allure results as workflow artifacts.
 
 ### CodeQL
 

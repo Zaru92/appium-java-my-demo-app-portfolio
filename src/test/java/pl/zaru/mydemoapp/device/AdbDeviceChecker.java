@@ -38,7 +38,7 @@ public final class AdbDeviceChecker implements DeviceChecker {
 
     CommandResult state = execute(List.of("adb", "-s", udid, "get-state"), "ADB state check", udid);
 
-    if (!state.output().equals("device")) {
+    if (!"device".equals(state.output())) {
       throw new IllegalStateException(
           "Android target %s is not ready. Expected ADB state 'device', but was '%s'."
               .formatted(udid, displayOutput(state)));
@@ -50,7 +50,7 @@ public final class AdbDeviceChecker implements DeviceChecker {
             "Android boot check",
             udid);
 
-    if (!bootState.output().equals("1")) {
+    if (!"1".equals(bootState.output())) {
       throw new IllegalStateException(
           "Android target %s has not completed booting. Received '%s'."
               .formatted(udid, displayOutput(bootState)));

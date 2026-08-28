@@ -58,7 +58,7 @@ public final class IosActions {
               .inheritIO()
               .start();
 
-      if (!process.waitFor(5, TimeUnit.SECONDS)) {
+      if (!process.waitFor(KEYBOARD_HIDE_TIMEOUT.toSeconds(), TimeUnit.SECONDS)) {
         process.destroyForcibly();
         throw new IllegalStateException(
             "Timed out while hiding the iOS Simulator software keyboard.");

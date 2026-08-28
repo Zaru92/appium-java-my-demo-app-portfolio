@@ -40,6 +40,7 @@ public final class FailureArtifacts {
     capturePageSource(driver, filePrefix);
   }
 
+  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   private static void captureScreenshot(AppiumDriver driver, String filePrefix) {
 
     try {
@@ -60,6 +61,7 @@ public final class FailureArtifacts {
     }
   }
 
+  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   private static void capturePageSource(AppiumDriver driver, String filePrefix) {
 
     try {

@@ -16,9 +16,11 @@ import java.util.Set;
 public final class ConfigLoader {
   private static final String CONFIG_DIRECTORY = "config/";
 
+  private static final String PLATFORM_KEY = "platform";
+
   private static final Set<String> OVERRIDABLE_KEYS =
       Set.of(
-          "platform",
+          PLATFORM_KEY,
           "targetType",
           "appium.url",
           "deviceName",
@@ -49,13 +51,13 @@ public final class ConfigLoader {
     Properties properties = loadProperties("common.properties");
 
     Platform selectedPlatform =
-        Platform.from(overrides.getOrDefault("platform", required(properties, "platform")));
+        Platform.from(overrides.getOrDefault(PLATFORM_KEY, required(properties, PLATFORM_KEY)));
 
     properties.putAll(loadProperties(selectedPlatform.configFile()));
 
     applyOverrides(properties, overrides);
 
-    Platform platform = Platform.from(required(properties, "platform"));
+    Platform platform = Platform.from(required(properties, PLATFORM_KEY));
 
     DeviceConfig device =
         new DeviceConfig(

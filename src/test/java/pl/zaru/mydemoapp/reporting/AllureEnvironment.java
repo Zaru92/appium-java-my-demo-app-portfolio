@@ -21,6 +21,8 @@ public final class AllureEnvironment {
 
   private static final String ENVIRONMENT_FILE = "environment.properties";
 
+  private static final String UNKNOWN_VALUE = "unknown";
+
   private AllureEnvironment() {}
 
   public static void write(TestConfig config) {
@@ -93,13 +95,13 @@ public final class AllureEnvironment {
   private static Properties commonEnvironment() {
     Properties environment = new Properties();
 
-    environment.setProperty("java.version", System.getProperty("java.version", "unknown"));
+    environment.setProperty("java.version", System.getProperty("java.version", UNKNOWN_VALUE));
 
-    environment.setProperty("os.name", System.getProperty("os.name", "unknown"));
+    environment.setProperty("os.name", System.getProperty("os.name", UNKNOWN_VALUE));
 
-    environment.setProperty("os.version", System.getProperty("os.version", "unknown"));
+    environment.setProperty("os.version", System.getProperty("os.version", UNKNOWN_VALUE));
 
-    environment.setProperty("os.architecture", System.getProperty("os.arch", "unknown"));
+    environment.setProperty("os.architecture", System.getProperty("os.arch", UNKNOWN_VALUE));
 
     return environment;
   }
@@ -194,12 +196,12 @@ public final class AllureEnvironment {
         new StringBuilder().append(appiumUrl.getScheme()).append("://").append(appiumUrl.getHost());
 
     if (appiumUrl.getPort() >= 0) {
-      address.append(":").append(appiumUrl.getPort());
+      address.append(':').append(appiumUrl.getPort());
     }
 
     String path = appiumUrl.getPath();
 
-    if (path != null && !path.isBlank() && !path.equals("/")) {
+    if (path != null && !path.isBlank() && !"/".equals(path)) {
 
       address.append(path);
     }
