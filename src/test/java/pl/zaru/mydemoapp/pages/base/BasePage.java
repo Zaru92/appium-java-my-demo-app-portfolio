@@ -49,11 +49,19 @@ public abstract class BasePage {
   }
 
   protected void replaceText(By locator, String value, String fieldName) {
-    String normalizedValue = requireNonBlank(value, fieldName);
-    WebElement element = waitUntilVisible(locator);
+    replaceTextAllowingEmpty(locator, requireNonBlank(value, fieldName), fieldName);
+  }
 
+  protected void replaceTextAllowingEmpty(By locator, String value, String fieldName) {
+    String normalizedFieldName = requireNonBlank(fieldName, "fieldName");
+    Objects.requireNonNull(value, normalizedFieldName + " must not be null");
+
+    WebElement element = waitUntilVisible(locator);
     element.clear();
-    element.sendKeys(normalizedValue);
+
+    if (!value.isEmpty()) {
+      element.sendKeys(value);
+    }
   }
 
   protected static String requireNonBlank(String value, String fieldName) {

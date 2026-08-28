@@ -2,9 +2,12 @@ package pl.zaru.mydemoapp.pages.ios;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
+import java.util.Objects;
 import org.openqa.selenium.By;
+import pl.zaru.mydemoapp.actions.IosActions;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.LoginPage;
+import pl.zaru.mydemoapp.pages.contracts.LoginValidation;
 
 public final class IosLoginPage extends BasePage implements LoginPage {
 
@@ -19,10 +22,17 @@ public final class IosLoginPage extends BasePage implements LoginPage {
       AppiumBy.iOSNsPredicateString(
           "type == 'XCUIElementTypeButton' " + "AND label == 'Login' " + "AND visible == 1");
 
-  private static final String PREDEFINED_USER_PASSWORD = "10203040";
+  private static final By USERNAME_REQUIRED_MESSAGE =
+      AppiumBy.accessibilityId("Username is required");
+
+  private static final By PASSWORD_REQUIRED_MESSAGE =
+      AppiumBy.accessibilityId("Password is required");
+
+  private final IosActions iosActions;
 
   public IosLoginPage(AppiumDriver driver) {
     super(driver);
+    iosActions = new IosActions(driver);
   }
 
   @Override
@@ -32,15 +42,21 @@ public final class IosLoginPage extends BasePage implements LoginPage {
 
   @Override
   public void login(String username, String password) {
-    String normalizedUsername = requireNonBlank(username, "username");
-    String normalizedPassword = requireNonBlank(password, "password");
+    replaceTextAllowingEmpty(USERNAME_INPUT, username, "username");
+    replaceTextAllowingEmpty(PASSWORD_INPUT, password, "password");
 
-    if (!PREDEFINED_USER_PASSWORD.equals(normalizedPassword)) {
-      throw new IllegalArgumentException(
-          "iOS predefined users require password: " + PREDEFINED_USER_PASSWORD);
-    }
-
-    tap(AppiumBy.accessibilityId(normalizedUsername));
+    iosActions.hideSimulatorSoftwareKeyboardIfPresent();
     tap(LOGIN_BUTTON);
+  }
+
+  @Override
+  public boolean isValidationDisplayed(LoginValidation validation) {
+    By locator =
+        switch (Objects.requireNonNull(validation, "validation must not be null")) {
+          case USERNAME_REQUIRED -> USERNAME_REQUIRED_MESSAGE;
+          case PASSWORD_REQUIRED -> PASSWORD_REQUIRED_MESSAGE;
+        };
+
+    return waitUntilVisible(locator).isDisplayed();
   }
 }
