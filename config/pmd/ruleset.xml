@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ruleset
+    name="Appium portfolio rules"
+    xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://pmd.sourceforge.net/ruleset/2.0.0
+        https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+    <description>
+        Static-analysis rules for the Appium test automation framework.
+    </description>
+
+    <rule ref="category/java/bestpractices.xml">
+        <!-- BaseTest and BasePage intentionally prevent direct instantiation. -->
+        <exclude name="AbstractClassWithoutAbstractMethod"/>
+
+        <!-- Local Appium services and port checks deliberately use loopback addresses. -->
+        <exclude name="AvoidUsingHardCodedIP"/>
+
+        <!-- Parameterized SLF4J calls do not require guards for inexpensive arguments. -->
+        <exclude name="GuardLogStatement"/>
+
+        <!-- Assertion intent is expressed by descriptive test and method names. -->
+        <exclude name="UnitTestAssertionsShouldIncludeMessage"/>
+
+        <!-- Re-added below with a project-appropriate limit. -->
+        <exclude name="UnitTestContainsTooManyAsserts"/>
+    </rule>
+
+    <rule ref="category/java/bestpractices.xml/UnitTestContainsTooManyAsserts">
+        <properties>
+            <property name="maximumAsserts" value="10"/>
+        </properties>
+    </rule>
+
+    <rule ref="category/java/errorprone.xml">
+        <!-- Concise accessor methods intentionally match their backing fields. -->
+        <exclude name="AvoidFieldNameMatchingMethodName"/>
+
+        <!-- Small collection-size thresholds are clearer as inline literals. -->
+        <exclude name="AvoidLiteralsInIfCondition"/>
+
+        <!-- Re-added below with Java runtime compatibility configuration. -->
+        <exclude name="CloseResource"/>
+
+        <!-- Re-added below with a suffix-based test-class convention. -->
+        <exclude name="TestClassWithoutTestCases"/>
+
+        <!-- This is a standalone test framework, not a J2EE application. -->
+        <exclude name="UseProperClassLoader"/>
+
+        <!-- Re-added below and explicitly configured for TestNG. -->
+        <exclude name="WrongTestAnnotation"/>
+    </rule>
+
+    <rule ref="category/java/errorprone.xml/CloseResource">
+        <properties>
+            <property
+                name="allowedResourceTypes"
+                value="java.io.ByteArrayOutputStream,java.io.ByteArrayInputStream,java.io.StringWriter,java.io.CharArrayWriter,java.util.stream.Stream,java.util.stream.IntStream,java.util.stream.LongStream,java.util.stream.DoubleStream,java.lang.Process"/>
+        </properties>
+    </rule>
+
+    <rule ref="category/java/errorprone.xml/TestClassWithoutTestCases">
+        <properties>
+            <property
+                name="testClassPattern"
+                value=".*(?:Tests?|TestCase)$"/>
+        </properties>
+    </rule>
+
+    <rule ref="category/java/errorprone.xml/WrongTestAnnotation">
+        <properties>
+            <property name="testFrameworks" value="testNG"/>
+        </properties>
+    </rule>
+
+    <rule ref="category/java/performance.xml"/>
+
+</ruleset>

@@ -38,6 +38,9 @@
 
         <allure.maven.plugin.version>3.0.3</allure.maven.plugin.version>
         <allure.report.version>2.45.0</allure.report.version>
+
+        <maven.pmd.plugin.version>3.28.0</maven.pmd.plugin.version>
+        <pmd.version>7.26.0</pmd.version>
     </properties>
 
     <dependencyManagement>
@@ -171,6 +174,45 @@
                 <executions>
                     <execution>
                         <id>check-formatting</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>${maven.pmd.plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sourceforge.pmd</groupId>
+                        <artifactId>pmd-core</artifactId>
+                        <version>${pmd.version}</version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>net.sourceforge.pmd</groupId>
+                        <artifactId>pmd-java</artifactId>
+                        <version>${pmd.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <targetJdk>${java.version}</targetJdk>
+                    <includeTests>true</includeTests>
+                    <minimumPriority>3</minimumPriority>
+                    <failOnViolation>true</failOnViolation>
+                    <printFailingErrors>true</printFailingErrors>
+                    <linkXRef>false</linkXRef>
+                    <rulesets>
+                        <ruleset>${project.basedir}/config/pmd/ruleset.xml</ruleset>
+                    </rulesets>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>check-static-analysis</id>
                         <phase>verify</phase>
                         <goals>
                             <goal>check</goal>

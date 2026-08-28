@@ -24,6 +24,7 @@ public final class DevicePreflightListener implements ISuiteListener {
   private final ParallelConfigValidator parallelConfigValidator = new ParallelConfigValidator();
 
   @Override
+  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   public void onStart(ISuite suite) {
     try {
       Map<String, TestConfig> configs = loadConfigurations(suite);
