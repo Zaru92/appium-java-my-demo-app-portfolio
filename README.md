@@ -61,6 +61,11 @@ Allure reporting.
 Tests are assigned to functional groups including `smoke`, `regression`, `e2e`, `catalog`,
 `cart`, `authentication`, and `checkout`.
 
+## Known application issues
+
+Confirmed defects and automation limitations in the upstream application builds are documented in
+[Known application issues](docs/known-issues.md).
+
 ## Architecture
 
 | Package | Responsibility |
