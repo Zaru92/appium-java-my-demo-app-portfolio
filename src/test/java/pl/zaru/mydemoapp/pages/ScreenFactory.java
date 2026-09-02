@@ -5,24 +5,30 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import java.util.Objects;
 import java.util.function.Supplier;
+import pl.zaru.mydemoapp.pages.android.AndroidAppNavigation;
 import pl.zaru.mydemoapp.pages.android.AndroidLoginPage;
 import pl.zaru.mydemoapp.pages.android.AndroidOrderConfirmationPage;
 import pl.zaru.mydemoapp.pages.android.AndroidOrderReviewPage;
 import pl.zaru.mydemoapp.pages.android.AndroidPaymentPage;
 import pl.zaru.mydemoapp.pages.android.AndroidProductCatalogPage;
 import pl.zaru.mydemoapp.pages.android.AndroidShippingAddressPage;
+import pl.zaru.mydemoapp.pages.android.AndroidWebViewPage;
+import pl.zaru.mydemoapp.pages.contracts.AppNavigation;
 import pl.zaru.mydemoapp.pages.contracts.LoginPage;
 import pl.zaru.mydemoapp.pages.contracts.OrderConfirmationPage;
 import pl.zaru.mydemoapp.pages.contracts.OrderReviewPage;
 import pl.zaru.mydemoapp.pages.contracts.PaymentPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
 import pl.zaru.mydemoapp.pages.contracts.ShippingAddressPage;
+import pl.zaru.mydemoapp.pages.contracts.WebViewPage;
+import pl.zaru.mydemoapp.pages.ios.IosAppNavigation;
 import pl.zaru.mydemoapp.pages.ios.IosLoginPage;
 import pl.zaru.mydemoapp.pages.ios.IosOrderConfirmationPage;
 import pl.zaru.mydemoapp.pages.ios.IosOrderReviewPage;
 import pl.zaru.mydemoapp.pages.ios.IosPaymentPage;
 import pl.zaru.mydemoapp.pages.ios.IosProductCatalogPage;
 import pl.zaru.mydemoapp.pages.ios.IosShippingAddressPage;
+import pl.zaru.mydemoapp.pages.ios.IosWebViewPage;
 
 public final class ScreenFactory {
 
@@ -30,6 +36,14 @@ public final class ScreenFactory {
 
   public ScreenFactory(AppiumDriver driver) {
     this.driver = Objects.requireNonNull(driver, "driver must not be null");
+  }
+
+  public AppNavigation appNavigation() {
+    return create(() -> new AndroidAppNavigation(driver), () -> new IosAppNavigation(driver));
+  }
+
+  public WebViewPage webViewPage() {
+    return create(() -> new AndroidWebViewPage(driver), () -> new IosWebViewPage(driver));
   }
 
   public ProductCatalogPage productCatalogPage() {

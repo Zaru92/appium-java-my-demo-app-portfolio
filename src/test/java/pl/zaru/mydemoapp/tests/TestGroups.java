@@ -9,6 +9,7 @@ public final class TestGroups {
   public static final String CART = "cart";
   public static final String AUTHENTICATION = "authentication";
   public static final String CHECKOUT = "checkout";
+  public static final String WEBVIEW = "webview";
 
   private TestGroups() {}
 }

@@ -5,19 +5,22 @@
 [![iOS Simulator Smoke](https://github.com/Zaru92/appium-java-my-demo-app-portfolio/actions/workflows/ios-smoke.yml/badge.svg)](https://github.com/Zaru92/appium-java-my-demo-app-portfolio/actions/workflows/ios-smoke.yml)
 [![CodeQL](https://github.com/Zaru92/appium-java-my-demo-app-portfolio/actions/workflows/codeql.yml/badge.svg)](https://github.com/Zaru92/appium-java-my-demo-app-portfolio/actions/workflows/codeql.yml)
 
-Cross-platform mobile UI automation framework for
-[Sauce Labs My Demo App](https://github.com/saucelabs/my-demo-app-android), built with Java,
-Appium, Maven, and TestNG.
+Cross-platform mobile UI automation framework for Sauce Labs My Demo App
+([Android](https://github.com/saucelabs/my-demo-app-android) and
+[iOS](https://github.com/saucelabs/my-demo-app-ios)), built with Java, Appium, Maven, and
+TestNG.
 
-The same test scenarios run on Android and iOS through shared page contracts, while
-platform-specific page objects contain native locators and interactions. The project supports
-emulators, simulators, physical devices, parallel execution, environment preflight checks, and
-Allure reporting.
+Shared test scenarios run on Android and iOS where the upstream application builds expose
+equivalent behavior. Platform-specific Page Objects contain native locators and interactions,
+while confirmed application defects and automation limitations are documented explicitly. The
+project supports emulators, simulators, physical devices, parallel execution, environment
+preflight checks, and Allure reporting.
 
 ## Highlights
 
-- One cross-platform test layer for Android and iOS
+- One shared test layer for Android and iOS
 - Platform-specific Page Objects selected by `ScreenFactory`
+- Native-to-WebView context switching and DOM-level validation on Android
 - Android emulator and physical-device execution
 - iOS Simulator and physical-device execution
 - Thread-safe Appium driver management with `ThreadLocal`
@@ -53,13 +56,14 @@ Allure reporting.
 
 | Area | Automated scenarios |
 |---|---|
-| Catalog | Application launch and product details |
+| Catalog | Application launch, product details, and product name sorting |
 | Cart | Add a product, update quantity, and remove a product |
-| Authentication | Require login before checkout and continue after valid login |
+| Authentication | Require login before checkout, continue after valid login, and validate invalid credentials |
 | Checkout | Shipping address, payment details, order review, and order confirmation |
+| WebView | Native-to-WebView context switching, DOM validation, and return to the native context on Android |
 
 Tests are assigned to functional groups including `smoke`, `regression`, `e2e`, `catalog`,
-`cart`, `authentication`, and `checkout`.
+`cart`, `authentication`, `checkout`, and `webview`.
 
 ## Known application issues
 
@@ -73,10 +77,11 @@ Confirmed defects and automation limitations in the upstream application builds 
 | `base` | Test lifecycle and Appium session setup/cleanup |
 | `config` | Platform, device, and runtime configuration |
 | `device` | Environment and execution-target preflight checks |
-| `driver` | Driver lifecycle, capabilities, and platform driver creation |
+| `driver` | Driver lifecycle, capabilities, platform driver creation, and context switching |
 | `pages.contracts` | Shared cross-platform screen APIs |
 | `pages.android` | Android Page Objects and locators |
 | `pages.ios` | iOS Page Objects and locators |
+| `pages.web` | Web Page Objects used after switching to a WebView context |
 | `actions` | Platform-specific reusable mobile interactions |
 | `testdata` | Immutable test models and factories |
 | `listeners` | Suite preflight and failure handling |
@@ -170,6 +175,9 @@ Start the Appium server before running mobile tests:
 appium
 ```
 
+The Android WebView test requires the scoped automatic ChromeDriver download option documented in
+the [Android WebView](#android-webview) section.
+
 ## Running tests
 
 ### Android Emulator
@@ -190,6 +198,32 @@ appium
 ./mvnw -Dplatform=android -Dgroups=smoke test
 ./mvnw -Dplatform=ios -Dgroups=regression test
 ```
+
+### Android WebView
+
+Hybrid WebView tests require Appium to be started with automatic ChromeDriver downloads enabled:
+
+```bash
+appium server \
+  --address 127.0.0.1 \
+  --allow-insecure uiautomator2:chromedriver_autodownload
+```
+
+Run the WebView navigation test:
+
+```bash
+./mvnw clean \
+  -Dplatform=android \
+  -Dtest=WebViewNavigationTest \
+  test
+```
+
+The scenario switches from the native application context to a `WEBVIEW_*` context, validates the
+web page DOM, and returns to `NATIVE_APP`. The Android target must have network access; the first
+execution may download a compatible ChromeDriver.
+
+The iOS variant is skipped because the upstream application's WKWebView is not exposed as
+inspectable. See [known application issues](docs/known-issues.md).
 
 ### Parallel Android and iOS smoke suite
 
@@ -358,7 +392,7 @@ Generate and open the report:
 ./mvnw allure:serve
 ```
 
-For failed mobile tests, the listener stores and attaches:
+For failed mobile tests, the listener stores:
 
 - a PNG screenshot,
 - the current Appium page source in XML format.
@@ -368,6 +402,9 @@ Local copies are written to:
 ```text
 target/failure-artifacts
 ```
+
+When an active Allure test lifecycle is available, the same artifacts are also attached to the
+report.
 
 The Allure environment file records the platform, target type, device, automation engine,
 application, Appium server, Java version, host OS, and automation port.
