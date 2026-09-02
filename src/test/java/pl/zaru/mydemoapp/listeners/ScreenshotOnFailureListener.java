@@ -2,16 +2,21 @@ package pl.zaru.mydemoapp.listeners;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.ITestListener;
+import org.testng.IInvokedMethod;
+import org.testng.IInvokedMethodListener;
 import org.testng.ITestResult;
 import pl.zaru.mydemoapp.driver.DriverManager;
 import pl.zaru.mydemoapp.reporting.FailureArtifacts;
 
-public final class ScreenshotOnFailureListener implements ITestListener {
+public final class ScreenshotOnFailureListener implements IInvokedMethodListener {
   private static final Logger LOGGER = LoggerFactory.getLogger(ScreenshotOnFailureListener.class);
 
   @Override
-  public void onTestFailure(ITestResult result) {
+  public void afterInvocation(IInvokedMethod method, ITestResult result) {
+    if (!method.isTestMethod() || result.getStatus() != ITestResult.FAILURE) {
+      return;
+    }
+
     if (!DriverManager.hasSession()) {
       LOGGER.warn(
           "Could not capture failure artifacts for {} because no Appium session is active.",
