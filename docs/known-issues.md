@@ -6,7 +6,8 @@
 - Platform: iOS
 - Version: 2.2.2
 - Status: Open upstream application defect
-- Automation impact: Excluded from the passing cross-platform regression suite
+- Automation impact: iOS price-sorting assertions are excluded from the cross-platform regression
+  suite
 
 ### Steps to reproduce
 
@@ -33,7 +34,7 @@ numeric values.
 The iOS implementation stores prices as strings and compares them directly using `<` and `>`.
 
 Source:
-https://github.com/saucelabs/my-demo-app-ios/blob/2.2.2/My%20Demo%20App/Controllers/CatalogViewController.swift
+[CatalogViewController.swift](https://github.com/saucelabs/my-demo-app-ios/blob/2.2.2/My%20Demo%20App/Controllers/CatalogViewController.swift)
 
 ## IOS-A11Y-001 — Product price value is not exposed to accessibility
 
@@ -41,6 +42,7 @@ https://github.com/saucelabs/my-demo-app-ios/blob/2.2.2/My%20Demo%20App/Controll
 - Platform: iOS
 - Version: 2.2.2
 - Status: Open upstream application defect
+- Automation impact: Prevents reliable price extraction through the XCUITest accessibility tree
 
 ### Actual result
 
@@ -52,3 +54,31 @@ The visible price, for example `$ 29.99`, is exposed to Appium as:
 
 The numerical value cannot therefore be retrieved reliably through the XCUITest accessibility
 tree.
+
+## IOS-WEBVIEW-001 — WebView context is not exposed to Appium
+
+- Application: Sauce Labs My Demo App
+- Platform: iOS
+- Version: 2.2.2
+- Confirmed target: iOS Simulator
+- Status: Upstream automation limitation
+- Automation impact: DOM-level WebView validation is intentionally skipped on iOS
+
+### Expected result
+
+After opening a URL from the Webview screen, Appium exposes an additional `WEBVIEW_*` context,
+allowing the embedded page DOM to be automated.
+
+### Actual result
+
+The website is displayed inside the application, but Appium exposes only the `NATIVE_APP`
+context. Appium Inspector reports that no additional contexts have been detected.
+
+### Technical notes
+
+The version 2.2.2 implementation loads the requested URL into a `WKWebView`, but does not enable
+its `isInspectable` property. The upstream application would need to expose the WebView for
+inspection on supported iOS versions.
+
+Source:
+[WebViewHandlerViewController.swift](https://github.com/saucelabs/my-demo-app-ios/blob/2.2.2/My%20Demo%20App/Controllers/WebViewHandlerViewController.swift)
