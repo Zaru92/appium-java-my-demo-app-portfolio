@@ -47,7 +47,7 @@ public final class IosLoginPage extends BasePage implements LoginPage {
 
     iosActions.hideKeyboardIfPresent();
     iosActions.scrollTo(LOGIN_BUTTON);
-    tap(LOGIN_BUTTON);
+    iosActions.tapAtCenter(LOGIN_BUTTON);
     iosActions.dismissPasswordSavePromptIfPresent();
   }
 
