@@ -2,10 +2,12 @@ package pl.zaru.mydemoapp.pages.android;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
+import java.util.Objects;
 import org.openqa.selenium.By;
 import pl.zaru.mydemoapp.actions.AndroidActions;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.ShippingAddressPage;
+import pl.zaru.mydemoapp.pages.contracts.ShippingAddressValidation;
 import pl.zaru.mydemoapp.testdata.model.TestAddress;
 
 public final class AndroidShippingAddressPage extends BasePage implements ShippingAddressPage {
@@ -41,18 +43,42 @@ public final class AndroidShippingAddressPage extends BasePage implements Shippi
 
   @Override
   public void fillAddress(TestAddress address) {
-    replaceText(scrollTo("fullNameET"), address.fullName(), "fullName");
-    replaceText(scrollTo("address1ET"), address.addressLine1(), "addressLine1");
-    replaceText(scrollTo("address2ET"), address.addressLine2(), "addressLine2");
-    replaceText(scrollTo("cityET"), address.city(), "city");
-    replaceText(scrollTo("stateET"), address.state(), "state");
-    replaceText(scrollTo("zipET"), address.zipCode(), "zipCode");
-    replaceText(scrollTo("countryET"), address.country(), "country");
+    TestAddress requiredAddress = Objects.requireNonNull(address, "address must not be null");
+
+    replaceTextAllowingEmpty(scrollTo("fullNameET"), requiredAddress.fullName(), "fullName");
+    replaceTextAllowingEmpty(
+        scrollTo("address1ET"), requiredAddress.addressLine1(), "addressLine1");
+    replaceTextAllowingEmpty(
+        scrollTo("address2ET"), requiredAddress.addressLine2(), "addressLine2");
+    replaceTextAllowingEmpty(scrollTo("cityET"), requiredAddress.city(), "city");
+    replaceTextAllowingEmpty(scrollTo("stateET"), requiredAddress.state(), "state");
+    replaceTextAllowingEmpty(scrollTo("zipET"), requiredAddress.zipCode(), "zipCode");
+    replaceTextAllowingEmpty(scrollTo("countryET"), requiredAddress.country(), "country");
   }
 
   @Override
   public void continueToPayment() {
     androidActions.hideKeyboardIfPresent();
     tap(PAYMENT_BUTTON);
+  }
+
+  @Override
+  public boolean isValidationDisplayed(ShippingAddressValidation validation) {
+    By locator =
+        switch (Objects.requireNonNull(validation, "validation must not be null")) {
+          case ZIP_CODE_REQUIRED -> scrollTo("zipErrorTV");
+        };
+
+    return waitUntilVisible(locator).isDisplayed();
+  }
+
+  @Override
+  public void dismissValidationIfPresent() {
+    // Android displays inline errors, so there is no modal to close.
+  }
+
+  @Override
+  public boolean isFormDisplayed() {
+    return waitUntilVisible(scrollTo("zipET")).isDisplayed();
   }
 }

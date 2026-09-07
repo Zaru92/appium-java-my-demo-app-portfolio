@@ -20,8 +20,7 @@ public final class IosLoginPage extends BasePage implements LoginPage {
   private static final By PASSWORD_INPUT = AppiumBy.className("XCUIElementTypeSecureTextField");
 
   private static final By LOGIN_BUTTON =
-      AppiumBy.iOSNsPredicateString(
-          "type == 'XCUIElementTypeButton' " + "AND label == 'Login' " + "AND visible == 1");
+      AppiumBy.iOSNsPredicateString("type == 'XCUIElementTypeButton' AND label == 'Login'");
 
   private static final By USERNAME_REQUIRED_MESSAGE =
       AppiumBy.accessibilityId("Username is required");
@@ -47,6 +46,7 @@ public final class IosLoginPage extends BasePage implements LoginPage {
     replaceTextAllowingEmpty(PASSWORD_INPUT, password, "password");
 
     iosActions.hideKeyboardIfPresent();
+    iosActions.scrollTo(LOGIN_BUTTON);
     tap(LOGIN_BUTTON);
     iosActions.dismissPasswordSavePromptIfPresent();
   }
