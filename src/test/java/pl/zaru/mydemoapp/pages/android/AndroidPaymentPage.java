@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import pl.zaru.mydemoapp.actions.AndroidActions;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.PaymentPage;
+import pl.zaru.mydemoapp.pages.contracts.PaymentValidation;
 import pl.zaru.mydemoapp.testdata.model.TestPaymentCard;
 
 public final class AndroidPaymentPage extends BasePage implements PaymentPage {
@@ -25,6 +26,8 @@ public final class AndroidPaymentPage extends BasePage implements PaymentPage {
 
   private static final By REVIEW_ORDER_BUTTON = AppiumBy.id(APP_ID + "paymentBtn");
 
+  private static final By CARD_NUMBER_ERROR = AppiumBy.id(APP_ID + "cardNumberErrorIV");
+
   private final AndroidActions androidActions;
 
   public AndroidPaymentPage(AppiumDriver driver) {
@@ -41,10 +44,10 @@ public final class AndroidPaymentPage extends BasePage implements PaymentPage {
   public void fillPaymentDetails(TestPaymentCard paymentCard) {
     Objects.requireNonNull(paymentCard, "paymentCard must not be null");
 
-    replaceText(FULL_NAME, paymentCard.fullName(), "payment card full name");
-    replaceText(CARD_NUMBER, paymentCard.cardNumber(), "card number");
-    replaceText(EXPIRATION_DATE, paymentCard.expirationDate(), "expiration date");
-    replaceText(SECURITY_CODE, paymentCard.securityCode(), "security code");
+    replaceTextAllowingEmpty(FULL_NAME, paymentCard.fullName(), "payment card full name");
+    replaceTextAllowingEmpty(CARD_NUMBER, paymentCard.cardNumber(), "card number");
+    replaceTextAllowingEmpty(EXPIRATION_DATE, paymentCard.expirationDate(), "expiration date");
+    replaceTextAllowingEmpty(SECURITY_CODE, paymentCard.securityCode(), "security code");
 
     androidActions.hideKeyboardIfPresent();
   }
@@ -52,5 +55,25 @@ public final class AndroidPaymentPage extends BasePage implements PaymentPage {
   @Override
   public void continueToOrderReview() {
     tap(REVIEW_ORDER_BUTTON);
+  }
+
+  @Override
+  public boolean isValidationDisplayed(PaymentValidation validation) {
+    By locator =
+        switch (Objects.requireNonNull(validation, "validation must not be null")) {
+          case CARD_NUMBER_REQUIRED -> CARD_NUMBER_ERROR;
+        };
+
+    return waitUntilVisible(locator).isDisplayed();
+  }
+
+  @Override
+  public void dismissValidationIfPresent() {
+    // Android displays inline errors, so there is no modal to close.
+  }
+
+  @Override
+  public boolean isFormDisplayed() {
+    return waitUntilVisible(CARD_NUMBER).isDisplayed();
   }
 }

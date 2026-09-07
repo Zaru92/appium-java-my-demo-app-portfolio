@@ -9,4 +9,12 @@ public interface PaymentPage {
   void fillPaymentDetails(TestPaymentCard paymentCard);
 
   void continueToOrderReview();
+
+  boolean isValidationDisplayed(PaymentValidation validation);
+
+  /** Closes modal validation feedback; inline errors remain visible. */
+  void dismissValidationIfPresent();
+
+  /** Checks the form after submission without requiring the heading to be in view. */
+  boolean isFormDisplayed();
 }

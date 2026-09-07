@@ -59,11 +59,17 @@ preflight checks, and Allure reporting.
 | Catalog | Application launch, product details, and product name sorting |
 | Cart | Add a product, update quantity, and remove a product |
 | Authentication | Require login before checkout, continue after valid login, and validate invalid credentials |
-| Checkout | Shipping address, payment details, order review, and order confirmation |
+| Checkout | Shipping address, payment details, complete order; reject a missing shipping ZIP code and a missing card number |
 | WebView | Native-to-WebView context switching, DOM validation, and return to the native context on Android |
 
 Tests are assigned to functional groups including `smoke`, `regression`, `e2e`, `catalog`,
 `cart`, `authentication`, `checkout`, and `webview`.
+
+Checkout includes focused positive scenarios, a successful end-to-end scenario, and two
+independent validation scenarios. Each validation test changes only one required field,
+verifies validation feedback, and checks
+that the current form remains displayed after dismissing any validation dialog. These scenarios
+cover required form fields; they do not verify address deliverability or payment authorization.
 
 ## Known application issues
 
@@ -201,6 +207,23 @@ the [Android WebView](#android-webview) section.
 ./mvnw -Dplatform=android -Dgroups=smoke test
 ./mvnw -Dplatform=ios -Dgroups=regression test
 ```
+
+### Checkout validation
+
+Run the two required-field validation scenarios on each platform:
+
+```bash
+./mvnw -Dplatform=android \
+  -Dtest=CheckoutShippingAddressValidationTest,CheckoutPaymentValidationTest test
+
+./mvnw -Dplatform=ios \
+  -Dtest=CheckoutShippingAddressValidationTest,CheckoutPaymentValidationTest test
+```
+
+Each scenario submits the form with exactly one empty required field. The test verifies
+validation feedback, dismisses the validation alert on iOS, and checks that checkout remains
+on the current form. To run these scenarios together with the positive checkout tests, use
+`-Dgroups=checkout`.
 
 ### Android WebView
 
