@@ -94,6 +94,7 @@ flowchart TD
     IOS -. implements .-> Contracts
     Android --> Appium["AppiumDriver"]
     IOS --> Appium
+```
 
 | Package | Responsibility |
 |---|---|
