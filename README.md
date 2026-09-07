@@ -79,6 +79,22 @@ Confirmed defects and automation limitations in the upstream application builds 
 
 ## Architecture
 
+The test layer remains platform-independent. `ScreenFactory` selects the appropriate native Page
+Object at runtime, while shared contracts expose the same business operations to Android and iOS
+tests.
+
+```mermaid
+flowchart TD
+    Tests["TestNG scenarios"] --> Flows["Reusable business flows"]
+    Tests --> Factory["ScreenFactory"]
+    Flows --> Factory
+    Factory -->|AndroidDriver| Android["Android Page Objects"]
+    Factory -->|IOSDriver| IOS["iOS Page Objects"]
+    Android -. implements .-> Contracts["Shared page contracts"]
+    IOS -. implements .-> Contracts
+    Android --> Appium["AppiumDriver"]
+    IOS --> Appium
+
 | Package | Responsibility |
 |---|---|
 | `base` | Test lifecycle and Appium session setup/cleanup |
