@@ -80,6 +80,11 @@ public final class IosActions {
     driver.executeScript("mobile: scrollToElement", Map.of("elementId", remoteElement.getId()));
   }
 
+  public void tapAtCenter(By locator) {
+    Objects.requireNonNull(locator, "locator must not be null");
+    tapAtCenter(driver.findElement(locator), "Element located by " + locator);
+  }
+
   public void hideKeyboardIfPresent() {
     boolean keyboardShown = Boolean.TRUE.equals(driver.executeScript("mobile: isKeyboardShown"));
 
@@ -115,17 +120,7 @@ public final class IosActions {
       WebElement notNowButton =
           dismissWait.until(ExpectedConditions.elementToBeClickable(notNowButtonLocator));
 
-      Rectangle bounds = notNowButton.getRect();
-
-      if (bounds.getWidth() <= 0 || bounds.getHeight() <= 0) {
-        throw new IllegalStateException(
-            "The iOS Save Password prompt's Not Now button has invalid bounds: " + bounds);
-      }
-
-      double centerX = bounds.getX() + bounds.getWidth() / 2.0;
-      double centerY = bounds.getY() + bounds.getHeight() / 2.0;
-
-      driver.executeScript("mobile: tap", Map.of("x", centerX, "y", centerY));
+      tapAtCenter(notNowButton, "The iOS Save Password prompt's Not Now button");
 
       dismissWait.until(ExpectedConditions.invisibilityOfElementLocated(SAVE_PASSWORD_PROMPT));
     } catch (TimeoutException exception) {
@@ -145,5 +140,17 @@ public final class IosActions {
               + "Grant Accessibility permission to the terminal or IDE running Maven. Output: "
               + result.displayOutput());
     }
+  }
+
+  private void tapAtCenter(WebElement element, String description) {
+    Rectangle bounds = Objects.requireNonNull(element, "element must not be null").getRect();
+
+    if (bounds.getWidth() <= 0 || bounds.getHeight() <= 0) {
+      throw new IllegalStateException(description + " has invalid bounds: " + bounds);
+    }
+
+    double centerX = bounds.getX() + bounds.getWidth() / 2.0;
+    double centerY = bounds.getY() + bounds.getHeight() / 2.0;
+    driver.executeScript("mobile: tap", Map.of("x", centerX, "y", centerY));
   }
 }
