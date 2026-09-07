@@ -22,12 +22,12 @@ import pl.zaru.mydemoapp.tests.TestGroups;
 
 @Epic("My Demo App")
 @Feature("Checkout")
-public final class CheckoutOrderConfirmationTest extends BaseTest {
+public final class CheckoutEndToEndTest extends BaseTest {
 
-  @Story("Complete an order")
+  @Story("Complete checkout successfully")
   @Severity(SeverityLevel.BLOCKER)
   @Test(groups = {TestGroups.SMOKE, TestGroups.REGRESSION, TestGroups.E2E, TestGroups.CHECKOUT})
-  public void shouldConfirmOrderAfterPlacingIt() {
+  public void shouldCompleteCheckoutSuccessfully() {
     ScreenFactory screens = screenFactory();
     CheckoutFlow checkout = new CheckoutFlow(screens);
 
