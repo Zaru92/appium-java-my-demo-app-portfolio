@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.CartPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
+import pl.zaru.mydemoapp.pages.locators.IosLocators;
 import pl.zaru.mydemoapp.testdata.model.TestProduct;
 
 public final class IosProductDetailsPage extends BasePage implements ProductDetailsPage {
@@ -31,11 +32,7 @@ public final class IosProductDetailsPage extends BasePage implements ProductDeta
     String expectedProductName =
         Objects.requireNonNull(product, "product must not be null").iosName();
 
-    String escapedProductName = expectedProductName.replace("\\", "\\\\").replace("'", "\\'");
-
-    By productName =
-        AppiumBy.iOSNsPredicateString(
-            "type == 'XCUIElementTypeStaticText' " + "AND label == '" + escapedProductName + "'");
+    By productName = IosLocators.staticTextWithLabel(expectedProductName);
 
     return waitUntilVisible(productName).isDisplayed();
   }

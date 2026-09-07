@@ -5,6 +5,8 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import java.util.Objects;
 import java.util.function.Supplier;
+import pl.zaru.mydemoapp.config.TargetType;
+import pl.zaru.mydemoapp.config.TestConfig;
 import pl.zaru.mydemoapp.pages.android.AndroidAppNavigation;
 import pl.zaru.mydemoapp.pages.android.AndroidLoginPage;
 import pl.zaru.mydemoapp.pages.android.AndroidOrderConfirmationPage;
@@ -30,12 +32,20 @@ import pl.zaru.mydemoapp.pages.ios.IosProductCatalogPage;
 import pl.zaru.mydemoapp.pages.ios.IosShippingAddressPage;
 import pl.zaru.mydemoapp.pages.ios.IosWebViewPage;
 
+/**
+ * Resolves platform-specific pages when a test needs to access the current screen directly.
+ * Deterministic transitions continue to return the next page from the originating page object.
+ */
 public final class ScreenFactory {
 
   private final AppiumDriver driver;
 
-  public ScreenFactory(AppiumDriver driver) {
+  private final TargetType targetType;
+
+  public ScreenFactory(AppiumDriver driver, TestConfig config) {
     this.driver = Objects.requireNonNull(driver, "driver must not be null");
+    this.targetType =
+        Objects.requireNonNull(config, "config must not be null").device().targetType();
   }
 
   public AppNavigation appNavigation() {
@@ -43,7 +53,8 @@ public final class ScreenFactory {
   }
 
   public WebViewPage webViewPage() {
-    return create(() -> new AndroidWebViewPage(driver), () -> new IosWebViewPage(driver));
+    return create(
+        () -> new AndroidWebViewPage(driver), () -> new IosWebViewPage(driver, targetType));
   }
 
   public ProductCatalogPage productCatalogPage() {
@@ -52,16 +63,18 @@ public final class ScreenFactory {
   }
 
   public LoginPage loginPage() {
-    return create(() -> new AndroidLoginPage(driver), () -> new IosLoginPage(driver));
+    return create(() -> new AndroidLoginPage(driver), () -> new IosLoginPage(driver, targetType));
   }
 
   public ShippingAddressPage shippingAddressPage() {
     return create(
-        () -> new AndroidShippingAddressPage(driver), () -> new IosShippingAddressPage(driver));
+        () -> new AndroidShippingAddressPage(driver),
+        () -> new IosShippingAddressPage(driver, targetType));
   }
 
   public PaymentPage paymentPage() {
-    return create(() -> new AndroidPaymentPage(driver), () -> new IosPaymentPage(driver));
+    return create(
+        () -> new AndroidPaymentPage(driver), () -> new IosPaymentPage(driver, targetType));
   }
 
   public OrderReviewPage orderReviewPage() {

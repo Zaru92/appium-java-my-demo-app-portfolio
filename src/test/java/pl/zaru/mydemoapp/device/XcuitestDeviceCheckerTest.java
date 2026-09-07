@@ -23,7 +23,7 @@ public final class XcuitestDeviceCheckerTest {
             (uri, timeout) -> {
               requestedUri.set(uri);
 
-              return new XcuitestDeviceChecker.TunnelRegistryResponse(
+              return new HttpProbeResponse(
                   200,
                   "{\"status\":\"OK\",\"tunnels\":{\"" + UDID + "\":{\"udid\":\"" + UDID + "\"}}}");
             });
@@ -37,9 +37,7 @@ public final class XcuitestDeviceCheckerTest {
   public void shouldRejectRealIosDeviceWithoutActiveTunnel() {
     XcuitestDeviceChecker checker =
         new XcuitestDeviceChecker(
-            (uri, timeout) ->
-                new XcuitestDeviceChecker.TunnelRegistryResponse(
-                    200, "{\"status\":\"OK\",\"tunnels\":{}}"));
+            (uri, timeout) -> new HttpProbeResponse(200, "{\"status\":\"OK\",\"tunnels\":{}}"));
 
     IllegalStateException exception =
         expectThrows(IllegalStateException.class, () -> checker.verify(realDevice()));
@@ -52,9 +50,7 @@ public final class XcuitestDeviceCheckerTest {
   public void shouldRejectUnavailableTunnelRegistry() {
     XcuitestDeviceChecker checker =
         new XcuitestDeviceChecker(
-            (uri, timeout) ->
-                new XcuitestDeviceChecker.TunnelRegistryResponse(
-                    503, "tunnel registry unavailable"));
+            (uri, timeout) -> new HttpProbeResponse(503, "tunnel registry unavailable"));
 
     IllegalStateException exception =
         expectThrows(IllegalStateException.class, () -> checker.verify(realDevice()));

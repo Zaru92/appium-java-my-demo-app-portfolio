@@ -20,9 +20,8 @@ public final class AndroidActions {
   }
 
   public void hideKeyboardIfPresent() {
-    if (driver instanceof AndroidDriver androidDriver && androidDriver.isKeyboardShown()) {
-
-      androidDriver.pressKey(new KeyEvent(AndroidKey.BACK));
+    if (driver.isKeyboardShown()) {
+      driver.pressKey(new KeyEvent(AndroidKey.BACK));
     }
   }
 }

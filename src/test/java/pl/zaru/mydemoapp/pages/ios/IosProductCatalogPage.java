@@ -9,6 +9,7 @@ import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductSort;
+import pl.zaru.mydemoapp.pages.locators.IosLocators;
 import pl.zaru.mydemoapp.testdata.model.TestProduct;
 
 public final class IosProductCatalogPage extends BasePage implements ProductCatalogPage {
@@ -63,11 +64,7 @@ public final class IosProductCatalogPage extends BasePage implements ProductCata
   public ProductDetailsPage openProduct(TestProduct product) {
     String productName = Objects.requireNonNull(product, "product must not be null").iosName();
 
-    String escapedProductName = productName.replace("\\", "\\\\").replace("'", "\\'");
-
-    By productNameLabel =
-        AppiumBy.iOSNsPredicateString(
-            "type == 'XCUIElementTypeStaticText' " + "AND label == '" + escapedProductName + "'");
+    By productNameLabel = IosLocators.staticTextWithLabel(productName);
 
     tap(productNameLabel);
 

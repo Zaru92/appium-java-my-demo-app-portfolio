@@ -5,7 +5,7 @@ import java.util.Objects;
 import pl.zaru.mydemoapp.config.TestConfig;
 
 public final class DriverManager {
-  private static final ThreadLocal<AppiumDriver> DRIVER = new ThreadLocal<>();
+  private static final ThreadLocal<Session> SESSION = new ThreadLocal<>();
 
   private DriverManager() {}
 
@@ -17,32 +17,49 @@ public final class DriverManager {
     }
 
     AppiumDriver driver = DriverFactory.create(config);
-    DRIVER.set(driver);
+    SESSION.set(new Session(driver, config));
   }
 
   public static AppiumDriver getDriver() {
-    AppiumDriver driver = DRIVER.get();
+    Session session = SESSION.get();
 
-    if (driver == null) {
+    if (session == null) {
       throw new IllegalStateException("No Appium driver is bound to the current thread.");
     }
 
-    return driver;
+    return session.driver();
+  }
+
+  public static TestConfig getConfig() {
+    Session session = SESSION.get();
+
+    if (session == null) {
+      throw new IllegalStateException("No test configuration is bound to the current thread.");
+    }
+
+    return session.config();
   }
 
   public static boolean hasSession() {
-    return DRIVER.get() != null;
+    return SESSION.get() != null;
   }
 
   public static void quitSession() {
-    AppiumDriver driver = DRIVER.get();
+    Session session = SESSION.get();
 
     try {
-      if (driver != null) {
-        driver.quit();
+      if (session != null) {
+        session.driver().quit();
       }
     } finally {
-      DRIVER.remove();
+      SESSION.remove();
+    }
+  }
+
+  private record Session(AppiumDriver driver, TestConfig config) {
+    private Session {
+      Objects.requireNonNull(driver, "driver must not be null");
+      Objects.requireNonNull(config, "config must not be null");
     }
   }
 }

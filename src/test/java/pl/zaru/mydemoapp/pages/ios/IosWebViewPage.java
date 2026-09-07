@@ -4,6 +4,7 @@ import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
 import pl.zaru.mydemoapp.actions.IosActions;
+import pl.zaru.mydemoapp.config.TargetType;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.WebViewPage;
 
@@ -19,9 +20,9 @@ public final class IosWebViewPage extends BasePage implements WebViewPage {
 
   private final IosActions iosActions;
 
-  public IosWebViewPage(AppiumDriver driver) {
+  public IosWebViewPage(AppiumDriver driver, TargetType targetType) {
     super(driver);
-    iosActions = new IosActions(driver);
+    iosActions = new IosActions(driver, targetType);
   }
 
   @Override
@@ -32,7 +33,7 @@ public final class IosWebViewPage extends BasePage implements WebViewPage {
   @Override
   public void openUrl(String url) {
     replaceText(URL_INPUT, url, "url");
-    iosActions.hideSimulatorSoftwareKeyboardIfPresent();
+    iosActions.hideKeyboardIfPresent();
     tap(GO_TO_SITE_BUTTON);
   }
 

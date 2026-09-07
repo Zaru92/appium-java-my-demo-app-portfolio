@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Objects;
 import pl.zaru.mydemoapp.config.DeviceConfig;
 import pl.zaru.mydemoapp.config.TargetType;
+import pl.zaru.mydemoapp.system.CommandExecutor;
+import pl.zaru.mydemoapp.system.CommandResult;
+import pl.zaru.mydemoapp.system.SystemCommandExecutor;
 
 public final class AdbDeviceChecker implements DeviceChecker {
   private static final Duration COMMAND_TIMEOUT = Duration.ofSeconds(10);
@@ -41,7 +44,7 @@ public final class AdbDeviceChecker implements DeviceChecker {
     if (!"device".equals(state.output())) {
       throw new IllegalStateException(
           "Android target %s is not ready. Expected ADB state 'device', but was '%s'."
-              .formatted(udid, displayOutput(state)));
+              .formatted(udid, state.displayOutput()));
     }
 
     CommandResult bootState =
@@ -53,7 +56,7 @@ public final class AdbDeviceChecker implements DeviceChecker {
     if (!"1".equals(bootState.output())) {
       throw new IllegalStateException(
           "Android target %s has not completed booting. Received '%s'."
-              .formatted(udid, displayOutput(bootState)));
+              .formatted(udid, bootState.displayOutput()));
     }
   }
 
@@ -63,13 +66,9 @@ public final class AdbDeviceChecker implements DeviceChecker {
     if (!result.successful()) {
       throw new IllegalStateException(
           "%s failed for %s with exit code %d: %s"
-              .formatted(checkName, udid, result.exitCode(), displayOutput(result)));
+              .formatted(checkName, udid, result.exitCode(), result.displayOutput()));
     }
 
     return result;
-  }
-
-  private static String displayOutput(CommandResult result) {
-    return result.output().isBlank() ? "<empty>" : result.output();
   }
 }

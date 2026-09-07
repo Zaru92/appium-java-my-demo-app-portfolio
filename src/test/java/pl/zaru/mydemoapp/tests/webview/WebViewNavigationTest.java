@@ -37,7 +37,7 @@ public final class WebViewNavigationTest extends BaseTest {
               + "because its WKWebView is not inspectable.");
     }
 
-    ScreenFactory screens = new ScreenFactory(driver());
+    ScreenFactory screens = screenFactory();
     ContextManager contextManager = new ContextManager(driver());
 
     AppNavigation appNavigation = screens.appNavigation();

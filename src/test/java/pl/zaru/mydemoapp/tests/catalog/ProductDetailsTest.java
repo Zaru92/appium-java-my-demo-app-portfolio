@@ -23,7 +23,7 @@ public final class ProductDetailsTest extends BaseTest {
   @Severity(SeverityLevel.CRITICAL)
   @Test(groups = {TestGroups.SMOKE, TestGroups.REGRESSION, TestGroups.CATALOG})
   public void shouldOpenSelectedProductDetails() {
-    ScreenFactory screens = new ScreenFactory(driver());
+    ScreenFactory screens = screenFactory();
     TestProduct product = TestProduct.BACKPACK;
 
     ProductCatalogPage catalogPage = screens.productCatalogPage();

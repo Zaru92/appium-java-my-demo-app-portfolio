@@ -12,7 +12,6 @@ import java.util.List;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pl.zaru.mydemoapp.base.BaseTest;
-import pl.zaru.mydemoapp.pages.ScreenFactory;
 import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductSort;
 import pl.zaru.mydemoapp.tests.TestGroups;
@@ -32,7 +31,7 @@ public final class ProductSortingTest extends BaseTest {
       dataProvider = "productSorts",
       groups = {TestGroups.REGRESSION, TestGroups.CATALOG})
   public void shouldSortVisibleProductsByName(ProductSort sort) {
-    ProductCatalogPage catalogPage = new ScreenFactory(driver()).productCatalogPage();
+    ProductCatalogPage catalogPage = screenFactory().productCatalogPage();
 
     assertTrue(catalogPage.isLoaded(), "Product catalog should be displayed.");
 
