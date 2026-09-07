@@ -23,7 +23,7 @@ preflight checks, and Allure reporting.
 - Native-to-WebView context switching and DOM-level validation on Android
 - Android emulator and physical-device execution
 - iOS Simulator and physical-device execution
-- Thread-safe Appium driver management with `ThreadLocal`
+- Thread-safe Appium driver and runtime-configuration management with `ThreadLocal`
 - Layered configuration with command-line and TestNG suite overrides
 - Preflight validation of the Appium server, application binary, devices, ports, and Remote XPC
   tunnels
@@ -47,7 +47,7 @@ preflight checks, and Allure reporting.
 | Allure TestNG | 2.35.4 |
 | SLF4J / Logback | Structured runtime logging |
 | Spotless / google-java-format | Source formatting verification |
-| PMD 7.26.0 | Static analysis with a project-specific ruleset |
+| PMD 7.27.0 | Static analysis with a project-specific ruleset |
 | GitHub Actions | Framework quality gate and Android/iOS virtual-device smoke tests |
 | CodeQL | Static security analysis of framework and test sources |
 | Dependency Review | Pull-request vulnerability gate for runtime and test dependencies |
@@ -78,11 +78,14 @@ Confirmed defects and automation limitations in the upstream application builds 
 | `config` | Platform, device, and runtime configuration |
 | `device` | Environment and execution-target preflight checks |
 | `driver` | Driver lifecycle, capabilities, platform driver creation, and context switching |
+| `flows` | Reusable business workflows used to prepare test preconditions |
 | `pages.contracts` | Shared cross-platform screen APIs |
 | `pages.android` | Android Page Objects and locators |
 | `pages.ios` | iOS Page Objects and locators |
+| `pages.locators` | Safe construction of dynamic Android and iOS locators |
 | `pages.web` | Web Page Objects used after switching to a WebView context |
 | `actions` | Platform-specific reusable mobile interactions |
+| `system` | Timeout-bound execution of local operating-system commands |
 | `testdata` | Immutable test models and factories |
 | `listeners` | Suite preflight and failure handling |
 | `reporting` | Allure environment data and diagnostic artifacts |

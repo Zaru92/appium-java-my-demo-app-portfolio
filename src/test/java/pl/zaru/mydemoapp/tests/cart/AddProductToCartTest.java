@@ -25,7 +25,7 @@ public final class AddProductToCartTest extends BaseTest {
   @Test(groups = {TestGroups.SMOKE, TestGroups.REGRESSION, TestGroups.CART})
   public void shouldAddSelectedProductToCart() {
 
-    ScreenFactory screens = new ScreenFactory(driver());
+    ScreenFactory screens = screenFactory();
 
     TestProduct product = TestProduct.BACKPACK;
 

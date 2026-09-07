@@ -9,6 +9,7 @@ import pl.zaru.mydemoapp.config.ConfigLoader;
 import pl.zaru.mydemoapp.driver.DriverManager;
 import pl.zaru.mydemoapp.listeners.DevicePreflightListener;
 import pl.zaru.mydemoapp.listeners.ScreenshotOnFailureListener;
+import pl.zaru.mydemoapp.pages.ScreenFactory;
 
 @Listeners({DevicePreflightListener.class, ScreenshotOnFailureListener.class})
 public abstract class BaseTest {
@@ -24,5 +25,9 @@ public abstract class BaseTest {
 
   protected final AppiumDriver driver() {
     return DriverManager.getDriver();
+  }
+
+  protected final ScreenFactory screenFactory() {
+    return new ScreenFactory(driver(), DriverManager.getConfig());
   }
 }

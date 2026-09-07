@@ -23,7 +23,7 @@ public final class AppLaunchSmokeTest extends BaseTest {
   @Test(groups = {TestGroups.SMOKE, TestGroups.REGRESSION, TestGroups.CATALOG})
   public void shouldLaunchApplication() {
 
-    ScreenFactory screens = new ScreenFactory(driver());
+    ScreenFactory screens = screenFactory();
 
     assertNotNull(driver().getSessionId(), "Appium session should be active.");
 

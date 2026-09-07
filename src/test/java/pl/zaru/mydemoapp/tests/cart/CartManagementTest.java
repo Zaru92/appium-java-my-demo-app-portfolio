@@ -26,7 +26,7 @@ public final class CartManagementTest extends BaseTest {
   @Test(groups = {TestGroups.REGRESSION, TestGroups.CART})
   public void shouldUpdateQuantityAndRemoveProduct() {
 
-    ScreenFactory screens = new ScreenFactory(driver());
+    ScreenFactory screens = screenFactory();
 
     TestProduct product = TestProduct.BACKPACK;
 

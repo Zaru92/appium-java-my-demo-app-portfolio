@@ -11,12 +11,10 @@ import java.util.Objects;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pl.zaru.mydemoapp.base.BaseTest;
+import pl.zaru.mydemoapp.flows.CheckoutFlow;
 import pl.zaru.mydemoapp.pages.ScreenFactory;
-import pl.zaru.mydemoapp.pages.contracts.CartPage;
 import pl.zaru.mydemoapp.pages.contracts.LoginPage;
 import pl.zaru.mydemoapp.pages.contracts.LoginValidation;
-import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
-import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
 import pl.zaru.mydemoapp.testdata.factory.UserFactory;
 import pl.zaru.mydemoapp.testdata.model.TestProduct;
 import pl.zaru.mydemoapp.testdata.model.TestUser;
@@ -50,20 +48,10 @@ public final class CheckoutLoginValidationTest extends BaseTest {
   public void shouldRejectCheckoutLoginWhenRequiredCredentialIsMissing(
       LoginValidationCase testCase) {
 
-    ScreenFactory screens = new ScreenFactory(driver());
+    ScreenFactory screens = screenFactory();
+    CheckoutFlow checkout = new CheckoutFlow(screens);
 
-    ProductCatalogPage catalogPage = screens.productCatalogPage();
-
-    ProductDetailsPage detailsPage = catalogPage.openProduct(TestProduct.BACKPACK);
-    detailsPage.addToCart();
-
-    CartPage cartPage = detailsPage.openCart();
-    assertTrue(cartPage.isLoaded(), "Cart should be displayed.");
-
-    cartPage.proceedToCheckout();
-
-    LoginPage loginPage = screens.loginPage();
-    assertTrue(loginPage.isLoaded(), "Login page should be displayed.");
+    LoginPage loginPage = checkout.openLoginFor(TestProduct.BACKPACK);
 
     loginPage.login(testCase.username(), testCase.password());
 

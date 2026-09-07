@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Objects;
 import pl.zaru.mydemoapp.config.DeviceConfig;
 import pl.zaru.mydemoapp.config.TargetType;
+import pl.zaru.mydemoapp.system.CommandExecutor;
+import pl.zaru.mydemoapp.system.CommandResult;
+import pl.zaru.mydemoapp.system.SystemCommandExecutor;
 
 public final class SimctlDeviceChecker implements DeviceChecker {
   private static final Duration COMMAND_TIMEOUT = Duration.ofSeconds(30);
@@ -35,7 +38,7 @@ public final class SimctlDeviceChecker implements DeviceChecker {
     if (!result.successful()) {
       throw new IllegalStateException(
           "Could not list booted iOS simulators. Exit code %d: %s"
-              .formatted(result.exitCode(), displayOutput(result)));
+              .formatted(result.exitCode(), result.displayOutput()));
     }
 
     boolean simulatorAvailable =
@@ -56,9 +59,5 @@ public final class SimctlDeviceChecker implements DeviceChecker {
         .udid()
         .map(udid -> line.contains("(" + udid + ")"))
         .orElseGet(() -> line.startsWith(device.deviceName() + " ("));
-  }
-
-  private static String displayOutput(CommandResult result) {
-    return result.output().isBlank() ? "<empty>" : result.output();
   }
 }

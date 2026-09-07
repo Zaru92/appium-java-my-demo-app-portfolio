@@ -1,6 +1,5 @@
 package pl.zaru.mydemoapp.pages.android;
 
-import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 import java.util.List;
 import java.util.Objects;
@@ -9,6 +8,7 @@ import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductSort;
+import pl.zaru.mydemoapp.pages.locators.AndroidLocators;
 import pl.zaru.mydemoapp.testdata.model.TestProduct;
 
 public final class AndroidProductCatalogPage extends BasePage implements ProductCatalogPage {
@@ -60,13 +60,8 @@ public final class AndroidProductCatalogPage extends BasePage implements Product
   public ProductDetailsPage openProduct(TestProduct product) {
     String productName = Objects.requireNonNull(product, "product must not be null").androidName();
 
-    String escapedProductName = productName.replace("\\", "\\\\").replace("\"", "\\\"");
-
     By productImage =
-        AppiumBy.androidUIAutomator(
-            ("new UiSelector().resourceId(\"%s\").text(\"%s\")"
-                    + ".fromParent(new UiSelector().resourceId(\"%s\"))")
-                .formatted(PRODUCT_NAME_ID, escapedProductName, PRODUCT_IMAGE_ID));
+        AndroidLocators.siblingByResourceId(PRODUCT_NAME_ID, productName, PRODUCT_IMAGE_ID);
 
     tap(productImage);
 

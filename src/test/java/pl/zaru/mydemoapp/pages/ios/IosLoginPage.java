@@ -5,6 +5,7 @@ import io.appium.java_client.AppiumDriver;
 import java.util.Objects;
 import org.openqa.selenium.By;
 import pl.zaru.mydemoapp.actions.IosActions;
+import pl.zaru.mydemoapp.config.TargetType;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.LoginPage;
 import pl.zaru.mydemoapp.pages.contracts.LoginValidation;
@@ -30,9 +31,9 @@ public final class IosLoginPage extends BasePage implements LoginPage {
 
   private final IosActions iosActions;
 
-  public IosLoginPage(AppiumDriver driver) {
+  public IosLoginPage(AppiumDriver driver, TargetType targetType) {
     super(driver);
-    iosActions = new IosActions(driver);
+    iosActions = new IosActions(driver, targetType);
   }
 
   @Override
@@ -45,8 +46,9 @@ public final class IosLoginPage extends BasePage implements LoginPage {
     replaceTextAllowingEmpty(USERNAME_INPUT, username, "username");
     replaceTextAllowingEmpty(PASSWORD_INPUT, password, "password");
 
-    iosActions.hideSimulatorSoftwareKeyboardIfPresent();
+    iosActions.hideKeyboardIfPresent();
     tap(LOGIN_BUTTON);
+    iosActions.dismissPasswordSavePromptIfPresent();
   }
 
   @Override

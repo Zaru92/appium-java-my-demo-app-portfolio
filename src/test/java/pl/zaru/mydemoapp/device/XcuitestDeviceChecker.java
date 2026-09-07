@@ -2,9 +2,6 @@ package pl.zaru.mydemoapp.device;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -17,15 +14,14 @@ public final class XcuitestDeviceChecker implements DeviceChecker {
 
   private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(5);
 
-  private final TunnelRegistryClient tunnelRegistryClient;
+  private final HttpProbe httpProbe;
 
   public XcuitestDeviceChecker() {
-    this(new JavaTunnelRegistryClient());
+    this(new JavaHttpProbe(REQUEST_TIMEOUT));
   }
 
-  XcuitestDeviceChecker(TunnelRegistryClient tunnelRegistryClient) {
-    this.tunnelRegistryClient =
-        Objects.requireNonNull(tunnelRegistryClient, "tunnelRegistryClient must not be null");
+  XcuitestDeviceChecker(HttpProbe httpProbe) {
+    this.httpProbe = Objects.requireNonNull(httpProbe, "httpProbe must not be null");
   }
 
   @Override
@@ -44,13 +40,12 @@ public final class XcuitestDeviceChecker implements DeviceChecker {
                     new IllegalStateException(
                         "udid must be provided to verify a real iOS device."));
 
-    TunnelRegistryResponse response =
-        tunnelRegistryClient.get(TUNNEL_REGISTRY_URI, REQUEST_TIMEOUT);
+    HttpProbeResponse response = requestTunnelRegistry();
 
     if (response.statusCode() < 200 || response.statusCode() >= 300) {
       throw new IllegalStateException(
           "Remote XPC tunnel registry returned HTTP %d: %s"
-              .formatted(response.statusCode(), displayBody(response.body())));
+              .formatted(response.statusCode(), response.displayBody()));
     }
 
     Pattern deviceTunnelPattern = Pattern.compile("\"" + Pattern.quote(udid) + "\"\\s*:\\s*\\{");
@@ -62,49 +57,16 @@ public final class XcuitestDeviceChecker implements DeviceChecker {
     }
   }
 
-  private static String displayBody(String body) {
-    String normalized = body.replaceAll("\\s+", " ").trim();
-
-    if (normalized.isEmpty()) {
-      return "<empty>";
-    }
-
-    return normalized.length() <= 300 ? normalized : normalized.substring(0, 300) + "...";
-  }
-
-  @FunctionalInterface
-  interface TunnelRegistryClient {
-    TunnelRegistryResponse get(URI registryUri, Duration timeout);
-  }
-
-  record TunnelRegistryResponse(int statusCode, String body) {
-    TunnelRegistryResponse {
-      Objects.requireNonNull(body, "body must not be null");
-    }
-  }
-
-  private static final class JavaTunnelRegistryClient implements TunnelRegistryClient {
-    private final HttpClient httpClient =
-        HttpClient.newBuilder().connectTimeout(REQUEST_TIMEOUT).build();
-
-    @Override
-    public TunnelRegistryResponse get(URI registryUri, Duration timeout) {
-      HttpRequest request = HttpRequest.newBuilder(registryUri).timeout(timeout).GET().build();
-
-      try {
-        HttpResponse<String> response =
-            httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-        return new TunnelRegistryResponse(response.statusCode(), response.body());
-      } catch (InterruptedException exception) {
-        Thread.currentThread().interrupt();
-
-        throw new IllegalStateException(
-            "Remote XPC tunnel request was interrupted: " + registryUri, exception);
-      } catch (IOException exception) {
-        throw new IllegalStateException(
-            "Remote XPC tunnel registry is not reachable at " + registryUri + ".", exception);
-      }
+  private HttpProbeResponse requestTunnelRegistry() {
+    try {
+      return httpProbe.get(TUNNEL_REGISTRY_URI, REQUEST_TIMEOUT);
+    } catch (InterruptedException exception) {
+      Thread.currentThread().interrupt();
+      throw new IllegalStateException(
+          "Remote XPC tunnel request was interrupted: " + TUNNEL_REGISTRY_URI, exception);
+    } catch (IOException exception) {
+      throw new IllegalStateException(
+          "Remote XPC tunnel registry is not reachable at " + TUNNEL_REGISTRY_URI + ".", exception);
     }
   }
 }

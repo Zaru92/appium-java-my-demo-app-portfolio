@@ -9,11 +9,10 @@ import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
 import org.testng.annotations.Test;
 import pl.zaru.mydemoapp.base.BaseTest;
+import pl.zaru.mydemoapp.flows.CheckoutFlow;
 import pl.zaru.mydemoapp.pages.ScreenFactory;
 import pl.zaru.mydemoapp.pages.contracts.CartPage;
 import pl.zaru.mydemoapp.pages.contracts.LoginPage;
-import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
-import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
 import pl.zaru.mydemoapp.testdata.model.TestProduct;
 import pl.zaru.mydemoapp.tests.TestGroups;
 
@@ -26,19 +25,12 @@ public final class CheckoutAuthenticationTest extends BaseTest {
   @Test(groups = {TestGroups.REGRESSION, TestGroups.AUTHENTICATION})
   public void shouldRequireLoginBeforeCheckout() {
 
-    ScreenFactory screens = new ScreenFactory(driver());
+    ScreenFactory screens = screenFactory();
+    CheckoutFlow checkout = new CheckoutFlow(screens);
 
     TestProduct product = TestProduct.BACKPACK;
 
-    ProductCatalogPage catalogPage = screens.productCatalogPage();
-
-    ProductDetailsPage detailsPage = catalogPage.openProduct(product);
-
-    detailsPage.addToCart();
-
-    CartPage cartPage = detailsPage.openCart();
-
-    assertTrue(cartPage.isLoaded(), "Cart should be displayed.");
+    CartPage cartPage = checkout.openCartWith(product);
 
     cartPage.proceedToCheckout();
 

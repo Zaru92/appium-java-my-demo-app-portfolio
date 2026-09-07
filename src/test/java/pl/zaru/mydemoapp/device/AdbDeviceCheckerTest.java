@@ -10,6 +10,8 @@ import java.util.Queue;
 import org.testng.annotations.Test;
 import pl.zaru.mydemoapp.config.DeviceConfig;
 import pl.zaru.mydemoapp.config.TargetType;
+import pl.zaru.mydemoapp.system.CommandExecutor;
+import pl.zaru.mydemoapp.system.CommandResult;
 
 public final class AdbDeviceCheckerTest {
 

@@ -4,6 +4,7 @@ import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
 import pl.zaru.mydemoapp.actions.IosActions;
+import pl.zaru.mydemoapp.config.TargetType;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.ShippingAddressPage;
 import pl.zaru.mydemoapp.testdata.model.TestAddress;
@@ -34,13 +35,12 @@ public final class IosShippingAddressPage extends BasePage implements ShippingAd
     return AppiumBy.iOSNsPredicateString(
         "type == 'XCUIElementTypeTextField' " + "AND value == '" + placeholder + "'");
   }
-  ;
 
   private final IosActions iosActions;
 
-  public IosShippingAddressPage(AppiumDriver driver) {
+  public IosShippingAddressPage(AppiumDriver driver, TargetType targetType) {
     super(driver);
-    iosActions = new IosActions(driver);
+    iosActions = new IosActions(driver, targetType);
   }
 
   @Override
@@ -65,7 +65,7 @@ public final class IosShippingAddressPage extends BasePage implements ShippingAd
 
   @Override
   public void continueToPayment() {
-    iosActions.hideSimulatorSoftwareKeyboardIfPresent();
+    iosActions.hideKeyboardIfPresent();
     tap(TO_PAYMENT_BUTTON);
   }
 }

@@ -5,6 +5,7 @@ import io.appium.java_client.AppiumDriver;
 import java.util.Objects;
 import org.openqa.selenium.By;
 import pl.zaru.mydemoapp.actions.IosActions;
+import pl.zaru.mydemoapp.config.TargetType;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.PaymentPage;
 import pl.zaru.mydemoapp.testdata.model.TestPaymentCard;
@@ -27,9 +28,9 @@ public final class IosPaymentPage extends BasePage implements PaymentPage {
 
   private final IosActions iosActions;
 
-  public IosPaymentPage(AppiumDriver driver) {
+  public IosPaymentPage(AppiumDriver driver, TargetType targetType) {
     super(driver);
-    iosActions = new IosActions(driver);
+    iosActions = new IosActions(driver, targetType);
   }
 
   @Override
@@ -46,7 +47,7 @@ public final class IosPaymentPage extends BasePage implements PaymentPage {
     replaceText(EXPIRATION_DATE, paymentCard.expirationDate(), "expiration date");
     replaceText(SECURITY_CODE, paymentCard.securityCode(), "security code");
 
-    iosActions.hideSimulatorSoftwareKeyboardIfPresent();
+    iosActions.hideKeyboardIfPresent();
   }
 
   @Override

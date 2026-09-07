@@ -26,7 +26,7 @@ public final class AppiumServerCheckerTest {
             (uri, timeout) -> {
               requestedUri.set(uri);
 
-              return new AppiumServerChecker.StatusResponse(200, "{\"value\":{\"ready\":true}}");
+              return new HttpProbeResponse(200, "{\"value\":{\"ready\":true}}");
             });
 
     checker.verify(config());
@@ -38,8 +38,7 @@ public final class AppiumServerCheckerTest {
   public void shouldRejectAppiumServerThatIsNotReady() {
     AppiumServerChecker checker =
         new AppiumServerChecker(
-            (uri, timeout) ->
-                new AppiumServerChecker.StatusResponse(200, "{\"value\":{\"ready\":false}}"));
+            (uri, timeout) -> new HttpProbeResponse(200, "{\"value\":{\"ready\":false}}"));
 
     IllegalStateException exception =
         expectThrows(IllegalStateException.class, () -> checker.verify(config()));

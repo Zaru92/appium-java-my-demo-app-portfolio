@@ -6,6 +6,7 @@ import java.util.Objects;
 import org.openqa.selenium.By;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.CartPage;
+import pl.zaru.mydemoapp.pages.locators.AndroidLocators;
 import pl.zaru.mydemoapp.testdata.model.TestProduct;
 
 public final class AndroidCartPage extends BasePage implements CartPage {
@@ -39,17 +40,7 @@ public final class AndroidCartPage extends BasePage implements CartPage {
   public boolean containsProduct(TestProduct product) {
     String productName = Objects.requireNonNull(product, "product must not be null").androidName();
 
-    String escaped = productName.replace("\\", "\\\\").replace("\"", "\\\"");
-
-    By productTitle =
-        AppiumBy.androidUIAutomator(
-            "new UiSelector()"
-                + ".resourceId(\""
-                + CART_ITEM_TITLE_ID
-                + "\")"
-                + ".text(\""
-                + escaped
-                + "\")");
+    By productTitle = AndroidLocators.byResourceIdAndText(CART_ITEM_TITLE_ID, productName);
 
     return waitUntilVisible(productTitle).isDisplayed();
   }
