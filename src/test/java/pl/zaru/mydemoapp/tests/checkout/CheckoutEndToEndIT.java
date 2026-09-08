@@ -22,7 +22,7 @@ import pl.zaru.mydemoapp.tests.TestGroups;
 
 @Epic("My Demo App")
 @Feature("Checkout")
-public final class CheckoutEndToEndTest extends BaseTest {
+public final class CheckoutEndToEndIT extends BaseTest {
 
   @Story("Complete checkout successfully")
   @Severity(SeverityLevel.BLOCKER)

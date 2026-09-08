@@ -31,6 +31,13 @@ public final class ConfigLoaderTest {
   }
 
   @Test
+  public void shouldLoadDefaultWaitTimeout() {
+    TestConfig config = ConfigLoader.load(Map.of());
+
+    assertEquals(config.waitTimeout(), Duration.ofSeconds(10));
+  }
+
+  @Test
   public void shouldLoadIosConfiguration() {
     TestConfig config = ConfigLoader.load(Map.of("platform", "ios"));
 
@@ -57,12 +64,14 @@ public final class ConfigLoaderTest {
                 "deviceName", "Pixel 7",
                 "udid", "physical-device-udid",
                 "newCommandTimeoutSeconds", "180",
+                "waitTimeoutSeconds", "25",
                 "targetType", "real"));
 
     assertEquals(config.appiumUrl(), URI.create("http://127.0.0.1:4725"));
     assertEquals(config.device().deviceName(), "Pixel 7");
     assertEquals(config.device().udid().orElseThrow(), "physical-device-udid");
     assertEquals(config.newCommandTimeout(), Duration.ofSeconds(180));
+    assertEquals(config.waitTimeout(), Duration.ofSeconds(25));
     assertEquals(config.device().targetType(), TargetType.REAL_DEVICE);
   }
 
@@ -71,6 +80,13 @@ public final class ConfigLoaderTest {
       expectedExceptionsMessageRegExp = "newCommandTimeoutSeconds must be positive\\.")
   public void shouldRejectNonPositiveTimeout() {
     ConfigLoader.load(Map.of("newCommandTimeoutSeconds", "0"));
+  }
+
+  @Test(
+      expectedExceptions = IllegalStateException.class,
+      expectedExceptionsMessageRegExp = "waitTimeoutSeconds must be positive\\.")
+  public void shouldRejectNonPositiveWaitTimeout() {
+    ConfigLoader.load(Map.of("waitTimeoutSeconds", "0"));
   }
 
   @Test(

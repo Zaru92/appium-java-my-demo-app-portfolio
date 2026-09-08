@@ -54,6 +54,7 @@ public final class AppiumServerCheckerTest {
             TargetType.EMULATOR, "Pixel_8", Optional.of("emulator-5554"), Optional.empty()),
         Optional.empty(),
         Path.of("application.apk"),
-        Duration.ofSeconds(120));
+        Duration.ofSeconds(120),
+        Duration.ofSeconds(10));
   }
 }

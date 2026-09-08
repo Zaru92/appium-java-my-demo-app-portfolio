@@ -125,7 +125,8 @@ public final class IosActions {
       dismissWait.until(ExpectedConditions.invisibilityOfElementLocated(SAVE_PASSWORD_PROMPT));
     } catch (TimeoutException exception) {
       throw new IllegalStateException(
-          "The iOS Save Password prompt was detected but could not be dismissed by tapping Not Now.",
+          "The iOS Save Password prompt was detected but could not be dismissed by tapping Not"
+              + " Now.",
           exception);
     }
   }

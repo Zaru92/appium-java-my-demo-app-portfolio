@@ -10,7 +10,7 @@
     <test name="Android smoke">
         <parameter name="platform" value="android"/>
         <parameter name="targetType" value="emulator"/>
-        <parameter name="deviceName" value="Pixel 8"/>
+        <parameter name="deviceName" value="Pixel_8"/>
         <parameter name="udid" value="emulator-5554"/>
         <parameter name="systemPort" value="8200"/>
 

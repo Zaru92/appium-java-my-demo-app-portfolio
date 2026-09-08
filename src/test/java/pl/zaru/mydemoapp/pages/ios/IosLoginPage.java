@@ -1,11 +1,11 @@
 package pl.zaru.mydemoapp.pages.ios;
 
 import io.appium.java_client.AppiumBy;
-import io.appium.java_client.AppiumDriver;
+import io.qameta.allure.Allure;
 import java.util.Objects;
 import org.openqa.selenium.By;
 import pl.zaru.mydemoapp.actions.IosActions;
-import pl.zaru.mydemoapp.config.TargetType;
+import pl.zaru.mydemoapp.pages.PageContext;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.LoginPage;
 import pl.zaru.mydemoapp.pages.contracts.LoginValidation;
@@ -30,25 +30,29 @@ public final class IosLoginPage extends BasePage implements LoginPage {
 
   private final IosActions iosActions;
 
-  public IosLoginPage(AppiumDriver driver, TargetType targetType) {
-    super(driver);
-    iosActions = new IosActions(driver, targetType);
+  public IosLoginPage(PageContext context) {
+    super(context);
+    iosActions = new IosActions(driver(), context.targetType());
   }
 
   @Override
   public boolean isLoaded() {
-    return waitUntilVisible(LOGIN_TITLE).isDisplayed();
+    return isVisible(LOGIN_TITLE);
   }
 
   @Override
   public void login(String username, String password) {
-    replaceTextAllowingEmpty(USERNAME_INPUT, username, "username");
-    replaceTextAllowingEmpty(PASSWORD_INPUT, password, "password");
+    Allure.step(
+        "Submit login form",
+        () -> {
+          replaceTextAllowingEmpty(USERNAME_INPUT, username, "username");
+          replaceTextAllowingEmpty(PASSWORD_INPUT, password, "password");
 
-    iosActions.hideKeyboardIfPresent();
-    iosActions.scrollTo(LOGIN_BUTTON);
-    iosActions.tapAtCenter(LOGIN_BUTTON);
-    iosActions.dismissPasswordSavePromptIfPresent();
+          iosActions.hideKeyboardIfPresent();
+          iosActions.scrollTo(LOGIN_BUTTON);
+          iosActions.tapAtCenter(LOGIN_BUTTON);
+          iosActions.dismissPasswordSavePromptIfPresent();
+        });
   }
 
   @Override
@@ -59,6 +63,6 @@ public final class IosLoginPage extends BasePage implements LoginPage {
           case PASSWORD_REQUIRED -> PASSWORD_REQUIRED_MESSAGE;
         };
 
-    return waitUntilVisible(locator).isDisplayed();
+    return isVisible(locator);
   }
 }

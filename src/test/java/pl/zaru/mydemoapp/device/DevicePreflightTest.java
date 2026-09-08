@@ -110,6 +110,7 @@ public final class DevicePreflightTest {
         device,
         Optional.empty(),
         Path.of("app-under-test"),
-        Duration.ofSeconds(120));
+        Duration.ofSeconds(120),
+        Duration.ofSeconds(10));
   }
 }

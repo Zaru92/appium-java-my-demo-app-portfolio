@@ -1,9 +1,10 @@
 package pl.zaru.mydemoapp.pages.ios;
 
 import io.appium.java_client.AppiumBy;
-import io.appium.java_client.AppiumDriver;
+import io.qameta.allure.Step;
 import java.util.Objects;
 import org.openqa.selenium.By;
+import pl.zaru.mydemoapp.pages.PageContext;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.CartPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
@@ -18,13 +19,13 @@ public final class IosProductDetailsPage extends BasePage implements ProductDeta
 
   private static final By CART_TAB = AppiumBy.accessibilityId("Cart-tab-item");
 
-  public IosProductDetailsPage(AppiumDriver driver) {
-    super(driver);
+  public IosProductDetailsPage(PageContext context) {
+    super(context);
   }
 
   @Override
   public boolean isLoaded() {
-    return waitUntilVisible(DETAILS_SCREEN).isDisplayed();
+    return isVisible(DETAILS_SCREEN);
   }
 
   @Override
@@ -34,17 +35,19 @@ public final class IosProductDetailsPage extends BasePage implements ProductDeta
 
     By productName = IosLocators.staticTextWithLabel(expectedProductName);
 
-    return waitUntilVisible(productName).isDisplayed();
+    return isVisible(productName);
   }
 
   @Override
+  @Step("Add product to cart")
   public void addToCart() {
     tap(ADD_TO_CART_BUTTON);
   }
 
   @Override
+  @Step("Open cart")
   public CartPage openCart() {
     tap(CART_TAB);
-    return new IosCartPage(driver());
+    return new IosCartPage(pageContext());
   }
 }

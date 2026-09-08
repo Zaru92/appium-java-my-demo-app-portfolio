@@ -6,7 +6,7 @@ readonly SCRIPT_DIRECTORY="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 readonly PROJECT_DIRECTORY="$(cd -- "${SCRIPT_DIRECTORY}/.." && pwd)"
 readonly DEVICE_UDID="${ANDROID_REAL_UDID:?Set ANDROID_REAL_UDID before running this script.}"
 readonly SYSTEM_PORT="${ANDROID_REAL_SYSTEM_PORT:-8201}"
-readonly TEST_CLASS="${1:-AppLaunchSmokeTest}"
+readonly TEST_CLASS="${1:-AppLaunchSmokeIT}"
 
 if ! command -v adb >/dev/null 2>&1; then
   echo "adb is not available on PATH." >&2
@@ -42,11 +42,12 @@ echo "Running ${TEST_CLASS} on ${device_name}, Android ${platform_version}."
 cd "${PROJECT_DIRECTORY}"
 
 exec ./mvnw clean \
+  -Pmobile \
   -Dplatform=android \
   -DtargetType=real \
   "-DdeviceName=${device_name}" \
   "-Dudid=${DEVICE_UDID}" \
   "-DplatformVersion=${platform_version}" \
   "-DsystemPort=${SYSTEM_PORT}" \
-  "-Dtest=${TEST_CLASS}" \
-  test
+  "-Dit.test=${TEST_CLASS}" \
+  verify

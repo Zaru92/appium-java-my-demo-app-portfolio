@@ -24,8 +24,6 @@ final class IosOptionsFactory {
 
     if (device.targetType() == TargetType.SIMULATOR) {
       options.setConnectHardwareKeyboard(true).setForceSimulatorSoftwareKeyboardPresence(false);
-
-      options.setCapability("appium:connectHardwareKeyboard", true);
     }
 
     device.udid().ifPresent(options::setUdid);

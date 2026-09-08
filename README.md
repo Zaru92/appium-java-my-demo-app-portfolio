@@ -28,7 +28,7 @@ preflight checks, and Allure reporting.
 - Preflight validation of the Appium server, application binary, devices, ports, and Remote XPC
   tunnels
 - Parallel Android and iOS smoke execution with isolated automation ports
-- Allure environment metadata, screenshots, and page source captured on failure
+- Allure business steps, environment metadata, screenshots, and page source captured on failure
 - Device-independent framework verification and Android/iOS virtual-device smoke tests in GitHub
   Actions
 - Reproducible Maven Wrapper build, automated Java formatting, and PMD static analysis
@@ -79,17 +79,18 @@ Confirmed defects and automation limitations in the upstream application builds 
 
 ## Architecture
 
-The test layer remains platform-independent. `ScreenFactory` selects the appropriate native Page
-Object at runtime, while shared contracts expose the same business operations to Android and iOS
-tests.
+The test layer remains platform-independent. `ScreenFactory` uses the validated
+`TestConfig.platform()` value to select the appropriate native Page Object and rejects a driver
+whose type does not match that platform. Shared contracts expose the same business operations to
+Android and iOS tests.
 
 ```mermaid
 flowchart TD
     Tests["TestNG scenarios"] --> Flows["Reusable business flows"]
     Tests --> Factory["ScreenFactory"]
     Flows --> Factory
-    Factory -->|AndroidDriver| Android["Android Page Objects"]
-    Factory -->|IOSDriver| IOS["iOS Page Objects"]
+    Factory -->|ANDROID| Android["Android Page Objects"]
+    Factory -->|IOS| IOS["iOS Page Objects"]
     Android -. implements .-> Contracts["Shared page contracts"]
     IOS -. implements .-> Contracts
     Android --> Appium["AppiumDriver"]
@@ -210,32 +211,36 @@ the [Android WebView](#android-webview) section.
 ### Android Emulator
 
 ```bash
-./mvnw -Dplatform=android -Dtest=AppLaunchSmokeTest test
+./mvnw -Pmobile -Dplatform=android -Dit.test=AppLaunchSmokeIT verify
 ```
 
 ### iOS Simulator
 
 ```bash
-./mvnw -Dplatform=ios -Dtest=AppLaunchSmokeTest test
+./mvnw -Pmobile -Dplatform=ios -Dit.test=AppLaunchSmokeIT verify
 ```
 
 ### TestNG group
 
 ```bash
-./mvnw -Dplatform=android -Dgroups=smoke test
-./mvnw -Dplatform=ios -Dgroups=regression test
+./mvnw -Pmobile -Dplatform=android -Dgroups=smoke verify
+./mvnw -Pmobile -Dplatform=ios -Dgroups=regression verify
 ```
+
+Mobile scenarios use the `*IT` naming convention and run through Maven Failsafe only when the
+`mobile` profile is enabled. Maven Surefire is bound to `testng-framework.xml`, so a plain
+`./mvnw verify` remains device-independent and never starts an Appium session.
 
 ### Checkout validation
 
 Run the two required-field validation scenarios on each platform:
 
 ```bash
-./mvnw -Dplatform=android \
-  -Dtest=CheckoutShippingAddressValidationTest,CheckoutPaymentValidationTest test
+./mvnw -Pmobile -Dplatform=android \
+  -Dit.test=CheckoutShippingAddressValidationIT,CheckoutPaymentValidationIT verify
 
-./mvnw -Dplatform=ios \
-  -Dtest=CheckoutShippingAddressValidationTest,CheckoutPaymentValidationTest test
+./mvnw -Pmobile -Dplatform=ios \
+  -Dit.test=CheckoutShippingAddressValidationIT,CheckoutPaymentValidationIT verify
 ```
 
 Each scenario submits the form with exactly one empty required field. The test verifies
@@ -257,9 +262,10 @@ Run the WebView navigation test:
 
 ```bash
 ./mvnw clean \
+  -Pmobile \
   -Dplatform=android \
-  -Dtest=WebViewNavigationTest \
-  test
+  -Dit.test=WebViewNavigationIT \
+  verify
 ```
 
 The scenario switches from the native application context to a `WEBVIEW_*` context, validates the
@@ -276,8 +282,9 @@ targets, and run:
 
 ```bash
 ./mvnw clean \
-  -Dsurefire.suiteXmlFiles=src/test/resources/suites/testng-parallel.xml \
-  test
+  -Pmobile \
+  -Dfailsafe.suiteXmlFiles=src/test/resources/suites/testng-parallel.xml \
+  verify
 ```
 
 The suite validates that every parallel target has a unique UDID and platform-specific automation
@@ -294,7 +301,7 @@ Optional overrides:
 
 ```bash
 export ANDROID_REAL_SYSTEM_PORT=8201
-./scripts/run-real-android.sh ProductDetailsTest
+./scripts/run-real-android.sh ProductDetailsIT
 ```
 
 The runner verifies that the UDID belongs to an authorized physical device and automatically
@@ -321,7 +328,7 @@ Optional overrides:
 export IOS_REAL_APP_PATH=/absolute/path/to/application.ipa
 export IOS_REAL_WDA_LOCAL_PORT=8101
 export IOS_REAL_TUNNEL_REGISTRY_URL=http://127.0.0.1:42314/remotexpc/tunnels
-./scripts/run-real-ios.sh ProductDetailsTest
+./scripts/run-real-ios.sh ProductDetailsIT
 ```
 
 The runner verifies the IPA, retrieves the device name and iOS version from Xcode, and confirms
@@ -347,22 +354,26 @@ udid
 platformVersion
 app
 newCommandTimeoutSeconds
+waitTimeoutSeconds
 appWaitActivity
 systemPort
 wdaLocalPort
 ```
 
+`waitTimeoutSeconds` controls page-element and WebView-context waits and defaults to 10 seconds.
+`newCommandTimeoutSeconds` controls how long Appium keeps an idle session alive.
+
 Example:
 
 ```bash
-./mvnw \
+./mvnw -Pmobile \
   -Dplatform=android \
   -DtargetType=real \
   -Dudid=<android-device-udid> \
   -DdeviceName="Pixel 7" \
   -DsystemPort=8201 \
-  -Dtest=AppLaunchSmokeTest \
-  test
+  -Dit.test=AppLaunchSmokeIT \
+  verify
 ```
 
 ## Code quality
@@ -412,17 +423,21 @@ Run the complete device-independent framework quality gate:
 
 ```bash
 ./mvnw --batch-mode --no-transfer-progress \
-  -Dsurefire.suiteXmlFiles=src/test/resources/suites/testng-framework.xml \
   clean verify
 ```
 
 This command performs the same compilation, Maven Enforcer, Spotless, and PMD checks as the static
-code quality gate, and additionally runs all device-independent TestNG framework tests.
+code quality gate, and additionally runs all device-independent TestNG framework tests through
+Maven Surefire. Mobile `*IT` classes are excluded unless the `mobile` profile is explicitly
+enabled; those scenarios run through Maven Failsafe.
 
 It does not start Appium or create a mobile session. The same full verification runs in GitHub
 Actions for pushes and pull requests targeting `main`.
 
 ## Reports and diagnostics
+
+Framework test reports are written to `target/surefire-reports`, while mobile integration-test
+reports are written to `target/failsafe-reports`.
 
 Allure results are written to:
 
@@ -448,7 +463,9 @@ target/failure-artifacts
 ```
 
 When an active Allure test lifecycle is available, the same artifacts are also attached to the
-report.
+report. Business operations from reusable flows and Page Objects are recorded as nested Allure
+steps; credentials, address details, and payment-card data are intentionally omitted from step
+parameters.
 
 The Allure environment file records the platform, target type, device, automation engine,
 application, Appium server, Java version, host OS, and automation port.
@@ -490,25 +507,27 @@ manual request. It:
 
 ### Android Smoke
 
-`Android Smoke` is triggered manually from the GitHub Actions interface. It:
+`Android Smoke` runs for relevant pull-request changes, on a weekly schedule, and on manual
+request. It:
 
 1. starts a hardware-accelerated Android 15 emulator,
 2. installs pinned Appium and UiAutomator2 versions,
 3. downloads and verifies the Android application,
 4. starts the Appium server and waits for its status endpoint,
-5. runs `AppLaunchSmokeTest`,
-6. uploads Surefire, Allure, failure, and Appium server artifacts.
+5. runs `AppLaunchSmokeIT`,
+6. uploads Surefire, Failsafe, Allure, failure, and Appium server artifacts.
 
 ### iOS Simulator Smoke
 
-`iOS Simulator Smoke` is triggered manually from the GitHub Actions interface. It:
+`iOS Simulator Smoke` runs for relevant pull-request changes, on a weekly schedule, and on manual
+request. It:
 
 1. uses a macOS ARM64 runner with Xcode,
 2. installs pinned Appium and XCUITest versions,
 3. downloads and verifies the iOS Simulator application,
 4. selects and boots an available iPhone Simulator dynamically,
-5. starts the Appium server and runs `AppLaunchSmokeTest`,
-6. uploads Surefire, Allure, failure, and Appium server artifacts.
+5. starts the Appium server and runs `AppLaunchSmokeIT`,
+6. uploads Surefire, Failsafe, Allure, failure, and Appium server artifacts.
 
 Physical-device E2E tests remain local because they require signing identities, Remote XPC
 infrastructure, or USB-connected devices. They can later be moved to a self-hosted runner or a

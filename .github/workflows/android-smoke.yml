@@ -1,6 +1,19 @@
 name: Android Smoke
 
 on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/android-smoke.yml"
+      - ".mvn/**"
+      - "mvnw"
+      - "pom.xml"
+      - "scripts/**"
+      - "src/test/java/**"
+      - "src/test/resources/**"
+  schedule:
+    - cron: "17 3 * * 1"
   workflow_dispatch:
 
 permissions:
@@ -72,6 +85,7 @@ jobs:
           name: android-smoke-artifacts
           path: |
             target/surefire-reports/
+            target/failsafe-reports/
             target/allure-results/
             target/failure-artifacts/
             target/appium-server.log

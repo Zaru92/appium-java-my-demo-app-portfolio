@@ -20,7 +20,7 @@ import pl.zaru.mydemoapp.tests.TestGroups;
 
 @Epic("My Demo App")
 @Feature("Authentication")
-public final class CheckoutLoginTest extends BaseTest {
+public final class CheckoutLoginIT extends BaseTest {
 
   @Story("Continue checkout after login")
   @Severity(SeverityLevel.BLOCKER)

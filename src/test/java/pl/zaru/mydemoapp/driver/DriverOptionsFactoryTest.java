@@ -77,7 +77,8 @@ public final class DriverOptionsFactoryTest {
             Optional.empty()),
         Optional.of("com.saucelabs.mydemoapp.android.view.activities.MainActivity"),
         Path.of("src/test/resources/apps/my-demo-app-android-2.2.0.apk"),
-        Duration.ofSeconds(120));
+        Duration.ofSeconds(120),
+        Duration.ofSeconds(10));
   }
 
   private static TestConfig iosConfig() {
@@ -93,6 +94,7 @@ public final class DriverOptionsFactoryTest {
             Optional.of(8100)),
         Optional.empty(),
         Path.of("src/test/resources/apps/my-demo-app-ios-simulator-2.2.2.zip"),
-        Duration.ofSeconds(120));
+        Duration.ofSeconds(120),
+        Duration.ofSeconds(10));
   }
 }

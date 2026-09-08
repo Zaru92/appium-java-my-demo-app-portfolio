@@ -2,9 +2,7 @@ package pl.zaru.mydemoapp.pages.contracts;
 
 import pl.zaru.mydemoapp.testdata.model.TestAddress;
 
-public interface ShippingAddressPage {
-
-  boolean isLoaded();
+public interface ShippingAddressPage extends LoadablePage {
 
   void fillAddress(TestAddress address);
 

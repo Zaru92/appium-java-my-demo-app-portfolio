@@ -19,10 +19,10 @@ public final class SimctlDeviceCheckerTest {
             new CommandResult(
                 0,
                 """
-                    == Devices ==
-                    -- iOS 26.4 --
-                        iPhone 17 Pro (ABC-123) (Booted)
-                    """);
+                == Devices ==
+                -- iOS 26.4 --
+                    iPhone 17 Pro (ABC-123) (Booted)
+                """);
 
     new SimctlDeviceChecker(executor).verify(iosSimulator());
   }

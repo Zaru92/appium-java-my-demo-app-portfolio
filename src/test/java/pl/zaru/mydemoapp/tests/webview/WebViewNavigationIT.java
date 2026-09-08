@@ -21,7 +21,7 @@ import pl.zaru.mydemoapp.tests.TestGroups;
 
 @Epic("My Demo App")
 @Feature("Hybrid WebView")
-public final class WebViewNavigationTest extends BaseTest {
+public final class WebViewNavigationIT extends BaseTest {
 
   private static final String EXAMPLE_URL = "https://example.com";
 
@@ -38,7 +38,7 @@ public final class WebViewNavigationTest extends BaseTest {
     }
 
     ScreenFactory screens = screenFactory();
-    ContextManager contextManager = new ContextManager(driver());
+    ContextManager contextManager = new ContextManager(driver(), testConfig().waitTimeout());
 
     AppNavigation appNavigation = screens.appNavigation();
     WebViewPage webViewPage = screens.webViewPage();
@@ -52,7 +52,7 @@ public final class WebViewNavigationTest extends BaseTest {
     try {
       contextManager.switchToWebView();
 
-      ExampleDomainPage exampleDomainPage = new ExampleDomainPage(driver());
+      ExampleDomainPage exampleDomainPage = screens.exampleDomainPage();
 
       assertTrue(exampleDomainPage.isLoaded(), "Example Domain page should be displayed.");
 

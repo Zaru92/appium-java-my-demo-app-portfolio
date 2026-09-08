@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public final class SystemCommandExecutor implements CommandExecutor {
@@ -23,29 +26,42 @@ public final class SystemCommandExecutor implements CommandExecutor {
       throw new IllegalArgumentException("timeout must be positive");
     }
 
+    Process process;
+
     try {
-      Process process = new ProcessBuilder(command).redirectErrorStream(true).start();
+      process = new ProcessBuilder(command).redirectErrorStream(true).start();
+    } catch (IOException exception) {
+      throw new IllegalStateException(
+          "Could not execute command: " + String.join(" ", command), exception);
+    }
+
+    try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+      Future<String> outputReader =
+          executor.submit(() -> new String(process.getInputStream().readAllBytes(), UTF_8));
 
       boolean completed = process.waitFor(timeout.toMillis(), TimeUnit.MILLISECONDS);
 
       if (!completed) {
         process.destroyForcibly();
+        process.waitFor();
 
         throw new IllegalStateException(
             "Command timed out after %d seconds: %s"
                 .formatted(timeout.toSeconds(), String.join(" ", command)));
       }
 
-      String output = new String(process.getInputStream().readAllBytes(), UTF_8).trim();
+      String output = outputReader.get().trim();
 
       return new CommandResult(process.exitValue(), output);
     } catch (InterruptedException exception) {
+      process.destroyForcibly();
       Thread.currentThread().interrupt();
       throw new IllegalStateException(
           "Command execution was interrupted: " + String.join(" ", command), exception);
-    } catch (IOException exception) {
+    } catch (ExecutionException exception) {
+      process.destroyForcibly();
       throw new IllegalStateException(
-          "Could not execute command: " + String.join(" ", command), exception);
+          "Could not read output from command: " + String.join(" ", command), exception);
     }
   }
 }

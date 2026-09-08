@@ -19,7 +19,7 @@ import pl.zaru.mydemoapp.tests.TestGroups;
 
 @Epic("My Demo App")
 @Feature("Checkout")
-public final class CheckoutShippingAddressValidationTest extends BaseTest {
+public final class CheckoutShippingAddressValidationIT extends BaseTest {
 
   @Story("Validate required shipping address fields")
   @Severity(SeverityLevel.CRITICAL)

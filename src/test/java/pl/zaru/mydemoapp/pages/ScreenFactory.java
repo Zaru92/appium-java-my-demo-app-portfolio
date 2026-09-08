@@ -5,7 +5,7 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import java.util.Objects;
 import java.util.function.Supplier;
-import pl.zaru.mydemoapp.config.TargetType;
+import pl.zaru.mydemoapp.config.Platform;
 import pl.zaru.mydemoapp.config.TestConfig;
 import pl.zaru.mydemoapp.pages.android.AndroidAppNavigation;
 import pl.zaru.mydemoapp.pages.android.AndroidLoginPage;
@@ -31,6 +31,7 @@ import pl.zaru.mydemoapp.pages.ios.IosPaymentPage;
 import pl.zaru.mydemoapp.pages.ios.IosProductCatalogPage;
 import pl.zaru.mydemoapp.pages.ios.IosShippingAddressPage;
 import pl.zaru.mydemoapp.pages.ios.IosWebViewPage;
+import pl.zaru.mydemoapp.pages.web.ExampleDomainPage;
 
 /**
  * Resolves platform-specific pages when a test needs to access the current screen directly.
@@ -38,64 +39,81 @@ import pl.zaru.mydemoapp.pages.ios.IosWebViewPage;
  */
 public final class ScreenFactory {
 
-  private final AppiumDriver driver;
+  private final PageContext pageContext;
 
-  private final TargetType targetType;
+  private final Platform platform;
 
   public ScreenFactory(AppiumDriver driver, TestConfig config) {
-    this.driver = Objects.requireNonNull(driver, "driver must not be null");
-    this.targetType =
-        Objects.requireNonNull(config, "config must not be null").device().targetType();
+    AppiumDriver requiredDriver = Objects.requireNonNull(driver, "driver must not be null");
+    TestConfig requiredConfig = Objects.requireNonNull(config, "config must not be null");
+
+    platform = requiredConfig.platform();
+    pageContext =
+        new PageContext(
+            requiredDriver, requiredConfig.device().targetType(), requiredConfig.waitTimeout());
+
+    boolean compatibleDriver =
+        switch (platform) {
+          case ANDROID -> requiredDriver instanceof AndroidDriver;
+          case IOS -> requiredDriver instanceof IOSDriver;
+        };
+
+    if (!compatibleDriver) {
+      throw new IllegalArgumentException(
+          "Driver type %s does not match configured platform %s."
+              .formatted(requiredDriver.getClass().getName(), platform.value()));
+    }
   }
 
   public AppNavigation appNavigation() {
-    return create(() -> new AndroidAppNavigation(driver), () -> new IosAppNavigation(driver));
+    return create(
+        () -> new AndroidAppNavigation(pageContext), () -> new IosAppNavigation(pageContext));
   }
 
   public WebViewPage webViewPage() {
-    return create(
-        () -> new AndroidWebViewPage(driver), () -> new IosWebViewPage(driver, targetType));
+    return create(() -> new AndroidWebViewPage(pageContext), () -> new IosWebViewPage(pageContext));
   }
 
   public ProductCatalogPage productCatalogPage() {
     return create(
-        () -> new AndroidProductCatalogPage(driver), () -> new IosProductCatalogPage(driver));
+        () -> new AndroidProductCatalogPage(pageContext),
+        () -> new IosProductCatalogPage(pageContext));
   }
 
   public LoginPage loginPage() {
-    return create(() -> new AndroidLoginPage(driver), () -> new IosLoginPage(driver, targetType));
+    return create(() -> new AndroidLoginPage(pageContext), () -> new IosLoginPage(pageContext));
   }
 
   public ShippingAddressPage shippingAddressPage() {
     return create(
-        () -> new AndroidShippingAddressPage(driver),
-        () -> new IosShippingAddressPage(driver, targetType));
+        () -> new AndroidShippingAddressPage(pageContext),
+        () -> new IosShippingAddressPage(pageContext));
   }
 
   public PaymentPage paymentPage() {
-    return create(
-        () -> new AndroidPaymentPage(driver), () -> new IosPaymentPage(driver, targetType));
+    return create(() -> new AndroidPaymentPage(pageContext), () -> new IosPaymentPage(pageContext));
   }
 
   public OrderReviewPage orderReviewPage() {
-    return create(() -> new AndroidOrderReviewPage(driver), () -> new IosOrderReviewPage(driver));
+    return create(
+        () -> new AndroidOrderReviewPage(pageContext), () -> new IosOrderReviewPage(pageContext));
   }
 
   public OrderConfirmationPage orderConfirmationPage() {
     return create(
-        () -> new AndroidOrderConfirmationPage(driver), () -> new IosOrderConfirmationPage(driver));
+        () -> new AndroidOrderConfirmationPage(pageContext),
+        () -> new IosOrderConfirmationPage(pageContext));
+  }
+
+  public ExampleDomainPage exampleDomainPage() {
+    return new ExampleDomainPage(pageContext);
   }
 
   private <T> T create(Supplier<? extends T> androidScreen, Supplier<? extends T> iosScreen) {
 
-    if (driver instanceof AndroidDriver) {
-      return androidScreen.get();
-    }
-
-    if (driver instanceof IOSDriver) {
-      return iosScreen.get();
-    }
-
-    throw new IllegalArgumentException("Unsupported driver type: " + driver.getClass().getName());
+    return switch (platform) {
+      case ANDROID -> androidScreen.get();
+      case IOS -> iosScreen.get();
+    };
   }
 }

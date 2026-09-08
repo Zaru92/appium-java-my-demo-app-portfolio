@@ -15,7 +15,7 @@
 <!-- Select every environment that was actually verified. -->
 
 * [ ] Framework verification
-  (`./mvnw --batch-mode --no-transfer-progress -Dsurefire.suiteXmlFiles=src/test/resources/suites/testng-framework.xml clean verify`)
+  (`./mvnw --batch-mode --no-transfer-progress clean verify`)
 * [ ] Android emulator
 * [ ] Android real device
 * [ ] iOS simulator

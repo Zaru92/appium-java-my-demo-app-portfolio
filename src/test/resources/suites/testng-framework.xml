@@ -8,6 +8,7 @@
             <package name="pl.zaru.mydemoapp.device"/>
             <package name="pl.zaru.mydemoapp.driver"/>
             <package name="pl.zaru.mydemoapp.reporting"/>
+            <package name="pl.zaru.mydemoapp.system"/>
         </packages>
     </test>
 </suite>

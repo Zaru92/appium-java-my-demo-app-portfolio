@@ -1,10 +1,11 @@
 package pl.zaru.mydemoapp.pages.ios;
 
 import io.appium.java_client.AppiumBy;
-import io.appium.java_client.AppiumDriver;
+import io.qameta.allure.Step;
 import java.util.List;
 import java.util.Objects;
 import org.openqa.selenium.By;
+import pl.zaru.mydemoapp.pages.PageContext;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
@@ -29,13 +30,13 @@ public final class IosProductCatalogPage extends BasePage implements ProductCata
 
   private static final By NAME_DESCENDING_OPTION = AppiumBy.accessibilityId("Name - Descending");
 
-  public IosProductCatalogPage(AppiumDriver driver) {
-    super(driver);
+  public IosProductCatalogPage(PageContext context) {
+    super(context);
   }
 
   @Override
   public boolean isLoaded() {
-    return waitUntilVisible(CATALOG_SCREEN).isDisplayed();
+    return isVisible(CATALOG_SCREEN);
   }
 
   @Override
@@ -49,6 +50,7 @@ public final class IosProductCatalogPage extends BasePage implements ProductCata
   }
 
   @Override
+  @Step("Sort products by {sort}")
   public void sortBy(ProductSort sort) {
     By sortOption =
         switch (Objects.requireNonNull(sort, "sort must not be null")) {
@@ -61,6 +63,7 @@ public final class IosProductCatalogPage extends BasePage implements ProductCata
   }
 
   @Override
+  @Step("Open product {product}")
   public ProductDetailsPage openProduct(TestProduct product) {
     String productName = Objects.requireNonNull(product, "product must not be null").iosName();
 
@@ -68,6 +71,6 @@ public final class IosProductCatalogPage extends BasePage implements ProductCata
 
     tap(productNameLabel);
 
-    return new IosProductDetailsPage(driver());
+    return new IosProductDetailsPage(pageContext());
   }
 }

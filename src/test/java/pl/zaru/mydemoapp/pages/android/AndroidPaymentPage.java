@@ -1,10 +1,12 @@
 package pl.zaru.mydemoapp.pages.android;
 
 import io.appium.java_client.AppiumBy;
-import io.appium.java_client.AppiumDriver;
+import io.qameta.allure.Allure;
+import io.qameta.allure.Step;
 import java.util.Objects;
 import org.openqa.selenium.By;
 import pl.zaru.mydemoapp.actions.AndroidActions;
+import pl.zaru.mydemoapp.pages.PageContext;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.PaymentPage;
 import pl.zaru.mydemoapp.pages.contracts.PaymentValidation;
@@ -30,29 +32,36 @@ public final class AndroidPaymentPage extends BasePage implements PaymentPage {
 
   private final AndroidActions androidActions;
 
-  public AndroidPaymentPage(AppiumDriver driver) {
-    super(driver);
-    androidActions = new AndroidActions(driver);
+  public AndroidPaymentPage(PageContext context) {
+    super(context);
+    androidActions = new AndroidActions(driver());
   }
 
   @Override
   public boolean isLoaded() {
-    return waitUntilVisible(PAYMENT_HEADING).isDisplayed();
+    return isVisible(PAYMENT_HEADING);
   }
 
   @Override
   public void fillPaymentDetails(TestPaymentCard paymentCard) {
-    Objects.requireNonNull(paymentCard, "paymentCard must not be null");
+    Allure.step(
+        "Fill payment details",
+        () -> {
+          TestPaymentCard requiredCard =
+              Objects.requireNonNull(paymentCard, "paymentCard must not be null");
 
-    replaceTextAllowingEmpty(FULL_NAME, paymentCard.fullName(), "payment card full name");
-    replaceTextAllowingEmpty(CARD_NUMBER, paymentCard.cardNumber(), "card number");
-    replaceTextAllowingEmpty(EXPIRATION_DATE, paymentCard.expirationDate(), "expiration date");
-    replaceTextAllowingEmpty(SECURITY_CODE, paymentCard.securityCode(), "security code");
+          replaceTextAllowingEmpty(FULL_NAME, requiredCard.fullName(), "payment card full name");
+          replaceTextAllowingEmpty(CARD_NUMBER, requiredCard.cardNumber(), "card number");
+          replaceTextAllowingEmpty(
+              EXPIRATION_DATE, requiredCard.expirationDate(), "expiration date");
+          replaceTextAllowingEmpty(SECURITY_CODE, requiredCard.securityCode(), "security code");
 
-    androidActions.hideKeyboardIfPresent();
+          androidActions.hideKeyboardIfPresent();
+        });
   }
 
   @Override
+  @Step("Continue to order review")
   public void continueToOrderReview() {
     tap(REVIEW_ORDER_BUTTON);
   }
@@ -64,7 +73,7 @@ public final class AndroidPaymentPage extends BasePage implements PaymentPage {
           case CARD_NUMBER_REQUIRED -> CARD_NUMBER_ERROR;
         };
 
-    return waitUntilVisible(locator).isDisplayed();
+    return isVisible(locator);
   }
 
   @Override
@@ -74,6 +83,6 @@ public final class AndroidPaymentPage extends BasePage implements PaymentPage {
 
   @Override
   public boolean isFormDisplayed() {
-    return waitUntilVisible(CARD_NUMBER).isDisplayed();
+    return isVisible(CARD_NUMBER);
   }
 }

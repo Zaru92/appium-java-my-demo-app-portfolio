@@ -6,7 +6,7 @@ readonly SCRIPT_DIRECTORY="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 readonly PROJECT_DIRECTORY="$(cd -- "${SCRIPT_DIRECTORY}/.." && pwd)"
 readonly DEVICE_UDID="${ANDROID_SERIAL:-emulator-5554}"
 readonly SYSTEM_PORT="${ANDROID_CI_SYSTEM_PORT:-8200}"
-readonly TEST_CLASS="${1:-AppLaunchSmokeTest}"
+readonly TEST_CLASS="${1:-AppLaunchSmokeIT}"
 readonly APPIUM_LOG="${PROJECT_DIRECTORY}/target/appium-server.log"
 
 appium_pid=""
@@ -59,9 +59,10 @@ if ! curl --fail --silent http://127.0.0.1:4723/status >/dev/null; then
 fi
 
 ./mvnw --batch-mode --no-transfer-progress \
+  -Pmobile \
   -Dplatform=android \
   "-DdeviceName=Android CI Emulator" \
   "-Dudid=${DEVICE_UDID}" \
   "-DsystemPort=${SYSTEM_PORT}" \
-  "-Dtest=${TEST_CLASS}" \
-  test
+  "-Dit.test=${TEST_CLASS}" \
+  verify

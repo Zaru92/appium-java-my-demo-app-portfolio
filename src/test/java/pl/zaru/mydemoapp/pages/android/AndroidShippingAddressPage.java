@@ -1,10 +1,12 @@
 package pl.zaru.mydemoapp.pages.android;
 
 import io.appium.java_client.AppiumBy;
-import io.appium.java_client.AppiumDriver;
+import io.qameta.allure.Allure;
+import io.qameta.allure.Step;
 import java.util.Objects;
 import org.openqa.selenium.By;
 import pl.zaru.mydemoapp.actions.AndroidActions;
+import pl.zaru.mydemoapp.pages.PageContext;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.ShippingAddressPage;
 import pl.zaru.mydemoapp.pages.contracts.ShippingAddressValidation;
@@ -31,32 +33,37 @@ public final class AndroidShippingAddressPage extends BasePage implements Shippi
 
   private final AndroidActions androidActions;
 
-  public AndroidShippingAddressPage(AppiumDriver driver) {
-    super(driver);
-    androidActions = new AndroidActions(driver);
+  public AndroidShippingAddressPage(PageContext context) {
+    super(context);
+    androidActions = new AndroidActions(driver());
   }
 
   @Override
   public boolean isLoaded() {
-    return waitUntilVisible(SHIPPING_ADDRESS_HEADING).isDisplayed();
+    return isVisible(SHIPPING_ADDRESS_HEADING);
   }
 
   @Override
   public void fillAddress(TestAddress address) {
-    TestAddress requiredAddress = Objects.requireNonNull(address, "address must not be null");
+    Allure.step(
+        "Fill shipping address",
+        () -> {
+          TestAddress requiredAddress = Objects.requireNonNull(address, "address must not be null");
 
-    replaceTextAllowingEmpty(scrollTo("fullNameET"), requiredAddress.fullName(), "fullName");
-    replaceTextAllowingEmpty(
-        scrollTo("address1ET"), requiredAddress.addressLine1(), "addressLine1");
-    replaceTextAllowingEmpty(
-        scrollTo("address2ET"), requiredAddress.addressLine2(), "addressLine2");
-    replaceTextAllowingEmpty(scrollTo("cityET"), requiredAddress.city(), "city");
-    replaceTextAllowingEmpty(scrollTo("stateET"), requiredAddress.state(), "state");
-    replaceTextAllowingEmpty(scrollTo("zipET"), requiredAddress.zipCode(), "zipCode");
-    replaceTextAllowingEmpty(scrollTo("countryET"), requiredAddress.country(), "country");
+          replaceTextAllowingEmpty(scrollTo("fullNameET"), requiredAddress.fullName(), "fullName");
+          replaceTextAllowingEmpty(
+              scrollTo("address1ET"), requiredAddress.addressLine1(), "addressLine1");
+          replaceTextAllowingEmpty(
+              scrollTo("address2ET"), requiredAddress.addressLine2(), "addressLine2");
+          replaceTextAllowingEmpty(scrollTo("cityET"), requiredAddress.city(), "city");
+          replaceTextAllowingEmpty(scrollTo("stateET"), requiredAddress.state(), "state");
+          replaceTextAllowingEmpty(scrollTo("zipET"), requiredAddress.zipCode(), "zipCode");
+          replaceTextAllowingEmpty(scrollTo("countryET"), requiredAddress.country(), "country");
+        });
   }
 
   @Override
+  @Step("Continue to payment")
   public void continueToPayment() {
     androidActions.hideKeyboardIfPresent();
     tap(PAYMENT_BUTTON);
@@ -69,7 +76,7 @@ public final class AndroidShippingAddressPage extends BasePage implements Shippi
           case ZIP_CODE_REQUIRED -> scrollTo("zipErrorTV");
         };
 
-    return waitUntilVisible(locator).isDisplayed();
+    return isVisible(locator);
   }
 
   @Override
@@ -79,6 +86,6 @@ public final class AndroidShippingAddressPage extends BasePage implements Shippi
 
   @Override
   public boolean isFormDisplayed() {
-    return waitUntilVisible(scrollTo("zipET")).isDisplayed();
+    return isVisible(scrollTo("zipET"));
   }
 }
