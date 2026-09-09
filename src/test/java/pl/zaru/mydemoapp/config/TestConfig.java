@@ -12,7 +12,8 @@ public record TestConfig(
     DeviceConfig device,
     Optional<String> appWaitActivity,
     Path appPath,
-    Duration newCommandTimeout) {
+    Duration newCommandTimeout,
+    Duration waitTimeout) {
 
   public TestConfig {
     Objects.requireNonNull(appiumUrl, "appiumUrl must not be null");
@@ -20,6 +21,7 @@ public record TestConfig(
     Objects.requireNonNull(device, "device must not be null");
     Objects.requireNonNull(appPath, "appPath must not be null");
     Objects.requireNonNull(newCommandTimeout, "newCommandTimeout must not be null");
+    Objects.requireNonNull(waitTimeout, "waitTimeout must not be null");
 
     appWaitActivity = normalize(appWaitActivity, "appWaitActivity");
     appPath = appPath.toAbsolutePath().normalize();
@@ -36,6 +38,10 @@ public record TestConfig(
 
     if (newCommandTimeout.isZero() || newCommandTimeout.isNegative()) {
       throw new IllegalArgumentException("newCommandTimeout must be positive.");
+    }
+
+    if (waitTimeout.isZero() || waitTimeout.isNegative()) {
+      throw new IllegalArgumentException("waitTimeout must be positive.");
     }
 
     if (platform == Platform.ANDROID && device.wdaLocalPort().isPresent()) {

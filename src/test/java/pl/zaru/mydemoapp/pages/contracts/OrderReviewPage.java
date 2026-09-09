@@ -1,8 +1,6 @@
 package pl.zaru.mydemoapp.pages.contracts;
 
-public interface OrderReviewPage {
-
-  boolean isLoaded();
+public interface OrderReviewPage extends LoadablePage {
 
   void placeOrder();
 }

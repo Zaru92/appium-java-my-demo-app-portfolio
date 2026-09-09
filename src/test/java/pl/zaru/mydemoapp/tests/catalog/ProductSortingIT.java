@@ -18,7 +18,7 @@ import pl.zaru.mydemoapp.tests.TestGroups;
 
 @Epic("My Demo App")
 @Feature("Catalog")
-public final class ProductSortingTest extends BaseTest {
+public final class ProductSortingIT extends BaseTest {
 
   @DataProvider(name = "productSorts")
   public Object[][] productSorts() {

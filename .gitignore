@@ -29,6 +29,7 @@ test-output/
 logs/
 videos/
 screenshots/
+*-artifacts.zip
 
 # Mobile application binaries
 *.apk

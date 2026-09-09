@@ -65,14 +65,15 @@ public class ParallelConfigValidatorTest {
         Platform.ANDROID,
         new DeviceConfig(
             TargetType.EMULATOR,
-            "Pixel 8",
+            "Pixel_8",
             Optional.ofNullable(udid),
             Optional.empty(),
             Optional.of(systemPort),
             Optional.empty()),
         Optional.empty(),
         Path.of("app.apk"),
-        Duration.ofSeconds(120));
+        Duration.ofSeconds(120),
+        Duration.ofSeconds(10));
   }
 
   private static TestConfig iosConfig(String udid, int wdaLocalPort) {
@@ -89,6 +90,7 @@ public class ParallelConfigValidatorTest {
             Optional.of(wdaLocalPort)),
         Optional.empty(),
         Path.of("app.zip"),
-        Duration.ofSeconds(120));
+        Duration.ofSeconds(120),
+        Duration.ofSeconds(10));
   }
 }

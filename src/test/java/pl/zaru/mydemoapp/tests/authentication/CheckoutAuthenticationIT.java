@@ -18,7 +18,7 @@ import pl.zaru.mydemoapp.tests.TestGroups;
 
 @Epic("My Demo App")
 @Feature("Authentication")
-public final class CheckoutAuthenticationTest extends BaseTest {
+public final class CheckoutAuthenticationIT extends BaseTest {
 
   @Story("Require authentication before checkout")
   @Severity(SeverityLevel.CRITICAL)

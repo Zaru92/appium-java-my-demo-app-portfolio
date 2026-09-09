@@ -1,10 +1,10 @@
 package pl.zaru.mydemoapp.pages.ios;
 
 import io.appium.java_client.AppiumBy;
-import io.appium.java_client.AppiumDriver;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import pl.zaru.mydemoapp.actions.IosActions;
-import pl.zaru.mydemoapp.config.TargetType;
+import pl.zaru.mydemoapp.pages.PageContext;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.WebViewPage;
 
@@ -20,17 +20,18 @@ public final class IosWebViewPage extends BasePage implements WebViewPage {
 
   private final IosActions iosActions;
 
-  public IosWebViewPage(AppiumDriver driver, TargetType targetType) {
-    super(driver);
-    iosActions = new IosActions(driver, targetType);
+  public IosWebViewPage(PageContext context) {
+    super(context);
+    iosActions = new IosActions(driver(), context.targetType());
   }
 
   @Override
   public boolean isLoaded() {
-    return waitUntilVisible(WEBVIEW_HEADING).isDisplayed();
+    return isVisible(WEBVIEW_HEADING);
   }
 
   @Override
+  @Step("Open URL in the embedded WebView")
   public void openUrl(String url) {
     replaceText(URL_INPUT, url, "url");
     iosActions.hideKeyboardIfPresent();
@@ -38,6 +39,7 @@ public final class IosWebViewPage extends BasePage implements WebViewPage {
   }
 
   @Override
+  @Step("Return to the WebView URL form")
   public void returnToUrlForm() {
     tap(BACK_BUTTON);
   }

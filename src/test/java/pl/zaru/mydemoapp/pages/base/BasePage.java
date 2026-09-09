@@ -5,48 +5,65 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import pl.zaru.mydemoapp.pages.PageContext;
 
 public abstract class BasePage {
 
-  private static final Duration DEFAULT_WAIT_TIMEOUT = Duration.ofSeconds(10);
+  private static final String LOCATOR_NULL_MESSAGE = "locator must not be null";
 
-  private final AppiumDriver driver;
+  private final PageContext context;
   private final WebDriverWait wait;
 
-  protected BasePage(AppiumDriver driver) {
-    this(driver, DEFAULT_WAIT_TIMEOUT);
-  }
-
-  protected BasePage(AppiumDriver driver, Duration waitTimeout) {
-    this.driver = Objects.requireNonNull(driver, "driver must not be null");
-    Objects.requireNonNull(waitTimeout, "waitTimeout must not be null");
-
-    if (waitTimeout.isZero() || waitTimeout.isNegative()) {
-      throw new IllegalArgumentException("waitTimeout must be positive");
-    }
-
-    wait = new WebDriverWait(driver, waitTimeout);
+  protected BasePage(PageContext context) {
+    this.context = Objects.requireNonNull(context, "context must not be null");
+    wait = new WebDriverWait(context.driver(), context.waitTimeout());
   }
 
   protected final AppiumDriver driver() {
-    return driver;
+    return context.driver();
+  }
+
+  protected final PageContext pageContext() {
+    return context;
+  }
+
+  protected final boolean isVisible(By locator) {
+    return isVisible(locator, context.waitTimeout());
+  }
+
+  protected final boolean isVisible(By locator, Duration timeout) {
+    Objects.requireNonNull(locator, LOCATOR_NULL_MESSAGE);
+    Objects.requireNonNull(timeout, "timeout must not be null");
+
+    if (timeout.isZero() || timeout.isNegative()) {
+      throw new IllegalArgumentException("timeout must be positive");
+    }
+
+    try {
+      new WebDriverWait(driver(), timeout)
+          .until(ExpectedConditions.visibilityOfElementLocated(locator));
+      return true;
+    } catch (TimeoutException expected) {
+      return false;
+    }
   }
 
   protected final WebElement waitUntilVisible(By locator) {
-    Objects.requireNonNull(locator, "locator must not be null");
+    Objects.requireNonNull(locator, LOCATOR_NULL_MESSAGE);
     return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
   }
 
   protected final WebElement waitUntilClickable(By locator) {
-    Objects.requireNonNull(locator, "locator must not be null");
+    Objects.requireNonNull(locator, LOCATOR_NULL_MESSAGE);
     return wait.until(ExpectedConditions.elementToBeClickable(locator));
   }
 
   protected final List<WebElement> waitUntilVisibleElements(By locator) {
-    Objects.requireNonNull(locator, "locator must not be null");
+    Objects.requireNonNull(locator, LOCATOR_NULL_MESSAGE);
 
     return wait.until(
         currentDriver -> {

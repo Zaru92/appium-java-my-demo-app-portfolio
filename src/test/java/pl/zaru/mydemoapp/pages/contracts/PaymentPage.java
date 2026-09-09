@@ -2,9 +2,7 @@ package pl.zaru.mydemoapp.pages.contracts;
 
 import pl.zaru.mydemoapp.testdata.model.TestPaymentCard;
 
-public interface PaymentPage {
-
-  boolean isLoaded();
+public interface PaymentPage extends LoadablePage {
 
   void fillPaymentDetails(TestPaymentCard paymentCard);
 

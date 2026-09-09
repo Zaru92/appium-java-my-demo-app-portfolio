@@ -1,9 +1,10 @@
 package pl.zaru.mydemoapp.pages.android;
 
 import io.appium.java_client.AppiumBy;
-import io.appium.java_client.AppiumDriver;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import pl.zaru.mydemoapp.actions.AndroidActions;
+import pl.zaru.mydemoapp.pages.PageContext;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.WebViewPage;
 
@@ -19,17 +20,18 @@ public final class AndroidWebViewPage extends BasePage implements WebViewPage {
 
   private final AndroidActions androidActions;
 
-  public AndroidWebViewPage(AppiumDriver driver) {
-    super(driver);
-    androidActions = new AndroidActions(driver);
+  public AndroidWebViewPage(PageContext context) {
+    super(context);
+    androidActions = new AndroidActions(driver());
   }
 
   @Override
   public boolean isLoaded() {
-    return waitUntilVisible(WEBVIEW_HEADING).isDisplayed();
+    return isVisible(WEBVIEW_HEADING);
   }
 
   @Override
+  @Step("Open URL in the embedded WebView")
   public void openUrl(String url) {
     replaceText(URL_INPUT, url, "url");
     androidActions.hideKeyboardIfPresent();
@@ -37,6 +39,7 @@ public final class AndroidWebViewPage extends BasePage implements WebViewPage {
   }
 
   @Override
+  @Step("Return to the WebView URL form")
   public void returnToUrlForm() {
     driver().navigate().back();
   }

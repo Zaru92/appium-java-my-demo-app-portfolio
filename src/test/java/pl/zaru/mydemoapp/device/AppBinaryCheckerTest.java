@@ -48,6 +48,7 @@ public final class AppBinaryCheckerTest {
             TargetType.EMULATOR, "Pixel_8", Optional.of("emulator-5554"), Optional.empty()),
         Optional.empty(),
         appPath,
-        Duration.ofSeconds(120));
+        Duration.ofSeconds(120),
+        Duration.ofSeconds(10));
   }
 }

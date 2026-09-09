@@ -1,11 +1,12 @@
 package pl.zaru.mydemoapp.pages.ios;
 
 import io.appium.java_client.AppiumBy;
-import io.appium.java_client.AppiumDriver;
+import io.qameta.allure.Allure;
+import io.qameta.allure.Step;
 import java.util.Objects;
 import org.openqa.selenium.By;
 import pl.zaru.mydemoapp.actions.IosActions;
-import pl.zaru.mydemoapp.config.TargetType;
+import pl.zaru.mydemoapp.pages.PageContext;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.PaymentPage;
 import pl.zaru.mydemoapp.pages.contracts.PaymentValidation;
@@ -31,31 +32,37 @@ public final class IosPaymentPage extends BasePage implements PaymentPage {
 
   private final IosValidationAlert validationAlert;
 
-  public IosPaymentPage(AppiumDriver driver, TargetType targetType) {
-    super(driver);
-    iosActions = new IosActions(driver, targetType);
-    validationAlert = new IosValidationAlert(driver);
+  public IosPaymentPage(PageContext context) {
+    super(context);
+    iosActions = new IosActions(driver(), context.targetType());
+    validationAlert = new IosValidationAlert(context);
   }
 
   @Override
   public boolean isLoaded() {
-    return waitUntilVisible(PAYMENT_HEADING).isDisplayed();
+    return isVisible(PAYMENT_HEADING);
   }
 
   @Override
   public void fillPaymentDetails(TestPaymentCard paymentCard) {
-    Objects.requireNonNull(paymentCard, "paymentCard must not be null");
+    Allure.step(
+        "Fill payment details",
+        () -> {
+          TestPaymentCard requiredCard =
+              Objects.requireNonNull(paymentCard, "paymentCard must not be null");
 
-    replaceTextAllowingEmpty(FULL_NAME, paymentCard.fullName(), "payment card full name");
-    replaceTextAllowingEmpty(CARD_NUMBER, paymentCard.cardNumber(), "card number");
-    replaceTextAllowingEmpty(EXPIRATION_DATE, paymentCard.expirationDate(), "expiration date");
-    replaceTextAllowingEmpty(SECURITY_CODE, paymentCard.securityCode(), "security code");
-
-    iosActions.hideKeyboardIfPresent();
+          replaceTextAllowingEmpty(FULL_NAME, requiredCard.fullName(), "payment card full name");
+          replaceTextAllowingEmpty(CARD_NUMBER, requiredCard.cardNumber(), "card number");
+          replaceTextAllowingEmpty(
+              EXPIRATION_DATE, requiredCard.expirationDate(), "expiration date");
+          replaceTextAllowingEmpty(SECURITY_CODE, requiredCard.securityCode(), "security code");
+        });
   }
 
   @Override
+  @Step("Continue to order review")
   public void continueToOrderReview() {
+    iosActions.hideKeyboardIfPresent();
     iosActions.scrollTo(REVIEW_ORDER_BUTTON);
     tap(REVIEW_ORDER_BUTTON);
   }
@@ -77,7 +84,7 @@ public final class IosPaymentPage extends BasePage implements PaymentPage {
 
   @Override
   public boolean isFormDisplayed() {
-    return waitUntilVisible(REVIEW_ORDER_BUTTON).isDisplayed();
+    return isLoaded();
   }
 
   private static By textFieldWithPlaceholder(String placeholder) {

@@ -10,6 +10,7 @@ import org.testng.TestNGException;
 import org.testng.xml.XmlSuite;
 import org.testng.xml.XmlTest;
 import pl.zaru.mydemoapp.config.ConfigLoader;
+import pl.zaru.mydemoapp.config.SuiteConfigStore;
 import pl.zaru.mydemoapp.config.TestConfig;
 import pl.zaru.mydemoapp.device.DevicePreflight;
 import pl.zaru.mydemoapp.device.ParallelConfigValidator;
@@ -37,7 +38,8 @@ public final class DevicePreflightListener implements ISuiteListener {
         TestConfig config = entry.getValue();
 
         LOGGER.info(
-            "Running test environment preflight: test={}, platform={}, targetType={}, deviceName={}",
+            "Running test environment preflight: test={}, platform={}, targetType={},"
+                + " deviceName={}",
             testName,
             config.platform().value(),
             config.device().targetType().value(),
@@ -47,6 +49,7 @@ public final class DevicePreflightListener implements ISuiteListener {
       }
 
       AllureEnvironment.write(configs, parallel);
+      SuiteConfigStore.store(suite, configs);
 
       LOGGER.info(
           "Test environment preflight completed successfully for {} configuration(s).",
@@ -56,6 +59,11 @@ public final class DevicePreflightListener implements ISuiteListener {
       throw new TestNGException(
           "Test environment preflight failed: " + exception.getMessage(), exception);
     }
+  }
+
+  @Override
+  public void onFinish(ISuite suite) {
+    SuiteConfigStore.clear(suite);
   }
 
   private static Map<String, TestConfig> loadConfigurations(ISuite suite) {

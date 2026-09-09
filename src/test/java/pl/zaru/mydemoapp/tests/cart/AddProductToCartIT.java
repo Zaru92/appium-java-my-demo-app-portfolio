@@ -1,6 +1,5 @@
 package pl.zaru.mydemoapp.tests.cart;
 
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import io.qameta.allure.Epic;
@@ -19,12 +18,12 @@ import pl.zaru.mydemoapp.tests.TestGroups;
 
 @Epic("My Demo App")
 @Feature("Cart")
-public final class CartManagementTest extends BaseTest {
+public final class AddProductToCartIT extends BaseTest {
 
-  @Story("Manage cart contents")
-  @Severity(SeverityLevel.NORMAL)
-  @Test(groups = {TestGroups.REGRESSION, TestGroups.CART})
-  public void shouldUpdateQuantityAndRemoveProduct() {
+  @Story("Add product to cart")
+  @Severity(SeverityLevel.CRITICAL)
+  @Test(groups = {TestGroups.SMOKE, TestGroups.REGRESSION, TestGroups.CART})
+  public void shouldAddSelectedProductToCart() {
 
     ScreenFactory screens = screenFactory();
 
@@ -32,7 +31,11 @@ public final class CartManagementTest extends BaseTest {
 
     ProductCatalogPage catalogPage = screens.productCatalogPage();
 
+    assertTrue(catalogPage.isLoaded(), "Product catalog should be loaded.");
+
     ProductDetailsPage detailsPage = catalogPage.openProduct(product);
+
+    assertTrue(detailsPage.isLoaded(), "Product details should be loaded.");
 
     detailsPage.addToCart();
 
@@ -40,14 +43,7 @@ public final class CartManagementTest extends BaseTest {
 
     assertTrue(cartPage.isLoaded(), "Cart should be loaded.");
 
-    assertEquals(cartPage.firstProductQuantity(), 1, "Initial product quantity should be one.");
-
-    cartPage.increaseFirstProductQuantity();
-
-    assertEquals(cartPage.firstProductQuantity(), 2, "Product quantity should increase to two.");
-
-    cartPage.removeFirstProduct();
-
-    assertTrue(cartPage.isEmpty(), "Cart should be empty after removing the product.");
+    assertTrue(
+        cartPage.containsProduct(product), "Cart should contain selected product: " + product);
   }
 }

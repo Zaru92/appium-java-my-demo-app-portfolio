@@ -1,9 +1,10 @@
 package pl.zaru.mydemoapp.pages.android;
 
-import io.appium.java_client.AppiumDriver;
+import io.qameta.allure.Step;
 import java.util.List;
 import java.util.Objects;
 import org.openqa.selenium.By;
+import pl.zaru.mydemoapp.pages.PageContext;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.ProductCatalogPage;
 import pl.zaru.mydemoapp.pages.contracts.ProductDetailsPage;
@@ -27,13 +28,13 @@ public final class AndroidProductCatalogPage extends BasePage implements Product
 
   private static final By NAME_DESCENDING_OPTION = By.id(APP_PACKAGE + ":id/nameDesCL");
 
-  public AndroidProductCatalogPage(AppiumDriver driver) {
-    super(driver);
+  public AndroidProductCatalogPage(PageContext context) {
+    super(context);
   }
 
   @Override
   public boolean isLoaded() {
-    return waitUntilVisible(PRODUCT_LIST).isDisplayed();
+    return isVisible(PRODUCT_LIST);
   }
 
   @Override
@@ -45,6 +46,7 @@ public final class AndroidProductCatalogPage extends BasePage implements Product
   }
 
   @Override
+  @Step("Sort products by {sort}")
   public void sortBy(ProductSort sort) {
     By sortOption =
         switch (Objects.requireNonNull(sort, "sort must not be null")) {
@@ -57,6 +59,7 @@ public final class AndroidProductCatalogPage extends BasePage implements Product
   }
 
   @Override
+  @Step("Open product {product}")
   public ProductDetailsPage openProduct(TestProduct product) {
     String productName = Objects.requireNonNull(product, "product must not be null").androidName();
 
@@ -65,6 +68,6 @@ public final class AndroidProductCatalogPage extends BasePage implements Product
 
     tap(productImage);
 
-    return new AndroidProductDetailsPage(driver());
+    return new AndroidProductDetailsPage(pageContext());
   }
 }

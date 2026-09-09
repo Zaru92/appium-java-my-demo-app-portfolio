@@ -1,9 +1,10 @@
 package pl.zaru.mydemoapp.pages.android;
 
 import io.appium.java_client.AppiumBy;
-import io.appium.java_client.AppiumDriver;
+import io.qameta.allure.Step;
 import java.util.Objects;
 import org.openqa.selenium.By;
+import pl.zaru.mydemoapp.pages.PageContext;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.CartPage;
 import pl.zaru.mydemoapp.pages.locators.AndroidLocators;
@@ -27,13 +28,13 @@ public final class AndroidCartPage extends BasePage implements CartPage {
 
   private static final By PROCEED_TO_CHECKOUT_BUTTON = AppiumBy.id(APP_PACKAGE + ":id/cartBt");
 
-  public AndroidCartPage(AppiumDriver driver) {
-    super(driver);
+  public AndroidCartPage(PageContext context) {
+    super(context);
   }
 
   @Override
   public boolean isLoaded() {
-    return waitUntilVisible(CART_CONTENT).isDisplayed();
+    return isVisible(CART_CONTENT);
   }
 
   @Override
@@ -42,7 +43,7 @@ public final class AndroidCartPage extends BasePage implements CartPage {
 
     By productTitle = AndroidLocators.byResourceIdAndText(CART_ITEM_TITLE_ID, productName);
 
-    return waitUntilVisible(productTitle).isDisplayed();
+    return isVisible(productTitle);
   }
 
   @Override
@@ -52,6 +53,7 @@ public final class AndroidCartPage extends BasePage implements CartPage {
   }
 
   @Override
+  @Step("Increase the first product quantity")
   public void increaseFirstProductQuantity() {
     int expectedQuantity = firstProductQuantity() + 1;
 
@@ -61,16 +63,18 @@ public final class AndroidCartPage extends BasePage implements CartPage {
   }
 
   @Override
+  @Step("Remove the first product from the cart")
   public void removeFirstProduct() {
     tap(FIRST_PRODUCT_REMOVE);
   }
 
   @Override
   public boolean isEmpty() {
-    return waitUntilVisible(EMPTY_CART).isDisplayed();
+    return isVisible(EMPTY_CART);
   }
 
   @Override
+  @Step("Proceed to checkout")
   public void proceedToCheckout() {
     tap(PROCEED_TO_CHECKOUT_BUTTON);
   }

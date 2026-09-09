@@ -1,11 +1,12 @@
 package pl.zaru.mydemoapp.pages.ios;
 
 import io.appium.java_client.AppiumBy;
-import io.appium.java_client.AppiumDriver;
+import io.qameta.allure.Allure;
+import io.qameta.allure.Step;
 import java.util.Objects;
 import org.openqa.selenium.By;
 import pl.zaru.mydemoapp.actions.IosActions;
-import pl.zaru.mydemoapp.config.TargetType;
+import pl.zaru.mydemoapp.pages.PageContext;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.ShippingAddressPage;
 import pl.zaru.mydemoapp.pages.contracts.ShippingAddressValidation;
@@ -42,35 +43,42 @@ public final class IosShippingAddressPage extends BasePage implements ShippingAd
 
   private final IosValidationAlert validationAlert;
 
-  public IosShippingAddressPage(AppiumDriver driver, TargetType targetType) {
-    super(driver);
-    iosActions = new IosActions(driver, targetType);
-    validationAlert = new IosValidationAlert(driver);
+  public IosShippingAddressPage(PageContext context) {
+    super(context);
+    iosActions = new IosActions(driver(), context.targetType());
+    validationAlert = new IosValidationAlert(context);
   }
 
   @Override
   public boolean isLoaded() {
-    return waitUntilVisible(SHIPPING_ADDRESS_HEADING).isDisplayed();
+    return isVisible(SHIPPING_ADDRESS_HEADING);
   }
 
   @Override
   public void fillAddress(TestAddress address) {
-    TestAddress requiredAddress = Objects.requireNonNull(address, "address must not be null");
+    Allure.step(
+        "Fill shipping address",
+        () -> {
+          TestAddress requiredAddress = Objects.requireNonNull(address, "address must not be null");
 
-    replaceTextAllowingEmpty(FULL_NAME, requiredAddress.fullName(), "full name");
-    replaceTextAllowingEmpty(ADDRESS_LINE_1, requiredAddress.addressLine1(), "address line 1");
-    replaceTextAllowingEmpty(ADDRESS_LINE_2, requiredAddress.addressLine2(), "address line 2");
-    replaceTextAllowingEmpty(CITY, requiredAddress.city(), "city");
-    replaceTextAllowingEmpty(STATE, requiredAddress.state(), "state");
+          replaceTextAllowingEmpty(FULL_NAME, requiredAddress.fullName(), "full name");
+          replaceTextAllowingEmpty(
+              ADDRESS_LINE_1, requiredAddress.addressLine1(), "address line 1");
+          replaceTextAllowingEmpty(
+              ADDRESS_LINE_2, requiredAddress.addressLine2(), "address line 2");
+          replaceTextAllowingEmpty(CITY, requiredAddress.city(), "city");
+          replaceTextAllowingEmpty(STATE, requiredAddress.state(), "state");
 
-    iosActions.scrollTo(ZIP_CODE);
-    replaceTextAllowingEmpty(ZIP_CODE, requiredAddress.zipCode(), "zip code");
+          iosActions.scrollTo(ZIP_CODE);
+          replaceTextAllowingEmpty(ZIP_CODE, requiredAddress.zipCode(), "zip code");
 
-    iosActions.scrollTo(COUNTRY);
-    replaceTextAllowingEmpty(COUNTRY, requiredAddress.country(), "country");
+          iosActions.scrollTo(COUNTRY);
+          replaceTextAllowingEmpty(COUNTRY, requiredAddress.country(), "country");
+        });
   }
 
   @Override
+  @Step("Continue to payment")
   public void continueToPayment() {
     iosActions.hideKeyboardIfPresent();
     iosActions.scrollTo(TO_PAYMENT_BUTTON);
@@ -94,6 +102,6 @@ public final class IosShippingAddressPage extends BasePage implements ShippingAd
 
   @Override
   public boolean isFormDisplayed() {
-    return waitUntilVisible(TO_PAYMENT_BUTTON).isDisplayed();
+    return isLoaded();
   }
 }

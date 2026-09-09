@@ -1,8 +1,8 @@
 package pl.zaru.mydemoapp.pages.android;
 
 import io.appium.java_client.AppiumBy;
-import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
+import pl.zaru.mydemoapp.pages.PageContext;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.OrderConfirmationPage;
 
@@ -14,13 +14,13 @@ public final class AndroidOrderConfirmationPage extends BasePage implements Orde
 
   private static final By CONFIRMATION_MESSAGE = AppiumBy.id(APP_ID + "thankYouTV");
 
-  public AndroidOrderConfirmationPage(AppiumDriver driver) {
-    super(driver);
+  public AndroidOrderConfirmationPage(PageContext context) {
+    super(context);
   }
 
   @Override
   public boolean isLoaded() {
-    return waitUntilVisible(CONFIRMATION_HEADING).isDisplayed();
+    return isVisible(CONFIRMATION_HEADING);
   }
 
   @Override

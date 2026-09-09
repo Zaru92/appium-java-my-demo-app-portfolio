@@ -2,9 +2,13 @@ package pl.zaru.mydemoapp.driver;
 
 import io.appium.java_client.AppiumDriver;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.zaru.mydemoapp.config.TestConfig;
 
 public final class DriverManager {
+  private static final Logger LOGGER = LoggerFactory.getLogger(DriverManager.class);
+
   private static final ThreadLocal<Session> SESSION = new ThreadLocal<>();
 
   private DriverManager() {}
@@ -16,8 +20,16 @@ public final class DriverManager {
       throw new IllegalStateException("An Appium session is already active on the current thread.");
     }
 
+    LOGGER.info(
+        "Starting Appium session: platform={}, targetType={}, deviceName={}",
+        config.platform().value(),
+        config.device().targetType().value(),
+        config.device().deviceName());
+
     AppiumDriver driver = DriverFactory.create(config);
     SESSION.set(new Session(driver, config));
+
+    LOGGER.info("Appium session started: sessionId={}", driver.getSessionId());
   }
 
   public static AppiumDriver getDriver() {
@@ -49,7 +61,9 @@ public final class DriverManager {
 
     try {
       if (session != null) {
+        LOGGER.info("Stopping Appium session: sessionId={}", session.driver().getSessionId());
         session.driver().quit();
+        LOGGER.info("Appium session stopped");
       }
     } finally {
       SESSION.remove();

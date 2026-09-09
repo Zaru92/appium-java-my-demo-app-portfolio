@@ -67,7 +67,7 @@
         <properties>
             <property
                 name="testClassPattern"
-                value=".*(?:Tests?|TestCase)$"/>
+                value=".*(?:IT|Tests?|TestCase)$"/>
         </properties>
     </rule>
 

@@ -22,7 +22,7 @@ import pl.zaru.mydemoapp.tests.TestGroups;
 
 @Epic("My Demo App")
 @Feature("Authentication")
-public final class CheckoutLoginValidationTest extends BaseTest {
+public final class CheckoutLoginValidationIT extends BaseTest {
 
   @DataProvider(name = "missingCredentials")
   public static Object[][] missingCredentials() {

@@ -1,8 +1,8 @@
 package pl.zaru.mydemoapp.pages.ios;
 
 import io.appium.java_client.AppiumBy;
-import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
+import pl.zaru.mydemoapp.pages.PageContext;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.OrderConfirmationPage;
 
@@ -17,13 +17,13 @@ public final class IosOrderConfirmationPage extends BasePage implements OrderCon
           "type == 'XCUIElementTypeStaticText' "
               + "AND label BEGINSWITH 'Thank you for your order'");
 
-  public IosOrderConfirmationPage(AppiumDriver driver) {
-    super(driver);
+  public IosOrderConfirmationPage(PageContext context) {
+    super(context);
   }
 
   @Override
   public boolean isLoaded() {
-    return waitUntilVisible(CONFIRMATION_HEADING).isDisplayed();
+    return isVisible(CONFIRMATION_HEADING);
   }
 
   @Override

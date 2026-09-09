@@ -5,7 +5,7 @@ set -euo pipefail
 readonly SCRIPT_DIRECTORY="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly PROJECT_DIRECTORY="$(cd "${SCRIPT_DIRECTORY}/.." && pwd)"
 readonly WDA_LOCAL_PORT="${IOS_CI_WDA_LOCAL_PORT:-8100}"
-readonly TEST_CLASS="${1:-AppLaunchSmokeTest}"
+readonly TEST_CLASS="${1:-AppLaunchSmokeIT}"
 readonly APPIUM_LOG="${PROJECT_DIRECTORY}/target/appium-server.log"
 
 appium_pid=""
@@ -125,11 +125,12 @@ if ! curl --fail --silent http://127.0.0.1:4723/status >/dev/null; then
 fi
 
 ./mvnw --batch-mode --no-transfer-progress \
+  -Pmobile \
   -Dplatform=ios \
   -DtargetType=simulator \
   "-DdeviceName=${simulator_name}" \
   "-Dudid=${simulator_udid}" \
   "-DplatformVersion=${platform_version}" \
   "-DwdaLocalPort=${WDA_LOCAL_PORT}" \
-  "-Dtest=${TEST_CLASS}" \
-  test
+  "-Dit.test=${TEST_CLASS}" \
+  verify

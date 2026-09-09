@@ -28,6 +28,7 @@ public final class ConfigLoader {
           "platformVersion",
           "app",
           "newCommandTimeoutSeconds",
+          "waitTimeoutSeconds",
           "appWaitActivity",
           "systemPort",
           "wdaLocalPort");
@@ -74,7 +75,8 @@ public final class ConfigLoader {
         device,
         optional(properties, "appWaitActivity"),
         Path.of(required(properties, "app")),
-        Duration.ofSeconds(positiveLong(properties, "newCommandTimeoutSeconds")));
+        Duration.ofSeconds(positiveLong(properties, "newCommandTimeoutSeconds")),
+        Duration.ofSeconds(positiveLong(properties, "waitTimeoutSeconds")));
   }
 
   private static Map<String, String> systemOverrides() {

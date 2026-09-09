@@ -1,8 +1,9 @@
 package pl.zaru.mydemoapp.pages.ios;
 
 import io.appium.java_client.AppiumBy;
-import io.appium.java_client.AppiumDriver;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
+import pl.zaru.mydemoapp.pages.PageContext;
 import pl.zaru.mydemoapp.pages.base.BasePage;
 import pl.zaru.mydemoapp.pages.contracts.OrderReviewPage;
 
@@ -14,16 +15,17 @@ public final class IosOrderReviewPage extends BasePage implements OrderReviewPag
 
   private static final By PLACE_ORDER_BUTTON = AppiumBy.accessibilityId("Place Order");
 
-  public IosOrderReviewPage(AppiumDriver driver) {
-    super(driver);
+  public IosOrderReviewPage(PageContext context) {
+    super(context);
   }
 
   @Override
   public boolean isLoaded() {
-    return waitUntilVisible(REVIEW_ORDER_HEADING).isDisplayed();
+    return isVisible(REVIEW_ORDER_HEADING);
   }
 
   @Override
+  @Step("Place the order")
   public void placeOrder() {
     tap(PLACE_ORDER_BUTTON);
   }
