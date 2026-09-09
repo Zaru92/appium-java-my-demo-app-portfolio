@@ -15,6 +15,12 @@ updates:
           - "patch"
     ignore:
       - dependency-name: "org.seleniumhq.selenium:selenium-bom"
+      - dependency-name: "org.apache.maven.plugins:maven-surefire-plugin"
+        update-types:
+          - "version-update:semver-minor"
+      - dependency-name: "org.apache.maven.plugins:maven-failsafe-plugin"
+        update-types:
+          - "version-update:semver-minor"
     commit-message:
       prefix: "deps"
 
