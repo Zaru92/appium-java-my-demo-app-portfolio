@@ -20,6 +20,8 @@ public final class DevicePreflightListener implements ISuiteListener {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DevicePreflightListener.class);
 
+  private static final String TESTNG_DRY_RUN_PROPERTY = "testng.mode.dryrun";
+
   private final DevicePreflight devicePreflight = new DevicePreflight();
 
   private final ParallelConfigValidator parallelConfigValidator = new ParallelConfigValidator();
@@ -27,6 +29,11 @@ public final class DevicePreflightListener implements ISuiteListener {
   @Override
   @SuppressWarnings("PMD.AvoidCatchingGenericException")
   public void onStart(ISuite suite) {
+    if (isDiscoveryDryRun()) {
+      LOGGER.debug("Skipping test environment preflight during TestNG discovery dry run.");
+      return;
+    }
+
     try {
       Map<String, TestConfig> configs = loadConfigurations(suite);
 
@@ -63,7 +70,13 @@ public final class DevicePreflightListener implements ISuiteListener {
 
   @Override
   public void onFinish(ISuite suite) {
-    SuiteConfigStore.clear(suite);
+    if (!isDiscoveryDryRun()) {
+      SuiteConfigStore.clear(suite);
+    }
+  }
+
+  private static boolean isDiscoveryDryRun() {
+    return Boolean.getBoolean(TESTNG_DRY_RUN_PROPERTY);
   }
 
   private static Map<String, TestConfig> loadConfigurations(ISuite suite) {
