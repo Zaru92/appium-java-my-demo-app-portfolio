@@ -288,9 +288,10 @@ targets, and run:
 
 The TestNG engine used by Surefire and Failsafe 3.6.0 does not support custom `testng.xml`
 suites. The `parallel-mobile` profile therefore launches the native TestNG runner in a separate
-JVM for this explicit multi-target suite. It preserves the suite parameters and validates that
-every parallel target has a unique UDID and platform-specific automation port (`systemPort` for
-Android or `wdaLocalPort` for iOS).
+JVM for this explicit multi-target suite. Maven `-D` configuration overrides are forwarded to
+that JVM and retain their normal priority over suite parameters. The suite validates that every
+parallel target has a unique UDID and platform-specific automation port (`systemPort` for Android
+or `wdaLocalPort` for iOS).
 
 ### Physical Android device
 
