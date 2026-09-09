@@ -37,9 +37,13 @@ public final class IosActions {
           "-e",
           "tell application \"Simulator\" to activate",
           "-e",
-          "delay 0.3",
-          "-e",
-          "tell application \"System Events\" to keystroke \"k\" using command down");
+          "tell application \"System Events\" to tell process \"Simulator\" to "
+              + "click menu item \"Toggle Software Keyboard\" of menu 1 "
+              + "of menu item \"Keyboard\" of menu 1 "
+              + "of menu bar item \"I/O\" of menu bar 1");
+
+  private static final By VISIBLE_KEYBOARD =
+      AppiumBy.iOSNsPredicateString("type == 'XCUIElementTypeKeyboard' AND visible == 1");
 
   private final IOSDriver driver;
 
@@ -86,18 +90,23 @@ public final class IosActions {
   }
 
   public void hideKeyboardIfPresent() {
-    boolean keyboardShown = Boolean.TRUE.equals(driver.executeScript("mobile: isKeyboardShown"));
-
-    if (!keyboardShown) {
+    if (!isKeyboardShown()) {
       return;
     }
 
     if (targetType == TargetType.REAL_DEVICE) {
       driver.hideKeyboard();
-      return;
+    } else {
+      hideSimulatorSoftwareKeyboard();
     }
 
-    hideSimulatorSoftwareKeyboard();
+    new WebDriverWait(driver, KEYBOARD_HIDE_TIMEOUT)
+        .withMessage("The iOS keyboard remained visible after the hide action.")
+        .until(ignored -> !isKeyboardShown());
+  }
+
+  private boolean isKeyboardShown() {
+    return !driver.findElements(VISIBLE_KEYBOARD).isEmpty();
   }
 
   public void dismissPasswordSavePromptIfPresent() {
@@ -137,8 +146,7 @@ public final class IosActions {
 
     if (!result.successful()) {
       throw new IllegalStateException(
-          "Could not send Command+K to iOS Simulator. "
-              + "Grant Accessibility permission to the terminal or IDE running Maven. Output: "
+          "Could not activate Toggle Software Keyboard in iOS Simulator. Output: "
               + result.displayOutput());
     }
   }

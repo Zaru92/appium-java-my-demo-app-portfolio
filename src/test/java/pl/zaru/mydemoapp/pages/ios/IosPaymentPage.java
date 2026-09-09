@@ -56,14 +56,13 @@ public final class IosPaymentPage extends BasePage implements PaymentPage {
           replaceTextAllowingEmpty(
               EXPIRATION_DATE, requiredCard.expirationDate(), "expiration date");
           replaceTextAllowingEmpty(SECURITY_CODE, requiredCard.securityCode(), "security code");
-
-          iosActions.hideKeyboardIfPresent();
         });
   }
 
   @Override
   @Step("Continue to order review")
   public void continueToOrderReview() {
+    iosActions.hideKeyboardIfPresent();
     iosActions.scrollTo(REVIEW_ORDER_BUTTON);
     tap(REVIEW_ORDER_BUTTON);
   }
@@ -85,7 +84,7 @@ public final class IosPaymentPage extends BasePage implements PaymentPage {
 
   @Override
   public boolean isFormDisplayed() {
-    return isVisible(REVIEW_ORDER_BUTTON);
+    return isLoaded();
   }
 
   private static By textFieldWithPlaceholder(String placeholder) {

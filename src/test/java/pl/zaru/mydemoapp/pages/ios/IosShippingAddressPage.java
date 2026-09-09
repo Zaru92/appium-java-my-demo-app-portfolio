@@ -102,6 +102,6 @@ public final class IosShippingAddressPage extends BasePage implements ShippingAd
 
   @Override
   public boolean isFormDisplayed() {
-    return isVisible(TO_PAYMENT_BUTTON);
+    return isLoaded();
   }
 }
