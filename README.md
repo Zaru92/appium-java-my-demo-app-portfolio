@@ -44,7 +44,8 @@ preflight checks, and Allure reporting.
 | Appium Java Client | 10.1.1 |
 | Selenium | 4.43.0 |
 | TestNG | 7.12.0 |
-| Allure TestNG | 2.35.4 |
+| Maven Surefire / Failsafe | 3.6.0 (TestNG via JUnit Platform) |
+| Allure TestNG | 2.35.5 |
 | SLF4J / Logback | Structured runtime logging |
 | Spotless / google-java-format | Source formatting verification |
 | PMD 7.27.0 | Static analysis with a project-specific ruleset |
@@ -228,8 +229,9 @@ the [Android WebView](#android-webview) section.
 ```
 
 Mobile scenarios use the `*IT` naming convention and run through Maven Failsafe only when the
-`mobile` profile is enabled. Maven Surefire is bound to `testng-framework.xml`, so a plain
-`./mvnw verify` remains device-independent and never starts an Appium session.
+`mobile` profile is enabled. Maven Surefire discovers device-independent `*Test` classes by
+naming convention, so a plain `./mvnw verify` never starts an Appium session. Surefire and
+Failsafe 3.6.0 execute TestNG through the JUnit Platform TestNG engine.
 
 ### Checkout validation
 
@@ -281,14 +283,14 @@ Update the device identifiers in `src/test/resources/suites/testng-parallel.xml`
 targets, and run:
 
 ```bash
-./mvnw clean \
-  -Pmobile \
-  -Dfailsafe.suiteXmlFiles=src/test/resources/suites/testng-parallel.xml \
-  verify
+./mvnw clean -Pparallel-mobile verify
 ```
 
-The suite validates that every parallel target has a unique UDID and platform-specific automation
-port (`systemPort` for Android or `wdaLocalPort` for iOS).
+The TestNG engine used by Surefire and Failsafe 3.6.0 does not support custom `testng.xml`
+suites. The `parallel-mobile` profile therefore launches the native TestNG runner in a separate
+JVM for this explicit multi-target suite. It preserves the suite parameters and validates that
+every parallel target has a unique UDID and platform-specific automation port (`systemPort` for
+Android or `wdaLocalPort` for iOS).
 
 ### Physical Android device
 
@@ -437,7 +439,8 @@ Actions for pushes and pull requests targeting `main`.
 ## Reports and diagnostics
 
 Framework test reports are written to `target/surefire-reports`, while mobile integration-test
-reports are written to `target/failsafe-reports`.
+reports are written to `target/failsafe-reports`. The native parallel suite writes TestNG reports
+to `target/testng-parallel-reports`.
 
 Allure results are written to:
 
