@@ -7,7 +7,7 @@
 
     <groupId>pl.zaru</groupId>
     <artifactId>appium-java-my-demo-app-portfolio</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
 
     <name>Appium Java My Demo App Portfolio</name>
     <description>
