@@ -9,13 +9,17 @@ import org.testng.annotations.Test;
 
 public final class DeviceConfigTest {
 
+  private static final String ANDROID_DEVICE_NAME = "Pixel 8";
+
+  private static final String ANDROID_UDID = "emulator-5554";
+
   @Test
   public void shouldCreateDeviceConfigWithSystemPort() {
     DeviceConfig config =
         new DeviceConfig(
             TargetType.EMULATOR,
-            "Pixel 8",
-            Optional.of("emulator-5554"),
+            ANDROID_DEVICE_NAME,
+            Optional.of(ANDROID_UDID),
             Optional.empty(),
             Optional.of(8200),
             Optional.empty());
@@ -31,8 +35,8 @@ public final class DeviceConfigTest {
   public void shouldRejectInvalidSystemPort() {
     new DeviceConfig(
         TargetType.EMULATOR,
-        "Pixel 8",
-        Optional.of("emulator-5554"),
+        ANDROID_DEVICE_NAME,
+        Optional.of(ANDROID_UDID),
         Optional.empty(),
         Optional.of(0),
         Optional.empty());
@@ -58,8 +62,8 @@ public final class DeviceConfigTest {
   public void shouldRejectTwoAutomationPorts() {
     new DeviceConfig(
         TargetType.EMULATOR,
-        "Pixel 8",
-        Optional.of("emulator-5554"),
+        ANDROID_DEVICE_NAME,
+        Optional.of(ANDROID_UDID),
         Optional.empty(),
         Optional.of(8200),
         Optional.of(8100));
@@ -71,8 +75,8 @@ public final class DeviceConfigTest {
   public void shouldRejectHeadlessModeForAndroidEmulator() {
     new DeviceConfig(
         TargetType.EMULATOR,
-        "Pixel 8",
-        Optional.of("emulator-5554"),
+        ANDROID_DEVICE_NAME,
+        Optional.of(ANDROID_UDID),
         Optional.empty(),
         Optional.of(8200),
         Optional.empty(),
