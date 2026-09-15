@@ -111,8 +111,7 @@ public final class ConfigLoaderTest {
 
   @Test
   public void shouldEnableHeadlessIosSimulatorFromRuntimeOverride() {
-    TestConfig config =
-        ConfigLoader.load(Map.of(PLATFORM_KEY, "ios", IS_HEADLESS_KEY, "true"));
+    TestConfig config = ConfigLoader.load(Map.of(PLATFORM_KEY, "ios", IS_HEADLESS_KEY, "true"));
 
     assertTrue(config.device().isHeadless());
   }

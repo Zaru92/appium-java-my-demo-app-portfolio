@@ -67,8 +67,7 @@ public final class DeviceConfigTest {
 
   @Test(
       expectedExceptions = IllegalArgumentException.class,
-      expectedExceptionsMessageRegExp =
-          "isHeadless can be enabled only for a simulator\\.")
+      expectedExceptionsMessageRegExp = "isHeadless can be enabled only for a simulator\\.")
   public void shouldRejectHeadlessModeForAndroidEmulator() {
     new DeviceConfig(
         TargetType.EMULATOR,
