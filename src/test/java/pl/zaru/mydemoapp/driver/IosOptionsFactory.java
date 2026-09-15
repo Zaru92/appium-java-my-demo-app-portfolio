@@ -23,7 +23,10 @@ final class IosOptionsFactory {
             .setWdaLaunchTimeout(WDA_LAUNCH_TIMEOUT);
 
     if (device.targetType() == TargetType.SIMULATOR) {
-      options.setConnectHardwareKeyboard(true).setForceSimulatorSoftwareKeyboardPresence(false);
+      options
+          .setConnectHardwareKeyboard(true)
+          .setForceSimulatorSoftwareKeyboardPresence(false)
+          .setIsHeadless(device.isHeadless());
     }
 
     device.udid().ifPresent(options::setUdid);

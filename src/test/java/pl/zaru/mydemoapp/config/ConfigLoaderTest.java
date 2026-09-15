@@ -1,6 +1,7 @@
 package pl.zaru.mydemoapp.config;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
@@ -18,6 +19,7 @@ public final class ConfigLoaderTest {
 
   private static final String PLATFORM_KEY = "platform";
   private static final String TARGET_TYPE_KEY = "targetType";
+  private static final String IS_HEADLESS_KEY = "isHeadless";
 
   private static final Set<String> CONFIG_SYSTEM_PROPERTIES =
       Set.of(
@@ -32,6 +34,7 @@ public final class ConfigLoaderTest {
           "appPath",
           "newCommandTimeoutSeconds",
           "waitTimeoutSeconds",
+          IS_HEADLESS_KEY,
           "systemPort",
           "wdaLocalPort");
 
@@ -103,6 +106,15 @@ public final class ConfigLoaderTest {
             .endsWith(Path.of("src/test/resources/apps/" + "my-demo-app-ios-simulator-2.2.2.zip")));
     assertTrue(config.device().systemPort().isEmpty());
     assertEquals(config.device().wdaLocalPort(), Optional.of(8100));
+    assertFalse(config.device().isHeadless());
+  }
+
+  @Test
+  public void shouldEnableHeadlessIosSimulatorFromRuntimeOverride() {
+    TestConfig config =
+        ConfigLoader.load(Map.of(PLATFORM_KEY, "ios", IS_HEADLESS_KEY, "true"));
+
+    assertTrue(config.device().isHeadless());
   }
 
   @Test
@@ -143,6 +155,13 @@ public final class ConfigLoaderTest {
       expectedExceptionsMessageRegExp = "waitTimeoutSeconds must be positive\\.")
   public void shouldRejectNonPositiveWaitTimeout() {
     ConfigLoader.load(Map.of("waitTimeoutSeconds", "0"));
+  }
+
+  @Test(
+      expectedExceptions = IllegalStateException.class,
+      expectedExceptionsMessageRegExp = "isHeadless must be true or false: sometimes")
+  public void shouldRejectInvalidHeadlessValue() {
+    ConfigLoader.load(Map.of(IS_HEADLESS_KEY, "sometimes"));
   }
 
   @Test(

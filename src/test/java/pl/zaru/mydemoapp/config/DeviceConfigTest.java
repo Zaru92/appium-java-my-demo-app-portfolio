@@ -1,6 +1,7 @@
 package pl.zaru.mydemoapp.config;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Optional;
@@ -21,6 +22,7 @@ public final class DeviceConfigTest {
 
     assertEquals(config.systemPort(), Optional.of(8200));
     assertTrue(config.wdaLocalPort().isEmpty());
+    assertFalse(config.isHeadless());
   }
 
   @Test(
@@ -61,5 +63,20 @@ public final class DeviceConfigTest {
         Optional.empty(),
         Optional.of(8200),
         Optional.of(8100));
+  }
+
+  @Test(
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp =
+          "isHeadless can be enabled only for a simulator\\.")
+  public void shouldRejectHeadlessModeForAndroidEmulator() {
+    new DeviceConfig(
+        TargetType.EMULATOR,
+        "Pixel 8",
+        Optional.of("emulator-5554"),
+        Optional.empty(),
+        Optional.of(8200),
+        Optional.empty(),
+        true);
   }
 }
