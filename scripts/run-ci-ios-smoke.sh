@@ -132,5 +132,6 @@ fi
   "-Dudid=${simulator_udid}" \
   "-DplatformVersion=${platform_version}" \
   "-DwdaLocalPort=${WDA_LOCAL_PORT}" \
+  -DisHeadless=true \
   "-Dit.test=${TEST_CLASS}" \
   verify

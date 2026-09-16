@@ -50,6 +50,14 @@ public final class DriverOptionsFactoryTest {
     assertEquals(timeoutInSeconds(options), 120L);
     assertEquals(((Number) options.getCapability("appium:wdaLocalPort")).intValue(), 8100);
     assertEquals(((Number) options.getCapability("appium:wdaLaunchTimeout")).longValue(), 300_000L);
+    assertEquals(options.getCapability("appium:isHeadless"), false);
+  }
+
+  @Test
+  public void shouldEnableHeadlessModeForIosSimulator() {
+    Capabilities options = DriverOptionsFactory.create(iosConfig(true));
+
+    assertEquals(options.getCapability("appium:isHeadless"), true);
   }
 
   private static void assertAutomationName(Capabilities options, TestConfig config) {
@@ -82,6 +90,10 @@ public final class DriverOptionsFactoryTest {
   }
 
   private static TestConfig iosConfig() {
+    return iosConfig(false);
+  }
+
+  private static TestConfig iosConfig(boolean isHeadless) {
     return new TestConfig(
         URI.create("http://127.0.0.1:4723"),
         Platform.IOS,
@@ -91,7 +103,8 @@ public final class DriverOptionsFactoryTest {
             Optional.empty(),
             Optional.of("26.4"),
             Optional.empty(),
-            Optional.of(8100)),
+            Optional.of(8100),
+            isHeadless),
         Optional.empty(),
         Path.of("src/test/resources/apps/my-demo-app-ios-simulator-2.2.2.zip"),
         Duration.ofSeconds(120),

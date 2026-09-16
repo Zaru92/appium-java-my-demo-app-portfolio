@@ -9,7 +9,8 @@ public record DeviceConfig(
     Optional<String> udid,
     Optional<String> platformVersion,
     Optional<Integer> systemPort,
-    Optional<Integer> wdaLocalPort) {
+    Optional<Integer> wdaLocalPort,
+    boolean isHeadless) {
 
   public DeviceConfig {
     Objects.requireNonNull(targetType, "targetType must not be null");
@@ -24,12 +25,27 @@ public record DeviceConfig(
           "Only one platform-specific automation port may be configured.");
     }
 
+    if (isHeadless && targetType != TargetType.SIMULATOR) {
+      throw new IllegalArgumentException("isHeadless can be enabled only for a simulator.");
+    }
+
     udid = normalize(udid, "udid");
     platformVersion = normalize(platformVersion, "platformVersion");
 
     if (targetType == TargetType.REAL_DEVICE && udid.isEmpty()) {
       throw new IllegalArgumentException("udid must be provided for a real device.");
     }
+  }
+
+  public DeviceConfig(
+      TargetType targetType,
+      String deviceName,
+      Optional<String> udid,
+      Optional<String> platformVersion,
+      Optional<Integer> systemPort,
+      Optional<Integer> wdaLocalPort) {
+
+    this(targetType, deviceName, udid, platformVersion, systemPort, wdaLocalPort, false);
   }
 
   public DeviceConfig(

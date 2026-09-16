@@ -18,6 +18,8 @@ public final class ConfigLoader {
 
   private static final String PLATFORM_KEY = "platform";
 
+  private static final String IS_HEADLESS_KEY = "isHeadless";
+
   private static final Set<String> OVERRIDABLE_KEYS =
       Set.of(
           PLATFORM_KEY,
@@ -29,6 +31,7 @@ public final class ConfigLoader {
           "app",
           "newCommandTimeoutSeconds",
           "waitTimeoutSeconds",
+          IS_HEADLESS_KEY,
           "appWaitActivity",
           "systemPort",
           "wdaLocalPort");
@@ -67,7 +70,8 @@ public final class ConfigLoader {
             optional(properties, "udid"),
             optional(properties, "platformVersion"),
             optionalPort(properties, "systemPort"),
-            optionalPort(properties, "wdaLocalPort"));
+            optionalPort(properties, "wdaLocalPort"),
+            booleanValue(properties, IS_HEADLESS_KEY));
 
     return new TestConfig(
         URI.create(required(properties, "appium.url")),
@@ -150,6 +154,20 @@ public final class ConfigLoader {
     } catch (NumberFormatException exception) {
       throw new IllegalStateException(key + " must be a whole number: " + value, exception);
     }
+  }
+
+  private static boolean booleanValue(Properties properties, String key) {
+    String value = required(properties, key);
+
+    if ("true".equalsIgnoreCase(value)) {
+      return true;
+    }
+
+    if ("false".equalsIgnoreCase(value)) {
+      return false;
+    }
+
+    throw new IllegalStateException(key + " must be true or false: " + value);
   }
 
   private static Optional<Integer> optionalPort(Properties properties, String key) {

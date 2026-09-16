@@ -358,6 +358,7 @@ platformVersion
 app
 newCommandTimeoutSeconds
 waitTimeoutSeconds
+isHeadless
 appWaitActivity
 systemPort
 wdaLocalPort
@@ -365,6 +366,9 @@ wdaLocalPort
 
 `waitTimeoutSeconds` controls page-element and WebView-context waits and defaults to 10 seconds.
 `newCommandTimeoutSeconds` controls how long Appium keeps an idle session alive.
+`isHeadless` defaults to `false` and enables headless execution only for an iOS Simulator. The iOS
+smoke workflow enables it so Appium reuses the Simulator booted by the CI script without restarting
+it to open the Simulator UI.
 
 Example:
 
@@ -529,7 +533,7 @@ request. It:
 1. uses a macOS ARM64 runner with Xcode,
 2. installs pinned Appium and XCUITest versions,
 3. downloads and verifies the iOS Simulator application,
-4. selects and boots an available iPhone Simulator dynamically,
+4. selects and boots an available iPhone Simulator dynamically in headless mode,
 5. starts the Appium server and runs `AppLaunchSmokeIT`,
 6. uploads Surefire, Failsafe, Allure, failure, and Appium server artifacts.
 
