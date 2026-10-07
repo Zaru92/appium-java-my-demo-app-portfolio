@@ -28,7 +28,7 @@
         <allure.version>2.35.5</allure.version>
         <aspectj.version>1.9.25.1</aspectj.version>
         <slf4j.version>2.0.20</slf4j.version>
-        <logback.version>1.6.4</logback.version>
+        <logback.version>1.6.5</logback.version>
 
         <maven.compiler.plugin.version>3.16.0</maven.compiler.plugin.version>
         <maven.surefire.plugin.version>3.6.0</maven.surefire.plugin.version>
