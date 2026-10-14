@@ -40,7 +40,7 @@ preflight checks, and Allure reporting.
 | Component | Version or role |
 |---|---|
 | Java | 21 language and bytecode baseline |
-| Maven Wrapper | 3.9.16 |
+| Maven Wrapper | 3.10.0 |
 | Appium Java Client | 10.1.1 |
 | Selenium | 4.43.0 |
 | TestNG | 7.12.0 |
